@@ -7,6 +7,7 @@ import { inspectSceneAt, type SceneInspection } from "./sceneRegistry";
 import "./inspector.css";
 
 interface Selection extends SceneInspection {
+  element?: Element;
   font?: string;
   fontSize?: string;
   lineHeight?: string;
@@ -30,6 +31,43 @@ export default function RegionInspector() {
     height: window.innerHeight,
   });
   const current = useRef<Selection | null>(null);
+  useEffect(() => {
+    if (!enabled || !pinned) return;
+    const refresh = () => {
+      const value = current.current;
+      if (!value?.element?.isConnected) {
+        setPinned(false);
+        setSelection(null);
+        current.current = null;
+        return;
+      }
+      const rect = value.element.getBoundingClientRect();
+      const style = getComputedStyle(value.element);
+      const next = {
+        ...value,
+        rect: {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        },
+        font: style.fontFamily,
+        fontSize: style.fontSize,
+        lineHeight: style.lineHeight,
+      };
+      current.current = next;
+      setSelection(next);
+    };
+    window.addEventListener("scroll", refresh, {
+      passive: true,
+      capture: true,
+    });
+    window.addEventListener("resize", refresh);
+    return () => {
+      window.removeEventListener("scroll", refresh, true);
+      window.removeEventListener("resize", refresh);
+    };
+  }, [enabled, pinned]);
   useEffect(() => {
     setPinned(false);
     setSelection(null);
@@ -114,6 +152,7 @@ export default function RegionInspector() {
             continue;
           return {
             ...region,
+            element,
             source: getRegionSource(region, element),
             rect: {
               left: rect.left,
