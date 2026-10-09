@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { cloudModes } from "./content";
 import { Tabs } from "./ui";
-import { DigitalFilm, ImagingWorkstation } from "./ImagingWorkstation";
+import { CloudScene } from "./CloudScene";
 export function CloudProduct() {
   const [mode, setMode] = useState(0);
   const current = cloudModes[mode];
@@ -36,13 +36,7 @@ export function CloudProduct() {
         aria-label={current.name}
         className="exhibit-content wrap"
       >
-        <div className={mode === 1 ? "exhibit-film" : "exhibit-reader"}>
-          {mode === 1 ? (
-            <DigitalFilm />
-          ) : (
-            <ImagingWorkstation compact cloudMode={mode} />
-          )}
-        </div>
+        <CloudScene mode={mode} />
         <div className="exhibit-caption">
           <h3>{current.title}</h3>
           <p>{current.description}</p>

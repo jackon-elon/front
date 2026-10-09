@@ -3,14 +3,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Plus,
-  Cloud,
   FileText,
   ArrowUpRight,
 } from "lucide-react";
 import { media } from "./content";
 import { Reveal, usePresentationMotion } from "./ui";
 import { ImageFrame } from "./ImageFrame";
-import { DigitalFilm } from "./ImagingWorkstation";
+import { DigitalFilm } from "./DigitalFilm";
 const cards = [
   {
     name: "区域影像云",
@@ -52,22 +51,23 @@ export function ProductHighlights({
     const update = () => {
       cancelAnimationFrame(tick);
       tick = requestAnimationFrame(() => {
-        const first = element.firstElementChild as HTMLElement | null;
-        if (first)
-          setActive(
-            Math.min(
-              cards.length - 1,
-              Math.max(
-                0,
-                Math.round(element.scrollLeft / (first.offsetWidth + 24)),
-              ),
-            ),
-          );
+        const items = Array.from(element.children) as HTMLElement[];
+        const first = items[0];
+        if (!first) return;
+        const max = element.scrollWidth - element.clientWidth;
+        const distances = items.map((card) =>
+          Math.abs(
+            element.scrollLeft -
+              Math.min(max, card.offsetLeft - first.offsetLeft),
+          ),
+        );
+        setActive(distances.indexOf(Math.min(...distances)));
       });
     };
     element.addEventListener("scroll", update, { passive: true });
     const observer = new ResizeObserver(update);
     observer.observe(element);
+    update();
     return () => {
       element.removeEventListener("scroll", update);
       observer.disconnect();
@@ -127,23 +127,30 @@ export function ProductHighlights({
               <h3>{card.title}</h3>
             </div>
             {card.type === "cloud" && (
-              <div className="highlight-network" aria-hidden="true">
-                <div className="network-cloud">
-                  <Cloud size={56} strokeWidth={1.2} />
-                  <span>影联网</span>
-                </div>
-                <i />
-                <div className="network-devices">
-                  <ImageFrame frame={1} />
-                  <ImageFrame frame={4} />
-                  <ImageFrame frame={2} />
-                </div>
-              </div>
+              <img
+                src={media.imagingHero}
+                loading="lazy"
+                alt="影像阅片工作站与移动影像的合成产品场景"
+              />
             )}
             {card.type === "film" && (
-              <div className="highlight-phone">
-                <DigitalFilm compact />
-              </div>
+              <>
+                <div className="highlight-film-sheet" aria-hidden="true">
+                  <FileText size={27} />
+                  <span>检查报告</span>
+                  <h4>
+                    影像与信息。
+                    <br />
+                    一起随行。
+                  </h4>
+                  <i />
+                  <i />
+                  <i />
+                </div>
+                <div className="highlight-phone">
+                  <DigitalFilm compact />
+                </div>
+              </>
             )}
             {card.type === "ai" && (
               <div className="highlight-ai-art" aria-hidden="true">

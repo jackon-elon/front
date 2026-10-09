@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -8,8 +7,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { cloudModes, aiModes } from "./content";
-import { Reveal, Tabs, usePresentationMotion } from "./ui";
-import { ImagingWorkstation, DigitalFilm } from "./ImagingWorkstation";
+import { Reveal, Tabs } from "./ui";
+import { ImagingWorkstation } from "./ImagingWorkstation";
+import { CloudScene } from "./CloudScene";
 export function ProductSections({
   onExplore,
 }: {
@@ -17,7 +17,6 @@ export function ProductSections({
 }) {
   const [cloud, setCloud] = useState(0);
   const [ai, setAI] = useState(0);
-  const reduce = usePresentationMotion();
   return (
     <div className="product-sections">
       <section
@@ -47,20 +46,15 @@ export function ProductSections({
             panelId="cloud-showcase-panel"
           />
         </div>
-        <Reveal className="cloud-display wrap">
-          <div className="cloud-desktop">
-            <ImagingWorkstation compact cloudMode={cloud} />
-          </div>
-          <div className="cloud-mobile">
-            <DigitalFilm />
-          </div>
-        </Reveal>
         <div
           id="cloud-showcase-panel"
           role="tabpanel"
           aria-label={cloudModes[cloud].name}
-          className="product-detail-row wrap"
+          className="cloud-scene-stage wrap"
         >
+          <CloudScene mode={cloud} />
+        </div>
+        <div className="product-detail-row wrap">
           <div>
             <h3>{cloudModes[cloud].title}</h3>
             <p>{cloudModes[cloud].description}</p>
@@ -111,17 +105,7 @@ export function ProductSections({
           role="tabpanel"
           aria-label={aiModes[ai].name}
         >
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={ai}
-              initial={reduce ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: reduce ? 0 : 0.18 }}
-            >
-              <ImagingWorkstation mode={ai} />
-            </motion.div>
-          </AnimatePresence>
+          <ImagingWorkstation mode={ai} />
         </div>
         <div className="product-detail-row wrap">
           <div>
