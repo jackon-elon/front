@@ -247,10 +247,6 @@
   gap: 12px;
   margin-top: 30px;
 }
-.regional-study .image-frame {
-  width: 66px;
-  border-radius: 7px;
-}
 .regional-study strong,
 .regional-document strong {
   display: block;
@@ -486,19 +482,19 @@
   border-top: 1px solid #ecedf0;
 }
 .consultation-console {
-  background: #14171c;
-  color: #edf0f4;
-  border-color: #343941;
+  background: var(--surface-soft);
+  color: var(--ink);
+  border-color: var(--line);
 }
 .consultation-console .scene-console-bar,
 .ai-workspace .scene-console-bar {
-  background: #24282f;
-  color: #e2e7ed;
-  border-bottom-color: #383e47;
+  background: var(--surface);
+  color: var(--ink);
+  border-bottom-color: var(--line);
 }
 .consultation-console .scene-console-bar small,
 .ai-workspace .scene-console-bar small {
-  color: #9ca4af;
+  color: var(--muted);
 }
 .consultation-layout {
   display: grid;
@@ -508,8 +504,8 @@
   min-height: 430px;
 }
 .consultation-view {
-  background: #0b0d10;
-  border: 1px solid #292f37;
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 9px;
   overflow: hidden;
 }
@@ -519,10 +515,10 @@
   padding: 17px;
   gap: 10px;
   font-size: 12px;
-  color: #929dab;
+  color: var(--muted);
 }
 .consultation-view-heading span:first-child {
-  color: #dce3eb;
+  color: var(--ink);
 }
 .consultation-images {
   display: grid;
@@ -535,7 +531,7 @@
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #95a2b3;
+  color: var(--muted);
   padding: 14px 17px;
 }
 .consultation-placeholder {
@@ -544,7 +540,7 @@
   align-items: center;
   justify-content: center;
   min-height: 290px;
-  color: #8d9bad;
+  color: var(--muted);
 }
 .consultation-placeholder p {
   font-size: 18px;
@@ -569,22 +565,10 @@
   border-radius: 9px;
   overflow: hidden;
   min-height: 340px;
-  background: #39444b;
-}
-.consultation-participant img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 20% center;
+  background: #edf1f5;
 }
 .consultation-participant.secondary img {
   object-position: 35% center;
-}
-.consultation-participant::after {
-  content: "";
-  position: absolute;
-  inset: 40% 0 0;
-  background: linear-gradient(transparent, #162128cc);
 }
 .consultation-participant span {
   position: absolute;
@@ -597,7 +581,7 @@
   position: absolute;
   right: 13px;
   top: 15px;
-  color: #fff;
+  color: var(--ink-subtle);
 }
 .consultation-participant i {
   display: inline-block;
@@ -609,7 +593,7 @@
 }
 .consultation-memo {
   grid-column: 1/-1;
-  background: #232a33;
+  background: var(--surface);
   padding: 23px;
   border-radius: 9px;
 }
@@ -621,7 +605,7 @@
 .consultation-memo label {
   display: block;
   font-size: 13px;
-  color: #a2afbf;
+  color: var(--muted);
   margin-bottom: 10px;
 }
 .consultation-memo textarea {
@@ -629,9 +613,9 @@
   min-height: 130px;
   resize: vertical;
   border-radius: 7px;
-  background: #161c24;
-  border: 1px solid #455063;
-  color: #e7edf5;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  color: var(--ink);
   padding: 12px;
   font: inherit;
   font-size: 14px;
@@ -647,7 +631,7 @@
   margin-top: 15px;
 }
 .consultation-memo > p {
-  color: #91a0b3;
+  color: var(--muted);
   font-size: 11px;
   line-height: 1.8;
   margin-top: 12px;
@@ -657,11 +641,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid #2f3742;
+  border-top: 1px solid var(--line);
   gap: 15px;
 }
 .consultation-controls > span {
-  color: #8290a0;
+  color: var(--muted);
   font-size: 11px;
 }
 .consultation-controls > div {
@@ -672,8 +656,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #2b3440;
-  color: #bcc9d9;
+  background: #edf1f5;
+  color: var(--ink-subtle);
   border-radius: 7px;
   min-height: 44px;
   font-size: 12px;
@@ -684,10 +668,10 @@
   color: #304962;
 }
 .ai-workspace {
-  background: #111419;
-  color: #edf1f7;
-  border-color: #3c444f;
-  box-shadow: 0 22px 64px #0004;
+  background: var(--surface-soft);
+  color: var(--ink);
+  border-color: var(--line);
+  box-shadow: 0 20px 50px #22314512;
 }
 .quality-layout {
   display: grid;
@@ -704,7 +688,7 @@
   gap: 10px;
   font-size: 12px;
   padding-bottom: 15px;
-  color: #aab6c7;
+  color: var(--ink-subtle);
 }
 .workspace-study > span:last-child {
   color: #788492;
@@ -737,21 +721,21 @@
   position: absolute;
   right: 10px;
   bottom: 10px;
-  color: #c1d5bd;
+  color: #88b39a;
 }
 .workspace-footnote {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #7e8fa4;
+  color: var(--muted);
   padding-top: 15px;
   line-height: 1.8;
 }
 .quality-review {
-  background: #232a33;
+  background: var(--surface);
   padding: 34px 28px;
-  border-left: 1px solid #35404d;
+  border-left: 1px solid var(--line);
 }
 .quality-review h3 {
   font-size: 33px;
@@ -761,10 +745,10 @@
 }
 .quality-review > p {
   font-size: 13px;
-  color: #91a0b3;
+  color: var(--muted);
 }
 .quality-review b {
-  color: #d4e4f7;
+  color: var(--ink);
   margin-left: 9px;
   font-weight: 500;
 }
@@ -777,16 +761,16 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #adc3dc;
+  color: var(--ink-subtle);
 }
 .quality-checklist span {
   font-size: 13px;
-  color: #d4dce7;
+  color: var(--ink);
 }
 .quality-checklist strong {
   display: block;
   font-size: 11px;
-  color: #91a0b3;
+  color: var(--muted);
   font-weight: 400;
   margin-top: 7px;
   line-height: 1.6;
@@ -809,7 +793,7 @@
 }
 .report-reference {
   padding: 24px;
-  background: #12161c;
+  background: #edf1f5;
 }
 .report-reference > .image-frame {
   max-width: 350px;
@@ -831,7 +815,7 @@
 }
 .report-reference > p {
   font-size: 12px;
-  color: #8a98aa;
+  color: var(--muted);
   margin: 22px 0;
 }
 .report-paper {
@@ -917,11 +901,11 @@
   margin-bottom: 20px;
 }
 .comparison-toolbar > span {
-  color: #899bb1;
+  color: var(--muted);
   font-size: 16px;
 }
 .comparison-toolbar b {
-  color: #d8e5f6;
+  color: var(--ink);
   font-weight: 500;
   margin-left: 7px;
 }
@@ -937,8 +921,8 @@
   min-width: 44px;
   min-height: 44px;
   justify-content: center;
-  background: #28313d;
-  color: #a8bdd7;
+  background: #edf1f5;
+  color: var(--ink-subtle);
   border-radius: 7px;
   font-size: 12px;
   padding: 9px;
@@ -949,7 +933,7 @@
 }
 .comparison-zoom {
   font-size: 12px;
-  color: #8498b2;
+  color: var(--muted);
   min-width: 43px;
   text-align: center;
 }
@@ -960,9 +944,9 @@
 }
 .comparison-pane {
   padding: 15px;
-  border: 1px solid #303b49;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  background: #0b0f15;
+  background: var(--surface);
 }
 .comparison-image {
   overflow: hidden;
@@ -979,7 +963,7 @@
   justify-content: space-between;
   margin-top: 12px;
   font-size: 12px;
-  color: #7e94af;
+  color: var(--muted);
 }
 .comparison-frame-controls > div {
   display: flex;
@@ -990,8 +974,8 @@
   place-items: center;
   min-width: 44px;
   min-height: 44px;
-  background: #212b3a;
-  color: #b1c6e1;
+  background: #edf1f5;
+  color: var(--ink-subtle);
   border-radius: 6px;
 }
 .product-exhibit .exhibit-content {
@@ -1275,7 +1259,7 @@
   .quality-review {
     padding: 26px 22px;
     border-left: 0;
-    border-top: 1px solid #35404d;
+    border-top: 1px solid var(--line);
   }
   .quality-review h3 {
     font-size: 28px;
@@ -1372,5 +1356,52 @@
   .comparison-frame-controls button {
     min-width: 44px;
     min-height: 44px;
+  }
+}
+.regional-study-icon {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 10px;
+  background: #edf2f7;
+  color: #6b869e;
+  flex-shrink: 0;
+}
+.consultation-avatar {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #64829c;
+  background: #e9eff4;
+}
+.secondary .consultation-avatar {
+  color: #859580;
+  background: #edf1eb;
+}
+.consultation-avatar strong {
+  font-size: 18px;
+  margin-top: 24px;
+  color: var(--ink);
+}
+.consultation-avatar small {
+  font-size: 10px;
+  margin-top: 12px;
+  color: #8a98a5;
+}
+@media (max-width: 760px) {
+  .consultation-avatar > svg {
+    width: 40px;
+    height: 40px;
+  }
+  .consultation-avatar strong {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  .consultation-avatar small {
+    display: none;
   }
 }

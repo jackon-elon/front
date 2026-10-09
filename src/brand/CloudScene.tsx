@@ -12,8 +12,9 @@ import {
   Check,
   Users,
   MessageSquare,
+  FolderOpen,
+  UserRound,
 } from "lucide-react";
-import { media } from "./content";
 import { ImageFrame } from "./ImageFrame";
 import { DigitalFilm } from "./DigitalFilm";
 import { usePresentationMotion } from "./ui";
@@ -109,7 +110,9 @@ function RegionalCloud() {
           <h3>{selected.name}</h3>
           <p>{selected.detail}</p>
           <div className="regional-study">
-            <ImageFrame frame={2} />
+            <span className="regional-study-icon">
+              <FolderOpen size={27} />
+            </span>
             <div>
               <strong>共享影像资料</strong>
               <span>MR · 合成示意</span>
@@ -254,7 +257,11 @@ function RemoteConsultation() {
           ) : (
             <>
               <div className="consultation-participant">
-                <img src={media.care} alt="协作团队合成场景" loading="lazy" />
+                <div className="consultation-avatar">
+                  <UserRound size={63} strokeWidth={1.2} />
+                  <strong>专业阅片</strong>
+                  <small>协作角色 · 设计示意</small>
+                </div>
                 <span>
                   <i />
                   专业阅片团队
@@ -262,7 +269,11 @@ function RemoteConsultation() {
                 <Video size={17} />
               </div>
               <div className="consultation-participant secondary">
-                <img src={media.care} alt="医疗机构合成场景" loading="lazy" />
+                <div className="consultation-avatar">
+                  <Building2 size={63} strokeWidth={1.2} />
+                  <strong>医疗机构</strong>
+                  <small>协作角色 · 设计示意</small>
+                </div>
                 <span>
                   <i />
                   医疗机构

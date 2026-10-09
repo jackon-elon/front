@@ -1,15 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Plus,
-  FileText,
-  ArrowUpRight,
-} from "lucide-react";
-import { media } from "./content";
+import { ChevronLeft, ChevronRight, Plus, ArrowUpRight } from "lucide-react";
 import { Reveal, usePresentationMotion } from "./ui";
-import { ImageFrame } from "./ImageFrame";
-import { DigitalFilm } from "./DigitalFilm";
+import { HighlightArt } from "./HighlightArt";
 const cards = [
   {
     name: "区域影像云",
@@ -35,7 +27,7 @@ const cards = [
     type: "care",
     product: 0,
   },
-];
+] as const;
 export function ProductHighlights({
   onExplore,
 }: {
@@ -126,51 +118,7 @@ export function ProductHighlights({
               <p>{card.name}</p>
               <h3>{card.title}</h3>
             </div>
-            {card.type === "cloud" && (
-              <img
-                src={media.imagingHero}
-                loading="lazy"
-                alt="影像阅片工作站与移动影像的合成产品场景"
-              />
-            )}
-            {card.type === "film" && (
-              <>
-                <div className="highlight-film-sheet" aria-hidden="true">
-                  <FileText size={27} />
-                  <span>检查报告</span>
-                  <h4>
-                    影像与信息。
-                    <br />
-                    一起随行。
-                  </h4>
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <div className="highlight-phone">
-                  <DigitalFilm compact />
-                </div>
-              </>
-            )}
-            {card.type === "ai" && (
-              <div className="highlight-ai-art" aria-hidden="true">
-                <ImageFrame frame={2} />
-                <div>
-                  <FileText size={22} />
-                  <span>从影像，到信息。</span>
-                  <i />
-                  <i />
-                  <i />
-                </div>
-              </div>
-            )}
-            {card.type === "care" && (
-              <img
-                src={media.care}
-                loading="lazy"
-                alt="远程阅片协作的合成场景"
-              />
-            )}
+            <HighlightArt kind={card.type} />
             <button
               className="highlight-more"
               aria-label={`了解${card.name}`}

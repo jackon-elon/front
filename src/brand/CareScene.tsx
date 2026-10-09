@@ -25,30 +25,23 @@ export function CareScene({
         </h2>
         <p>影像的价值，在每一次真实的医疗协作中延伸。</p>
       </Reveal>
-      <div className="care-photograph">
-        <img
-          src={media.care}
-          width="1672"
-          height="941"
-          alt="医生在明亮的阅片空间协作，场景为视觉设计示意"
-          loading="lazy"
-        />
-        <div className="care-photo-shade" />
-        <div className="care-content wrap">
+      <div className="care-layout wrap">
+        <div className="care-content">
           <AnimatePresence mode="wait">
             <motion.div
               className="care-story"
               key={mode}
-              initial={reduce ? false : { opacity: 0, y: 15 }}
+              initial={reduce ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: reduce ? 0 : -15 }}
-              transition={{ duration: reduce ? 0 : 0.3 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduce ? 0 : 0.2 }}
             >
               <p>{current.name}</p>
               <h3>{current.headline}</h3>
               <p>{current.text}</p>
               <button onClick={onContact}>
-                一起探索合作 <ArrowUpRight size={19} />
+                一起探索合作
+                <ArrowUpRight size={19} />
               </button>
             </motion.div>
           </AnimatePresence>
@@ -63,14 +56,23 @@ export function CareScene({
             <span>协作场景 · 视觉示意</span>
           </div>
         </div>
-        <div
-          id="care-description"
-          className="sr-only"
-          role="tabpanel"
-          aria-label={current.name}
-        >
-          {current.text}
+        <div className="care-photograph">
+          <img
+            src={media.care}
+            width="1672"
+            height="941"
+            alt="医生在明亮的阅片空间协作，场景为视觉设计示意"
+            loading="lazy"
+          />
         </div>
+      </div>
+      <div
+        id="care-description"
+        className="sr-only"
+        role="tabpanel"
+        aria-label={current.name}
+      >
+        {current.text}
       </div>
     </section>
   );

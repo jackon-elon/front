@@ -9,7 +9,7 @@ export function CinemaHero() {
           width="1672"
           height="941"
           fetchPriority="high"
-          alt="深色阅片终端与移动影像界面的产品设计展示"
+          alt="白色摄影背景上的银色阅片终端，展示影像与报告界面"
         />
       </div>
       <div className="launch-copy wrap">

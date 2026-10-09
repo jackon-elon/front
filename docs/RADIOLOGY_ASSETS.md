@@ -1,8 +1,20 @@
 # 影像设计素材记录
 
-## 当前深色主视觉
+## 当前浅色主视觉
 
-使用内置 imagegen 生成；仅转换为 WebP，没有改动图像内容。发布路径：`public/media/imaging-workstation-hero.webp`，1672 × 941，95,340 字节。
+日期：2026-10-10。内置 imagegen 生成，使用 Pillow 仅转为 WebP，没有裁切、调色或改动图像内容。发布路径：public/media/imaging-workstation-light.webp，1672 × 941，42,910 字节。仅在首屏使用一次。
+
+原图：C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-6e46c002-7120-48c6-8264-cf6b52493d41.png。
+
+最终提示词：
+
+Use case: product-mockup. Asset type: wide 16:9 hero photograph for a refined light-themed medical imaging software brand website. Create premium realistic studio product photography of ONE generic professional silver desktop display on a seamless warm-white cyclorama and white tabletop. One display only, no phone, no extra screens. Front-facing slight three-quarter angle, fully contained inside frame, centered within middle 75 percent of image with soft natural grounding shadow, plenty of white surrounding space. Screen: beautifully restrained light-gray medical image review workspace, one modest grayscale healthy knee MRI view as a small local joint image in the center, a thin pale-blue navigation strip and simple light-gray report lines beside it, without readable labels. The medical image must occupy less than one-third of the screen, software chrome stays light. Brushed anodized silver enclosure, realistic subtle anti-reflective glass and slim graphite bezel, finely detailed stand. Daylight studio lighting, accurate material texture, exceptionally calm clinical sophistication. No head, skull, brain, organs, whole body, blood, pathology or horror. No floating glass, holograms, neon, gradients, dark scene, reflections of extra devices, brand logo, Apple products, readable text, letters, numbers or watermark. Design concept only, not actual patient imaging. Background corners and lower margin softly resolve to near white. High fidelity photographic composition.
+
+四项亮点改为代码图形，远程会诊使用不同的协作角色图形；既有医生照片仅在解决方案章节使用一次。影像图集只用于实际阅片演示，多个帧用于表达同一份资料的不同视图。旧深色主视觉归档在 docs/reference-assets/imaging-workstation-dark.webp，不再发布。
+
+## 历史深色主视觉
+
+使用内置 imagegen 生成；仅转换为 WebP，没有改动图像内容。归档路径：`docs/reference-assets/imaging-workstation-dark.webp`，1672 × 941，95,340 字节。
 
 原图：`C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-dd37bb5b-4289-4c0c-87b4-25173178f459.png`。
 
@@ -12,7 +24,7 @@
 Use case: ads-marketing. Asset type: wide 16:9 hero photograph for a refined medical imaging software brand website. Primary request: premium studio product photography of medical image viewing across two thin professional graphite displays and one small portrait mobile display. These are generic display devices showcasing software, not MRI scanners or branded hardware. Scene: seamless pure black studio cyclorama, black floor with only a faint soft reflection, exceptionally restrained lighting. Composition: one large landscape display facing camera at a subtle 12 degree oblique angle, one slim rear display in elegant opposing perspective showing a small multi-frame contact sheet, one portrait phone in the lower right as a secondary object. All objects fully within the image, clustered in the central 75 percent of width; upper half and edges naturally fall into pure black, generous negative space, no dramatic floating holograms. Screens show extremely refined dark grayscale radiology viewing interfaces with small grayscale knee MRI views, thin muted steel-blue dividing lines, an understated report sidebar represented only by fine gray horizontal rules. Medical images are local joint views, controlled size, never enlarged anatomy. Realistic anti-reflective glass, fine graphite metal texture, delicate silver rim light, precise beveled edges, coherent scale, luxurious materials, no harsh glow. Image-specific grayscale content provides the visual interest. No readable text, no letters, no numbers, no labels, no logo, no watermark, no brand identification, no Apple products. No brain, no skull, no head, no face, no whole body, no blood, no organs, no pathology, no gore, no neon, no purple gradient, no cloudy glass cards, no giant acrylic MRI panels. Synthetic design concept, not an actual patient study. Keep presentation calm, photographic and sophisticated.
 ```
 
-通用设备展示影像软件，不代表讯飞影联制造这些硬件。当前构建只发布这张主视觉、六帧合成关节图集和既有阅片空间场景图。
+通用设备展示影像软件，不代表讯飞影联制造这些硬件。当前构建只发布浅色主视觉、六帧合成关节图集和既有阅片空间场景图。
 
 日期：2026-10-09。使用 imagegen 生成两张全新图片，未复制参考网站素材。WebP 仅作格式压缩，未更改生成图的内容或构图。
 
