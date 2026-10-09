@@ -13,6 +13,7 @@ import {
 import { artworkKinds, type ArtworkKind } from "../data/artworks";
 import { useLab } from "../state/LabContext";
 import { useMotionPreference } from "../hooks/useMotionPreference";
+import { registerSceneInspector } from "../learning/sceneRegistry";
 
 export interface ArtCanvasHandle {
   setProgress: (progress: number) => void;
@@ -61,8 +62,13 @@ export const ArtCanvas = forwardRef<ArtCanvasHandle, Props>(function ArtCanvas(
       controller.configure(latest.current.settings, latest.current.reduced);
       controller.setAvailable(latest.current.available);
       controller.setProgress(progress.current);
+      const unregisterInspector = registerSceneInspector(
+        host.current,
+        controller.inspect,
+      );
       setState("ready");
       return () => {
+        unregisterInspector();
         scene.current = null;
         controller.dispose();
       };

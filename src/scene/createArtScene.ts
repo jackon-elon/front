@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 import { createSculpture, createExhibit } from "./sculptures";
+import type { SceneInspection } from "../learning/sceneRegistry";
+import { artworks } from "../data/artworks";
 import { artworkKinds, type ArtworkKind } from "../data/artworks";
 import { defaultSettings, type LabSettings } from "../state/model";
 
@@ -11,6 +13,7 @@ export interface SceneOptions {
   onLost: () => void;
 }
 export interface ArtScene {
+  inspect: (x: number, y: number) => SceneInspection | null;
   setProgress: (progress: number) => void;
   setKind: (kind: ArtworkKind) => void;
   configure: (settings: LabSettings, reducedMotion: boolean) => void;
@@ -260,7 +263,92 @@ export function createArtScene(
     dirty = false;
   };
   frame = requestAnimationFrame(tick);
+  const inspectionRay = new THREE.Raycaster();
+  const projected = new THREE.Vector3();
+  const particleBounds = new THREE.Sphere(new THREE.Vector3(), 1.35);
+  const inspect = (x: number, y: number): SceneInspection | null => {
+    if (disposed || lost) return null;
+    const view = container.getBoundingClientRect();
+    inspectionRay.setFromCamera(
+      new THREE.Vector2(
+        ((x - view.left) / width) * 2 - 1,
+        -(((y - view.top) / height) * 2 - 1),
+      ),
+      camera,
+    );
+    let picked: {
+      group: THREE.Group;
+      box: THREE.Box3;
+      distance: number;
+      title: string;
+      name: string;
+    } | null = null;
+    for (const group of [hero, ...exhibits]) {
+      if (!group.visible || group.scale.x < 0.01) continue;
+      const kind = group.userData.kind as ArtworkKind | undefined;
+      let box: THREE.Box3;
+      let distance: number;
+      if (kind === "particles") {
+        // GPU positions aren't DOM elements or CPU vertices. Use the field's
+        // volume for learning-mode picking rather than the seed geometry.
+        const sphere = particleBounds.clone().applyMatrix4(group.matrixWorld);
+        const hit = inspectionRay.ray.intersectSphere(
+          sphere,
+          new THREE.Vector3(),
+        );
+        if (!hit) continue;
+        box = sphere.getBoundingBox(new THREE.Box3());
+        distance = inspectionRay.ray.origin.distanceTo(hit);
+      } else {
+        const hit = inspectionRay.intersectObject(group, true)[0];
+        if (!hit) continue;
+        box = new THREE.Box3().setFromObject(group);
+        distance = hit.distance;
+      }
+      if (!picked || distance < picked.distance)
+        picked = {
+          group,
+          box,
+          distance,
+          title: kind
+            ? "3D 展品 · " + artworks.find((art) => art.kind === kind)!.title
+            : "首页 3D 雕塑",
+          name: kind ? "createExhibit('" + kind + "')" : "createSculpture()",
+        };
+    }
+    if (!picked) return null;
+    const bounds = {
+      left: Infinity,
+      top: Infinity,
+      right: -Infinity,
+      bottom: -Infinity,
+    };
+    for (const px of [picked.box.min.x, picked.box.max.x])
+      for (const py of [picked.box.min.y, picked.box.max.y])
+        for (const pz of [picked.box.min.z, picked.box.max.z]) {
+          projected.set(px, py, pz).project(camera);
+          const sx = view.left + ((projected.x + 1) / 2) * width;
+          const sy = view.top + ((1 - projected.y) / 2) * height;
+          bounds.left = Math.min(bounds.left, sx);
+          bounds.top = Math.min(bounds.top, sy);
+          bounds.right = Math.max(bounds.right, sx);
+          bounds.bottom = Math.max(bounds.bottom, sy);
+        }
+    return {
+      title: picked.title,
+      selector: "Three.js 对象 / " + picked.name,
+      source: "src/scene/sculptures.ts / src/scene/createArtScene.ts",
+      note: "形状、材质和粒子改 sculptures.ts；大小、位置、摄像机和滚动解构改 createArtScene.ts。蓝框是对象的投影范围。",
+      rect: {
+        left: bounds.left,
+        top: bounds.top,
+        width: bounds.right - bounds.left,
+        height: bounds.bottom - bounds.top,
+      },
+    };
+  };
   return {
+    inspect,
     setProgress: (next) => {
       progress = THREE.MathUtils.clamp(next, 0, 3);
       dirty = true;

@@ -7,6 +7,7 @@ const Home = lazy(() => import("./pages/HomeExperience"));
 const Works = lazy(() => import("./pages/WorksGallery"));
 const Experiment = lazy(() => import("./pages/ExperimentPage"));
 const About = lazy(() => import("./pages/AboutPage"));
+const RegionInspector = lazy(() => import("./learning/RegionInspector"));
 
 class PageBoundary extends Component<
   { children: ReactNode },
@@ -69,6 +70,9 @@ function Shell() {
         跳到主要内容
       </a>
       <Header />
+      <Suspense fallback={null}>
+        <RegionInspector />
+      </Suspense>
       <div id="main-content" tabIndex={-1}>
         <PageBoundary key={pathname}>
           <Suspense
