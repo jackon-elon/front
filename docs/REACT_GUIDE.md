@@ -1,16 +1,16 @@
-# 跟着真实官网学 React
+# 跟着产品官网阅读 React
 
-建议按组件和交互阅读，不必先逐行理解全部样式。
+按实际组件和交互阅读，不用先记语法清单。
 
-1. `content.ts` 与 `BrandSite.tsx`：认识数据配置、组件、props、列表与 key。修改产品配置并观察导航和展台标题联动。
-2. `CloudProduct.tsx` 与 `ui.tsx`：学习受控组件、useState、Tab 状态、键盘导航与 ARIA。为新场景配置节点。
-3. `ImagingAI.tsx` 与 `RadiologyFilm.tsx`：学习 range 受控表单、props、useId、缩略图状态与条件渲染。影像帧、窗宽、窗位和分界线各有独立状态；同一帧同步驱动原图与 Canvas，对照线同步驱动裁剪与可访问文字。继续阅读 useRef、图片加载 useEffect、requestAnimationFrame 清理和像素灰度映射。
-4. `MedicalAgent.tsx` / `workflow.ts`：学习 useReducer、useEffect 清理、定时器与过期回调。切换场景和重置不应被上一个任务的回调覆盖。
-5. `Modal.tsx`：学习 Portal、useRef、useId、事件监听清理、焦点管理与 Escape。
-6. `BrandSite.tsx` 与 `CareScene.tsx`：学习状态提升、方案 Tab、React.lazy / Suspense。产品展台按需加载，页脚与场景共用选择状态。
-7. `ImagingStory.tsx`：学习 useScroll / useTransform。MotionValue 驱动连续几何动画，React state 管理章节内容；useInView 与回调通知导航。
-8. `CinemaHero.tsx` / `ui.tsx`：学习组件封装、稳定排版、减少动态效果与静态替代布局。
-9. `narrative.css` / `site.css`：学习设计参数、Flex/Grid、sticky 场景、透视变换、图片裁剪、响应式和层叠顺序。
-10. `workflow.test.ts` 与 GitHub CI：学习状态生命周期测试。关注取消、重新开始、越界和迟到事件，而不是验证某个颜色常量。
+1. content.ts 与 BrandSite.tsx：数据配置、组件组合、props、列表 key。修改产品名称观察导航与详情联动。
+2. ProductSections.tsx：useState 与受控 Tab。同一个场景索引驱动画面、说明和节点。
+3. ImagingWorkstation.tsx 与 ImageFrame.tsx：可复用组件、可选 props、条件渲染、样式对象与图集复用。多期对比与六帧视图共享素材，不复制六张图片。
+4. ProductHighlights.tsx：useRef、原生滚动、requestAnimationFrame、ResizeObserver、事件与清理。按钮、拖动和键盘改变同一滚动区域，React 跟踪当前位置。
+5. ui.tsx：可访问 Tab、useId、roving tabindex、左右方向键和 Home/End；减少动态设置影响短转场而不改变阅读结构。
+6. MedicalAgent.tsx 与 workflow.ts：useReducer、定时器、取消与运行编号。场景切换和重置后，旧回调不能覆盖新流程。
+7. Modal.tsx：Portal、事件清理、焦点约束、Escape、滚动锁定与恢复。
+8. BrandSite.tsx 与 CareScene.tsx：状态提升、页脚联动、IntersectionObserver、React.lazy / Suspense。
+9. narrative.css 与 site.css：Flex/Grid、scroll-snap、sticky 导航、图片比例、响应式与层叠顺序。
+10. workflow.test.ts 与 CI：验证取消、重新开始、越界和迟到事件等行为。
 
-工程使用 React + TypeScript + Vite + Motion。没有 WebGL、患者数据、云端诊断或 Token 后端。项目的难度来自可操作的交互、跨组件状态、响应式和可访问性，而不是添加很多无关依赖。
+一个合格修改应该能说清「哪个组件、谁拥有状态、谁接收 props、视图如何更新」。复杂度服务产品体验，不必用需要长时间滚动的动画证明技术能力。

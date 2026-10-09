@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { media, solutions } from "./content";
-import { Reveal, Tabs } from "./ui";
+import { Reveal, Tabs, usePresentationMotion } from "./ui";
 
 export function CareScene({
   mode,
@@ -13,6 +13,7 @@ export function CareScene({
   onContact: () => void;
 }) {
   const current = solutions[mode];
+  const reduce = usePresentationMotion();
   return (
     <section className="care-scene" id="solutions" aria-labelledby="care-title">
       <Reveal className="care-heading wrap">
@@ -38,10 +39,10 @@ export function CareScene({
             <motion.div
               className="care-story"
               key={mode}
-              initial={{ opacity: 0, y: 15 }}
+              initial={reduce ? false : { opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, y: reduce ? 0 : -15 }}
+              transition={{ duration: reduce ? 0 : 0.3 }}
             >
               <p>{current.name}</p>
               <h3>{current.headline}</h3>

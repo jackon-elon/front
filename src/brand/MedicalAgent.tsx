@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowUp,
   Check,
@@ -10,14 +10,14 @@ import {
   Sparkles,
 } from "lucide-react";
 import { agentModes } from "./content";
-import { Reveal, Tabs } from "./ui";
+import { Reveal, Tabs, usePresentationMotion } from "./ui";
 import { initialWorkflow, workflowReducer } from "./workflow";
 export function MedicalAgent() {
   const [{ mode, step, playing, runId }, dispatch] = useReducer(
     workflowReducer,
     initialWorkflow,
   );
-  const reduce = useReducedMotion();
+  const reduce = usePresentationMotion();
   const current = agentModes[mode];
   useEffect(() => {
     if (!playing) return;

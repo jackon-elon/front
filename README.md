@@ -1,10 +1,10 @@
 # 讯飞影联 · 品牌官网设计概念
 
-以云影像、AI 辅助诊断与医疗 Agent 为主题的 React 宣传官网。视觉参考苹果产品页的产品摄影、字号层级、章节节奏和克制的交互；没有复制苹果的代码、商标或图片。
+以区域影像云、数字影像、医学影像 AI 与协作为主题的 React 宣传官网。参考苹果产品页的摄影构图、信息层级与交互节奏，使用自己的组件和合成素材。
 
 [在线预览](https://agentlens-front.proudash8.chatgpt.site/) · [源码](https://github.com/jackon-elon/front)
 
-这是品牌官网设计概念，非讯飞影联官方站点。医学影像、阅片空间与产品界面均为设计示意。没有真实患者信息、临床推理或咨询提交后端。
+这是非官方设计概念。产品方向参考公开资料；影像、界面及医疗 Agent 为设计演示，不接入患者信息或诊断服务。
 
 ## 运行
 
@@ -18,39 +18,35 @@ npm run build
 npm run preview
 ```
 
-开发地址 http://127.0.0.1:5173/。纯静态网站，部署 `dist/` 即可，无服务器/API/数据库要求。
+开发地址 http://127.0.0.1:5173/。部署 dist/ 即可，无服务器、API 或数据库要求。
 
-## 已实现的交互
+## 产品与交互
 
-- 双层导航、吸顶模糊背景、章节定位、移动端导航弹窗。
-- 居中大标题与银灰影像板，关节 MRI 主视觉有限移动，文字保持稳定。
-- 连续滚动旅程：影像板展开连接云端、收拢近看局部、转为协作报告；章节导航可直接定位。
-- 章节内容与吸顶导航联动，单个标题按阶段切换，避免多层文字重叠。
-- 产品展台使用 React.lazy / Suspense 按需加载；首页负责叙事，详情保留实际交互。
-- 全幅医疗协作场景与解决方案切换；系统减少动态效果设置生效，也可用 `?motion=off` 查看静态布局。
-- 云影像场景切换，展示内容、工作流节点与说明随受控 Tab 联动。
-- 六帧合成关节 MRI 切换、缩略图选择、窗宽窗位灰度映射、可拖动或键盘操作的对照分界线与一键重置。
-- 医疗 Agent 的可取消流程演示；切换场景或重置会取消旧流程，过期回调不会污染新场景。最终状态保留人工复核。
-- 解决方案切换，页脚场景链接会定位并切换到对应方案。
-- 公开联系方式弹窗，电话、邮箱、外部平台和复制按钮。
-- 弹窗 Portal、焦点约束、Escape 关闭与关闭后焦点恢复。
+- 深色阅片终端主视觉，独立且稳定的大标题，移动端重新布局。
+- 四项横向产品亮点，原生滚动、滚动吸附、左右按钮、键盘操作与边界状态。
+- 区域影像云、数字影像、远程会诊的受控 Tab，联动界面、说明和协作节点。
+- 质控、报告协同、多期对比点击即时切换；没有固定滚动轨道、扫描线或滑块。
+- 产品详情按需加载，独立的交互状态；首页可以直接浏览，无需先打开详情。
+- 医疗 Agent 四步演示，支持取消、重置、切换和重新开始；过期回调无法覆盖新流程，最后等待人工确认。
+- 全幅医疗协作场景，方案 Tab 与页脚入口共享选择状态。
+- 吸顶章节导航、移动菜单、联系信息复制、电话和邮件链接。
+- 弹窗 Portal、焦点约束、Escape 关闭与焦点恢复。
+- 系统减少动态效果设置与 ?motion=off；动效不会影响页面的阅读顺序。
 
-## 代码入口
+## 组件入口
 
-- `src/brand/BrandSite.tsx`：页面组合、导航、跨组件方案状态和按需加载弹窗。
-- `src/brand/CinemaHero.tsx`：居中首屏与产品主视觉。
-- `src/brand/ImagingStory.tsx`：连续滚动旅程、章节切换、影像板几何变换和静态替代布局。
-- `src/brand/RadiologyFilm.tsx`：可复用影像板、六帧图集定位、Canvas 灰度映射及图片加载生命周期。
-- `src/brand/CareScene.tsx`：全幅医疗协作场景与方案 Tab。
-- `src/brand/content.ts`：产品文案、场景配置、图片路径和公开资料链接。
-- `src/site.css`：基础设计参数、通用组件与产品展台样式。
-- `src/narrative.css`：首屏、滚动场景与医疗协作的布局及响应式规则。
-- `src/brand/CloudProduct.tsx`：云影像产品切换。
-- `src/brand/ImagingAI.tsx`：影像帧、窗宽、窗位和对照线的受控交互。
-- `src/brand/MedicalAgent.tsx` / `workflow.ts`：Agent 交互与状态迁移。
-- `src/brand/ui.tsx`：进入视口动画、键盘 Tab、自绘几何标识。
-- `src/components/Modal.tsx`：复用之前项目的通用弹窗能力。
+- src/brand/BrandSite.tsx：页面、章节导航、弹窗与跨组件状态。
+- src/brand/CinemaHero.tsx：产品摄影首屏。
+- src/brand/ProductHighlights.tsx：横向亮点与滚动生命周期。
+- src/brand/ProductSections.tsx：首页产品章节、受控场景切换。
+- src/brand/ImagingWorkstation.tsx：桌面工作台与移动数字影像界面。
+- src/brand/ImageFrame.tsx：合成图集的帧定位。
+- src/brand/CloudProduct.tsx / ImagingAI.tsx：按需加载的产品详情。
+- src/brand/MedicalAgent.tsx / workflow.ts：可取消的协作演示。
+- src/brand/CareScene.tsx：医疗场景及方案联动。
+- src/brand/content.ts：文案、场景、素材与资料链接。
+- src/brand/ui.tsx / src/components/Modal.tsx：视口动画、可访问 Tab 与弹窗。
+- src/site.css：通用组件、导航、Agent、页脚。
+- src/narrative.css：产品画面、亮点、工作台与响应式布局。
 
-旧 AgentLens 的页面、日志读取、图表、后端和无关依赖已移除；历史版本可以从 Git 记录查看。
-
-[UI 设计说明](docs/UI_DESIGN.md) · [项目定位图](docs/PROJECT_MAP.md) · [React 学习路线](docs/REACT_GUIDE.md) · [验证记录](docs/VERIFICATION.md)
+[UI 设计与资料来源](docs/UI_DESIGN.md) · [修改位置](docs/PROJECT_MAP.md) · [React 阅读路线](docs/REACT_GUIDE.md) · [验证记录](docs/VERIFICATION.md) · [素材记录](docs/RADIOLOGY_ASSETS.md)

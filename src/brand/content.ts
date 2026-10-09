@@ -1,28 +1,28 @@
 export const media = {
   care: `${import.meta.env.BASE_URL}media/reading-room.webp`,
-  imagingHero: `${import.meta.env.BASE_URL}media/joint-imaging-hero.webp`,
+  imagingHero: `${import.meta.env.BASE_URL}media/imaging-workstation-hero.webp`,
   jointAtlas: `${import.meta.env.BASE_URL}media/joint-mri-atlas.webp`,
 };
 export const products = [
   {
     id: "cloud",
-    label: "云影像",
+    label: "影像云",
     eyebrow: "CLOUD IMAGING",
     title: "一份影像。\n连接整个医疗网络。",
     summary: "从影像存储到远程协作，让医院、医生与患者之间的连接，更近一步。",
     detail:
-      "以影像云为连接基础，贯穿检查、影像访问与远程协作。区域影像云、院内影像管理与远程会诊，围绕同一条诊疗路径协同工作。",
-    features: ["区域影像共享", "院内影像管理", "远程阅片协作"],
+      "以影联网为连接入口，围绕区域影像云、电子胶片和远程会诊，让影像资料与专业服务连接。产品展台呈现这些业务方向的界面设计概念。",
+    features: ["区域影像云", "数字影像", "远程会诊"],
   },
   {
     id: "ai",
-    label: "AI 辅助诊断",
+    label: "影像智能",
     eyebrow: "INTELLIGENT IMAGING",
     title: "多一份洞察。\n看见更多细节。",
     summary: "把 AI 融入阅片过程，让影像信息更清晰，让专业判断更从容。",
     detail:
-      "围绕影像阅片场景，以 AI 辅助识别、信息组织与结构化表达，支持医生进一步复核。这里的标注与影像均为交互设计示意，不呈现临床诊断结论。",
-    features: ["影像辅助分析", "信息结构化", "医生复核"],
+      "结合公开的医学影像 AI 合作方向，探索质控、报告协同与影像对比的界面设计。具体能力以正式产品信息为准，展台不执行影像分析或诊断。",
+    features: ["质控场景", "报告协同", "多期对比"],
   },
   {
     id: "agent",
@@ -44,18 +44,49 @@ export const cloudModes = [
     focus: "区域协同网络",
   },
   {
-    name: "院内云 PACS",
-    title: "检查与阅片，顺畅衔接。",
-    description: "让影像归档、科室访问和报告管理，围绕院内工作流有序展开。",
-    nodes: ["影像归档", "临床科室", "报告中心"],
-    focus: "院内影像工作流",
+    name: "数字影像",
+    title: "影像与报告，随时相连。",
+    description: "从电子胶片到检查报告，让移动查阅和影像分享有更轻便的体验。",
+    nodes: ["电子胶片", "检查报告", "移动查阅"],
+    focus: "数字影像服务",
   },
   {
-    name: "远程协作",
+    name: "远程会诊",
     title: "专业支持，可以更近。",
     description: "把资料准备、阅片讨论与专家复核，连接为一次连续的协作。",
     nodes: ["资料准备", "协同阅片", "专家复核"],
     focus: "远程阅片协作",
+  },
+] as const;
+export const aiModes = [
+  {
+    name: "智能质控",
+    title: "让资料核对，更有条理。",
+    description:
+      "将检查序列、关联资料与复核事项放在一起，探索清晰的影像质控体验。",
+    panelTitle: "关注影像质量。",
+    panelIntro: "整理资料核对事项，为专业复核保留清晰的路径。",
+    items: ["检查序列关联", "检查资料核对", "专业质量复核"],
+    document: "质控复核清单",
+  },
+  {
+    name: "报告协同",
+    title: "影像与信息，在一处汇合。",
+    description: "把关联资料组织成可复核的报告框架，让医生继续完善所见与结论。",
+    panelTitle: "组织报告框架。",
+    panelIntro: "从资料到结构化信息，保留医生补充和确认的空间。",
+    items: ["检查资料整理", "报告框架组织", "医生补充确认"],
+    document: "待复核报告框架",
+  },
+  {
+    name: "多期对比",
+    title: "并列查看，让对照更直观。",
+    description:
+      "把参考视图与当前视图并列呈现，为医生进一步比对提供清晰的界面。",
+    panelTitle: "让对照更直观。",
+    panelIntro: "关联影像与参考资料，支持专业人员继续比对。",
+    items: ["参考影像关联", "对照资料整理", "医生比对复核"],
+    document: "影像对照资料索引",
   },
 ] as const;
 export const agentModes = [
@@ -107,5 +138,5 @@ export const solutions = [
 ] as const;
 export const sources = {
   platform: "https://www.imagingunion.com/iunet/login",
-  partnership: "https://shukun.net/news/8/335.html",
+  partnership: "https://cn.careverse.com/",
 };

@@ -116,20 +116,6 @@ button:focus:not(:focus-visible) {
   line-height: 1.5;
   letter-spacing: 0.04em;
 }
-.section-heading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 30px;
-  margin-bottom: 50px;
-}
-.section-heading h2 {
-  font-size: clamp(38px, 4.1vw, 58px);
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.045em;
-  margin-top: 13px;
-}
 .center-heading {
   text-align: center;
 }
@@ -150,11 +136,6 @@ button:focus:not(:focus-visible) {
 }
 .blue-text {
   color: #1373cc;
-}
-.silver-text {
-  background: linear-gradient(100deg, #c8def6, #fff 50%, #9aa8b9);
-  background-clip: text;
-  color: transparent;
 }
 .text-link {
   display: inline-flex;
@@ -341,203 +322,7 @@ button:focus:not(:focus-visible) {
   padding-bottom: 125px;
   background: white;
 }
-.cloud-stage {
-  max-width: 1180px;
-}
-.product-window {
-  border: 1px solid #d8dce3;
-  border-radius: 20px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow:
-    0 35px 80px #1c365716,
-    0 3px 7px #1c36570a;
-}
-.window-bar {
-  height: 48px;
-  background: #f7f8fa;
-  border-bottom: 1px solid #e2e5eb;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 0 22px;
-  color: #818b99;
-  font-size: 12px;
-}
-.window-dots {
-  display: flex;
-  gap: 6px;
-}
-.window-bar > span {
-  margin-left: 0;
-}
-.workspace-view {
-  display: flex;
-  min-height: 470px;
-}
-.workspace-sidebar {
-  width: 180px;
-  flex-shrink: 0;
-  padding: 30px 18px;
-  border-right: 1px solid #eef0f4;
-  position: relative;
-}
-.workspace-sidebar > div {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: #808898;
-  padding: 13px 10px;
-  border-radius: 8px;
-  margin-bottom: 5px;
-}
-.workspace-sidebar > div.workspace-logo {
-  color: #226ec8;
-  font-size: 16px;
-  padding-bottom: 28px;
-}
-.workspace-sidebar > div.selected {
-  color: #2471c8;
-  background: #edf5ff;
-}
-.workspace-sidebar > small {
-  position: absolute;
-  bottom: 25px;
-  left: 28px;
-  color: #a0a5ae;
-  font-size: 11px;
-}
-.workspace-main {
-  flex: 1;
-  min-width: 0;
-  padding: 30px;
-}
-.workspace-title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 22px;
-}
-.workspace-title div > span {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: #8792a3;
-}
-.workspace-title h3 {
-  font-size: 24px;
-  margin-top: 8px;
-  letter-spacing: -0.03em;
-}
-.workspace-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #758296;
-  font-size: 12px;
-}
-.workspace-status i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #3a9c83;
-}
-.workspace-content {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(180px, 1fr);
-  gap: 24px;
-  min-height: 320px;
-}
-.workspace-image {
-  overflow: hidden;
-  background: #eaf0f7;
-  border-radius: 11px;
-  position: relative;
-}
-.workspace-image .radiology-film {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-.image-label {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: #526c8d;
-  background: linear-gradient(transparent, #edf3fbf5);
-  padding: 24px 14px 13px;
-  font-size: 11px;
-}
-.image-label span {
-  margin-left: auto;
-  color: #7c8799;
-}
-.connection-list > p {
-  font-size: 13px;
-  color: #768195;
-  margin: 4px 0 14px;
-}
-.connection-node {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #f6f8fb;
-  border: 1px solid #e9edf4;
-  border-radius: 12px;
-  padding: 17px 15px;
-  margin-bottom: 10px;
-  position: relative;
-}
-.connection-node > span {
-  background: white;
-  color: #6d8fb6;
-  box-shadow: 0 2px 6px #2947730a;
-  border-radius: 10px;
-  height: 40px;
-  width: 40px;
-  display: grid;
-  place-items: center;
-}
-.connection-node > div {
-  flex: 1;
-}
-.connection-node small {
-  font-size: 10px;
-  color: #8395ac;
-  display: block;
-}
-.connection-node strong {
-  font-size: 14px;
-  font-weight: 500;
-  display: block;
-  margin-top: 3px;
-}
-.connection-node > svg {
-  color: #a0aab7;
-}
-.cloud-caption {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  margin: 40px 45px 0;
-}
-.cloud-caption h3 {
-  font-size: 27px;
-  letter-spacing: -0.04em;
-}
-.cloud-caption p {
-  font-size: 17px;
-  line-height: 1.8;
-  color: var(--muted);
-}
-/* AI comparison uses a real, keyboard operable range control. */
+/* Product detail surface; scene interactions are controlled by React tabs. */
 .ai-section {
   background: #08090b;
   color: #f5f5f7;
@@ -547,130 +332,6 @@ button:focus:not(:focus-visible) {
 }
 .ai-section .section-description {
   color: #9299a6;
-}
-.ai-stage {
-  max-width: 1180px;
-  margin-top: 60px;
-}
-.comparison-view {
-  position: relative;
-  aspect-ratio: 1.9;
-  border-radius: 24px;
-  border: 1px solid #2a2e35;
-  background: #060709;
-  overflow: hidden;
-}
-.comparison-view > .radiology-film,
-.comparison-overlay > .radiology-film {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-.comparison-overlay {
-  position: absolute;
-  inset: 0;
-}
-.comparison-tag {
-  position: absolute;
-  top: 22px;
-  font-size: 12px;
-  color: #ccd7e5;
-  z-index: 2;
-  background: #161b23ba;
-  border: 1px solid #464f5c66;
-  padding: 7px 12px;
-  border-radius: 7px;
-}
-.comparison-tag.left {
-  left: 22px;
-}
-.comparison-tag.right {
-  right: 22px;
-}
-.comparison-line {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: #e1effdcc;
-  pointer-events: none;
-  z-index: 3;
-  box-shadow: 0 0 20px #a1d9ff50;
-}
-.comparison-line > span {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translate(-50%, -50%);
-  height: 45px;
-  width: 45px;
-  border-radius: 50%;
-  color: #273645;
-  background: #e6f3ff;
-  box-shadow: 0 4px 15px #0004;
-  display: grid;
-  place-items: center;
-}
-.comparison-range {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  opacity: 0;
-  cursor: ew-resize;
-  z-index: 4;
-}
-.comparison-view:focus-within {
-  outline: 3px solid #399ffa;
-  outline-offset: 4px;
-}
-.comparison-hint {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  white-space: nowrap;
-  font-size: 12px;
-  color: #b3c2d3;
-  z-index: 2;
-  background: #101820cc;
-  border-radius: 25px;
-  padding: 9px 15px;
-  pointer-events: none;
-}
-.ai-feature-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 55px;
-  padding: 50px 30px 0;
-}
-.ai-feature-list svg {
-  color: #a8c8e9;
-  margin-bottom: 16px;
-}
-.ai-feature-list h3 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  letter-spacing: -0.03em;
-}
-.ai-feature-list p {
-  color: #959ba7;
-  font-size: 16px;
-  line-height: 1.8;
-}
-.visual-note {
-  font-size: 11px;
-  color: #787e88;
-  text-align: center;
-  margin-top: 42px;
 }
 /* Agent interaction is a cancellable, local scenario demonstration. */
 .agent-section {
@@ -1140,27 +801,12 @@ button:focus:not(:focus-visible) {
   border-bottom: 1px solid #e7e9ed;
   padding: 22px 0;
 }
-@media (min-width: 1800px) {
-}
 @media (max-width: 1100px) {
   .wrap {
     width: calc(100% - 72px);
   }
   .product-nav nav {
     gap: 20px;
-  }
-  .workspace-sidebar {
-    width: 145px;
-    padding-inline: 10px;
-  }
-  .workspace-main {
-    padding: 24px;
-  }
-  .workspace-content {
-    gap: 16px;
-  }
-  .workspace-sidebar > div {
-    font-size: 12px;
   }
   .agent-conversation {
     padding: 26px;
@@ -1170,10 +816,6 @@ button:focus:not(:focus-visible) {
   }
   .agent-product-brand div > span {
     font-size: 10px;
-  }
-  .ai-feature-list {
-    gap: 30px;
-    padding-inline: 15px;
   }
 }
 @media (max-width: 800px) {
@@ -1205,33 +847,11 @@ button:focus:not(:focus-visible) {
     font-size: 11px;
     padding: 8px 11px;
   }
-  .section-heading h2 {
-    font-size: 40px;
-  }
   .center-heading h2 {
     font-size: 44px;
   }
   .section-description {
     font-size: 18px;
-  }
-  .workspace-sidebar {
-    display: none;
-  }
-  .workspace-view {
-    min-height: 420px;
-  }
-  .workspace-main {
-    padding: 25px;
-  }
-  .cloud-caption {
-    margin-inline: 10px;
-    gap: 25px;
-  }
-  .cloud-caption h3 {
-    font-size: 24px;
-  }
-  .cloud-caption p {
-    font-size: 15px;
   }
   .agent-product {
     grid-template-columns: 1.45fr 1fr;
@@ -1268,19 +888,6 @@ button:focus:not(:focus-visible) {
   }
   .footer-note p {
     max-width: none;
-  }
-  .ai-feature-list {
-    gap: 20px;
-    padding-top: 35px;
-  }
-  .ai-feature-list h3 {
-    font-size: 17px;
-  }
-  .ai-feature-list p {
-    font-size: 14px;
-  }
-  .comparison-view {
-    aspect-ratio: 1.55;
   }
   .about-content > p:not(.eyebrow) {
     font-size: 19px;
@@ -1331,20 +938,6 @@ button:focus:not(:focus-visible) {
   .eyebrow {
     font-size: 14px;
   }
-  .section-heading {
-    gap: 18px;
-    align-items: flex-start;
-    flex-direction: column;
-    margin-bottom: 32px;
-  }
-  .section-heading h2 {
-    font-size: 34px;
-    line-height: 1.27;
-    margin-top: 12px;
-  }
-  .section-heading .text-link {
-    font-size: 14px;
-  }
   .center-heading h2 {
     font-size: clamp(29px, 7.8vw, 42px);
     line-height: 1.32;
@@ -1369,156 +962,6 @@ button:focus:not(:focus-visible) {
   .segmented-tabs button {
     font-size: 12px;
     padding: 11px 15px;
-  }
-  .product-window {
-    border-radius: 14px;
-  }
-  .window-bar {
-    height: 39px;
-    padding-inline: 13px;
-    font-size: 9px;
-  }
-  .window-dots i {
-    height: 5px;
-    width: 5px;
-  }
-  .workspace-main {
-    padding: 20px 15px;
-  }
-  .workspace-title {
-    margin-bottom: 16px;
-  }
-  .workspace-title h3 {
-    font-size: 20px;
-  }
-  .workspace-title div > span {
-    font-size: 8px;
-    letter-spacing: 0.1em;
-  }
-  .workspace-status {
-    font-size: 9px;
-  }
-  .workspace-content {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    min-height: 0;
-  }
-  .workspace-image {
-    height: 225px;
-  }
-  .workspace-view {
-    min-height: 0;
-  }
-  .connection-list {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-  .connection-list > p {
-    width: 100%;
-    font-size: 11px;
-    margin: 0 0 3px;
-  }
-  .connection-node {
-    flex: 1;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px 5px;
-    text-align: center;
-    margin: 0;
-    border-radius: 8px;
-  }
-  .connection-node > svg {
-    display: none;
-  }
-  .connection-node > span {
-    height: 30px;
-    width: 30px;
-    border-radius: 7px;
-  }
-  .connection-node > span > svg {
-    width: 17px;
-  }
-  .connection-node strong {
-    font-size: 11px;
-    white-space: nowrap;
-  }
-  .connection-node small {
-    font-size: 8px;
-  }
-  .image-label {
-    font-size: 9px;
-    padding: 18px 10px 10px;
-  }
-  .image-label span {
-    font-size: 8px;
-  }
-  .cloud-caption {
-    grid-template-columns: 1fr;
-    gap: 13px;
-    margin: 30px 5px 0;
-  }
-  .cloud-caption h3 {
-    font-size: 23px;
-  }
-  .cloud-caption p {
-    font-size: 15px;
-  }
-  .ai-stage {
-    margin-top: 35px;
-  }
-  .comparison-view {
-    aspect-ratio: 1.08;
-    border-radius: 18px;
-  }
-  .comparison-tag {
-    top: 15px;
-    font-size: 10px;
-    padding: 5px 8px;
-  }
-  .comparison-tag.left {
-    left: 15px;
-  }
-  .comparison-tag.right {
-    right: 15px;
-  }
-  .comparison-line > span {
-    width: 38px;
-    height: 38px;
-  }
-  .comparison-hint {
-    font-size: 10px;
-    bottom: 15px;
-    gap: 5px;
-    padding: 7px 10px;
-  }
-  .ai-feature-list {
-    grid-template-columns: 1fr;
-    gap: 25px;
-    padding: 32px 5px 0;
-  }
-  .ai-feature-list > div {
-    position: relative;
-    padding-left: 40px;
-  }
-  .ai-feature-list svg {
-    position: absolute;
-    left: 0;
-    top: 3px;
-    width: 23px;
-    margin: 0;
-  }
-  .ai-feature-list h3 {
-    font-size: 17px;
-    margin-bottom: 7px;
-  }
-  .ai-feature-list p {
-    font-size: 14px;
-  }
-  .visual-note {
-    font-size: 9px;
-    line-height: 1.8;
-    margin-top: 25px;
   }
   .agent-product {
     grid-template-columns: 1fr;

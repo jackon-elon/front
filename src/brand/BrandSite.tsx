@@ -14,7 +14,8 @@ import { Modal } from "../components/Modal";
 import { products, solutions, sources } from "./content";
 import { BrandMark, Reveal } from "./ui";
 import { CinemaHero } from "./CinemaHero";
-import { ImagingStory } from "./ImagingStory";
+import { ProductHighlights } from "./ProductHighlights";
+import { ProductSections } from "./ProductSections";
 import { CareScene } from "./CareScene";
 const CloudProduct = lazy(() =>
   import("./CloudProduct").then((module) => ({ default: module.CloudProduct })),
@@ -27,8 +28,8 @@ const MedicalAgent = lazy(() =>
 );
 
 const navigation = [
-  { id: "cloud", name: "云影像" },
-  { id: "ai", name: "AI 辅助诊断" },
+  { id: "cloud", name: "影像云" },
+  { id: "ai", name: "影像智能" },
   { id: "agent", name: "医疗 Agent" },
   { id: "solutions", name: "解决方案" },
 ];
@@ -102,7 +103,7 @@ export function BrandSite() {
       <div className="product-nav">
         <div className="wrap product-nav-inner">
           <a href="#home" className="product-nav-title">
-            影像，智联。
+            影像产品
           </a>
           <nav aria-label="产品章节">
             {navigation.map((item) => (
@@ -135,7 +136,8 @@ export function BrandSite() {
       </div>
       <main id="main">
         <CinemaHero />
-        <ImagingStory onExplore={setDetail} onActive={setActive} />
+        <ProductHighlights onExplore={setDetail} />
+        <ProductSections onExplore={setDetail} />
         <CareScene
           mode={solutionMode}
           onChange={setSolutionMode}
@@ -154,8 +156,9 @@ export function BrandSite() {
               <span>更连接人与人。</span>
             </h2>
             <p>
-              围绕云影像与医学影像
-              AI，连接医疗机构、影像资源与专业协作。让技术走进诊疗路径，让优质医疗服务走得更远。
+              以影联网为连接入口，围绕区域影像云、数字影像与远程医疗服务，
+              让检查资料、影像资源与专业协作相互连接。继续探索医学影像 AI
+              的应用。
             </p>
             <div className="about-links">
               <a

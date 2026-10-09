@@ -1,55 +1,37 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
-import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { usePresentationMotion } from "./ui";
+import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { media } from "./content";
-
 export function CinemaHero() {
-  const target = useRef<HTMLElement>(null);
-  const reduce = usePresentationMotion();
-  const { scrollYProgress } = useScroll({
-    target,
-    offset: ["start start", "end start"],
-  });
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.18]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, -90]);
   return (
-    <section
-      className="cinema-hero"
-      ref={target}
-      id="top"
-      aria-labelledby="cinema-title"
-    >
-      <div className="cinema-heading">
-        <p>讯飞影联</p>
-        <h1 id="cinema-title">
-          影像，
-          <br className="cinema-mobile-break" />
-          <span>不止于所见。</span>
-        </h1>
-        <p className="cinema-subtitle">连接云端。洞察细节。协同每一步。</p>
-        <a href="#cloud" className="cinema-start">
-          开启探索 <ArrowDown size={17} />
-        </a>
-      </div>
-      <motion.div
-        className="cinema-hero-image"
-        style={reduce ? {} : { scale, y }}
-      >
+    <section className="launch-hero" id="top" aria-labelledby="launch-title">
+      <div className="launch-art">
         <img
           src={media.imagingHero}
           width="1672"
           height="941"
           fetchPriority="high"
-          alt="明亮空间中，三块银灰影像板呈现关节 MRI 的多视图设计示意"
+          alt="深色阅片终端与移动影像界面的产品设计展示"
         />
-      </motion.div>
-      <div className="cinema-hero-foot">
-        <span>让影像，连接更好的医疗。</span>
-        <a href="#solutions">
-          看见真实的协作场景 <ArrowUpRight size={16} />
-        </a>
       </div>
+      <div className="launch-copy wrap">
+        <div>
+          <p className="launch-brand">讯飞影联</p>
+          <h1 id="launch-title">
+            影像相连。
+            <br />
+            <span>专业，更近。</span>
+          </h1>
+          <p className="launch-subtitle">区域影像云 · 数字影像 · 智能协作</p>
+        </div>
+        <div className="launch-actions">
+          <a href="#products">
+            探索产品 <ArrowUpRight size={20} />
+          </a>
+          <p>让影像资源，走进每一次协作。</p>
+        </div>
+      </div>
+      <a href="#products" className="launch-down" aria-label="浏览产品亮点">
+        <ChevronDown size={22} />
+      </a>
     </section>
   );
 }
