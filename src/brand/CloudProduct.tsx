@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { cloudModes } from "./content";
 import { Reveal, Tabs } from "./ui";
-import { WorkspaceArtwork } from "./WorkspaceArtwork";
+import { RadiologyFilm } from "./RadiologyFilm";
 export function CloudProduct() {
   const [mode, setMode] = useState(0);
   const current = cloudModes[mode];
@@ -97,9 +97,12 @@ export function CloudProduct() {
                   transition={{ duration: 0.25 }}
                 >
                   <div className="workspace-image">
-                    <WorkspaceArtwork label="云端资料与协作空间示意" />
+                    <RadiologyFilm
+                      frame={mode + 1}
+                      label="关节 MRI 合成影像预览"
+                    />
                     <div className="image-label">
-                      <Scan size={16} /> 云端资料空间 <span>概念示意</span>
+                      <Scan size={16} /> 影像序列预览 <span>合成素材</span>
                     </div>
                   </div>
                   <div className="connection-list">

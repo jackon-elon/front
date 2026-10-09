@@ -1,9 +1,18 @@
 import { useId, useState } from "react";
-import { ScanLine, Crosshair, ListChecks, MoveHorizontal } from "lucide-react";
+import {
+  ScanLine,
+  Crosshair,
+  ListChecks,
+  MoveHorizontal,
+  RotateCcw,
+} from "lucide-react";
 import { Reveal } from "./ui";
-import { WorkspaceArtwork } from "./WorkspaceArtwork";
+import { RadiologyFilm, FRAME_COUNT, frameStyle } from "./RadiologyFilm";
 export function ImagingAI() {
   const [reveal, setReveal] = useState(55);
+  const [frame, setFrame] = useState(2);
+  const [windowWidth, setWindowWidth] = useState(190);
+  const [windowLevel, setWindowLevel] = useState(112);
   const id = useId();
   return (
     <section
@@ -24,16 +33,22 @@ export function ImagingAI() {
       </Reveal>
       <Reveal className="ai-stage wrap">
         <div className="comparison-view">
-          <WorkspaceArtwork landscape label="云端资料的基础视图示意" />
+          <RadiologyFilm
+            frame={frame}
+            label={`关节 MR 合成影像，第 ${frame + 1} 帧`}
+          />
           <div
             className="comparison-overlay"
             style={{ clipPath: `inset(0 ${100 - reveal}% 0 0)` }}
             aria-hidden="true"
           >
-            <WorkspaceArtwork landscape annotated />
+            <RadiologyFilm
+              frame={frame}
+              windowing={{ width: windowWidth, level: windowLevel }}
+            />
           </div>
-          <span className="comparison-tag left">信息整理</span>
-          <span className="comparison-tag right">基础视图</span>
+          <span className="comparison-tag left">灰度调整</span>
+          <span className="comparison-tag right">原始影像</span>
           <div
             className="comparison-line"
             style={{ left: `${reveal}%` }}
@@ -51,12 +66,94 @@ export function ImagingAI() {
             max="92"
             value={reveal}
             onChange={(e) => setReveal(Number(e.target.value))}
-            aria-label="调整信息整理对照分界线"
-            aria-valuetext={`信息整理区域 ${reveal}%`}
+            aria-label="调整影像对照分界线"
+            aria-valuetext={`灰度调整区域 ${reveal}%`}
           />
           <label htmlFor={id} className="comparison-hint">
             <MoveHorizontal size={15} /> 拖动分界线，探索不同视图
           </label>
+        </div>
+        <div className="reading-controls">
+          <div className="reading-controls-heading">
+            <div>
+              <span>影像序列</span>
+              <strong>关节 MR · 六帧设计示意</strong>
+            </div>
+            <button
+              onClick={() => {
+                setFrame(2);
+                setWindowWidth(190);
+                setWindowLevel(112);
+                setReveal(55);
+              }}
+            >
+              <RotateCcw size={15} /> 重置视图
+            </button>
+          </div>
+          <div className="filmstrip" aria-label="选择影像帧">
+            {Array.from({ length: FRAME_COUNT }, (_, i) => (
+              <button
+                key={i}
+                aria-label={`查看第 ${i + 1} 帧影像`}
+                aria-pressed={frame === i}
+                onClick={() => setFrame(i)}
+              >
+                <span className="filmstrip-image" style={frameStyle(i)} />
+                <span>0{i + 1}</span>
+              </button>
+            ))}
+          </div>
+          <div className="reading-sliders">
+            <label htmlFor={`${id}-frame`}>
+              <span>
+                影像帧{" "}
+                <output>
+                  {frame + 1} / {FRAME_COUNT}
+                </output>
+              </span>
+              <input
+                id={`${id}-frame`}
+                type="range"
+                min="0"
+                max={FRAME_COUNT - 1}
+                value={frame}
+                onChange={(e) => setFrame(Number(e.target.value))}
+                aria-label="切换影像帧"
+                aria-valuetext={`第 ${frame + 1} 帧，共 ${FRAME_COUNT} 帧`}
+              />
+            </label>
+            <label htmlFor={`${id}-width`}>
+              <span>
+                窗宽 <output>{windowWidth}</output>
+              </span>
+              <input
+                id={`${id}-width`}
+                type="range"
+                min="64"
+                max="384"
+                value={windowWidth}
+                onChange={(e) => setWindowWidth(Number(e.target.value))}
+                aria-label="调整窗宽"
+              />
+            </label>
+            <label htmlFor={`${id}-level`}>
+              <span>
+                窗位 <output>{windowLevel}</output>
+              </span>
+              <input
+                id={`${id}-level`}
+                type="range"
+                min="64"
+                max="192"
+                value={windowLevel}
+                onChange={(e) => setWindowLevel(Number(e.target.value))}
+                aria-label="调整窗位"
+              />
+            </label>
+          </div>
+          <p className="reading-note">
+            拖动影像分界线，对照灰度变化。这里演示合成图片的阅片交互，数值不代表临床参数。
+          </p>
         </div>
         <div className="ai-feature-list">
           {[
@@ -84,7 +181,8 @@ export function ImagingAI() {
           ))}
         </div>
         <p className="visual-note">
-          资料关联与整理为交互设计示意，不呈现患者影像或临床结果。
+          关节影像为生成的展示素材。窗宽窗位是对 8 位图片的灰度映射，不是 DICOM
+          诊断或 AI 推理。
         </p>
       </Reveal>
     </section>

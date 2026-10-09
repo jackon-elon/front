@@ -456,7 +456,7 @@ button:focus:not(:focus-visible) {
   border-radius: 11px;
   position: relative;
 }
-.workspace-image .workspace-artwork {
+.workspace-image .radiology-film {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -560,8 +560,8 @@ button:focus:not(:focus-visible) {
   background: #060709;
   overflow: hidden;
 }
-.comparison-view > .workspace-artwork,
-.comparison-overlay > .workspace-artwork {
+.comparison-view > .radiology-film,
+.comparison-overlay > .radiology-film {
   position: absolute;
   inset: 0;
   width: 100%;

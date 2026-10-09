@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { usePresentationMotion } from "./ui";
-import { WorkspaceArtwork } from "./WorkspaceArtwork";
+import { media } from "./content";
 
 export function CinemaHero() {
   const target = useRef<HTMLElement>(null);
@@ -36,17 +36,13 @@ export function CinemaHero() {
         className="cinema-hero-image"
         style={reduce ? {} : { scale, y }}
       >
-        <div className="hero-workspace-deck">
-          <div className="hero-workspace-layer layer-back" aria-hidden="true" />
-          <div
-            className="hero-workspace-layer layer-middle"
-            aria-hidden="true"
-          />
-          <WorkspaceArtwork
-            landscape
-            label="云端资料与医疗协作空间的产品设计示意"
-          />
-        </div>
+        <img
+          src={media.imagingHero}
+          width="1672"
+          height="941"
+          fetchPriority="high"
+          alt="明亮空间中，三块银灰影像板呈现关节 MRI 的多视图设计示意"
+        />
       </motion.div>
       <div className="cinema-hero-foot">
         <span>让影像，连接更好的医疗。</span>
