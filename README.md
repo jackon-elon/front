@@ -1,78 +1,49 @@
-# AgentLens
+# 讯飞影联 · 品牌官网设计概念
 
-围绕 Agent 工作记录构建的 React 交互作品。统一的石墨色界面包括材质唱片、可点击用量轨迹、可拖动叠放展册和请求回放；深入后可以检索、标注并分析 Codex、Claude Code 与 WorkBuddy 的用量变化。
+以云影像、AI 辅助诊断与医疗 Agent 为主题的 React 宣传官网。视觉参考苹果产品页的产品摄影、字号层级、章节节奏和克制的交互；没有复制苹果的代码、商标或图片。
 
-[在线演示](https://agentlens-front.proudash8.chatgpt.site) · [UI 设计](docs/UI_DESIGN.md) · [结构地图](docs/PROJECT_MAP.md)
+[在线预览](https://agentlens-front.proudash8.chatgpt.site/) · [源码](https://github.com/jackon-elon/front)
 
-![AgentLens interactive experience](docs/images/overview.jpg)
-
-在线演示使用 **180 个确定性虚构会话**。本地模式通过轻量 Node API 只读取统计元数据；没有内置真实对话或认证信息。
+这是品牌官网设计概念，非讯飞影联官方站点。医学影像、阅片空间与产品界面均为设计示意。没有真实患者信息、临床推理或咨询提交后端。
 
 ## 运行
 
-需要 Node.js 22.12+。
+需要 Node.js 22.12 或以上。
 
-```sh
-npm install
-npm run dev:all
-```
-
-打开 http://127.0.0.1:5173/ 。本地首次打开默认读取本机真实日志；无日志时显示空状态，连接失败时显示错误，不自动用演示数据替代。顶部可以主动选择演示或导入模式，选择会保存。公开在线站点默认演示模式，不能读取访问者电脑文件。只体验前端可运行 `npm run dev` 后主动选择演示模式。
-
-```sh
+```bash
+npm ci
+npm run dev
 npm test
-npm run typecheck
 npm run build
+npm run preview
 ```
 
-## 产品功能
+开发地址 http://127.0.0.1:5173/。纯静态网站，部署 `dist/` 即可，无服务器/API/数据库要求。
 
-- 视觉探索：固定首屏中的滚动编排、指针倾斜、由请求记录生成的 SVG 唱片；点击唱片扇区定位真实请求，旋转后的坐标通过 SVG 矩阵还原。
-- 会话展册：拖动 / 方向键 / 按钮切换，叠放与横向展开采用弹簧布局；搜索、来源筛选、详情与对比联动。实时重排保持当前 session ID。
-- 请求回放：播放 / 暂停、键盘滑块逐条检查输入、输出和缓存；柱图与首屏指针使用相同选中请求。
-- 全屏排版导航、路由遮幅转场；手机重新编排场景，支持系统与应用减弱动画。
-- 实时请求脉冲：15 分钟 / 1 小时 / 6 小时范围，点击时间柱联动会话；画面暂停而采集继续，恢复时查看待更新数量。
-- 叠放会话卡片与可展开列表切换；会话请求轨迹；指针 / 键盘调整面板宽度并持久化；真实新增请求数量与最近检查时间；时间、项目、Agent 联动统计。
-- 可排序、可搜索的虚拟会话列表；URL 筛选；收藏、标签备注、保存视图与 CSV 导出。
-- 会话详情侧栏；输入上下文走势；虚拟请求明细；单次请求的输入、输出、缓存、推理与上限口径。
-- 基准变化分析：同项目最近两次配对、手动指定基准、三个会话拖动 / 键盘排序；按进度或请求序号对齐；平均用量、缓存百分点和覆盖率、上下文峰值的差值；CSV 导出，缺失指标保留未知。
-- 浏览器 Worker 文件解析与规范校验；预览后导入 IndexedDB；演示 / 本地 / 导入工作区切换。
-- Ctrl / Cmd K 搜索跳转；路由懒加载、错误边界、键盘焦点约束、动画减弱与移动布局。
-- 开发模式 F8 区域定位，显示组件与样式位置，方便和 AI 描述具体修改。
+## 已实现的交互
 
-## 前端实现
+- 双层导航、吸顶模糊背景、章节定位、移动端导航弹窗。
+- 首屏影像在画框内随滚动轻微移动，文字不横向移动；系统减少动态效果设置自动生效。
+- 支持触摸/触控板的吸附卡片轨道、上一张/下一张与位置指示、产品详情弹窗。
+- 云影像场景切换，展示内容、工作流节点与说明随受控 Tab 联动。
+- 可拖动、可用键盘操作的 AI 影像对照分界线。
+- 医疗 Agent 的可取消流程演示；切换场景或重置会取消旧流程，过期回调不会污染新场景。最终状态保留人工复核。
+- 解决方案切换，页脚场景链接会定位并切换到对应方案。
+- 公开联系方式弹窗，电话、邮箱、外部平台和复制按钮。
+- 弹窗 Portal、焦点约束、Escape 关闭与关闭后焦点恢复。
 
-React 19、TypeScript strict、React Router 7、TanStack Query 5、Table 8 / Virtual 3、Motion、Recharts、React Hook Form 与 Zod。
+## 代码入口
 
-服务端状态由 Query 管理；筛选在 URL；表单和视图状态留在组件；全局工作区和对比选择在 Context。聚合与文件解析使用独立 Worker，并处理过期响应和进程清理。请求列表与会话表分别虚拟化，路由和重型图表按需加载。标签备注支持乐观更新、错误回滚和持久化。
+- `src/brand/BrandSite.tsx`：网站组合、首屏、导航、解决方案和弹窗状态。
+- `src/brand/content.ts`：产品文案、场景配置、图片路径和公开资料链接。
+- `src/site.css`：全站设计参数、组件样式及 1100/800/600 px 响应式规则。
+- `src/brand/Highlights.tsx`：卡片轨道与详情入口。
+- `src/brand/CloudProduct.tsx`：云影像产品切换。
+- `src/brand/ImagingAI.tsx`：影像对照交互。
+- `src/brand/MedicalAgent.tsx` / `workflow.ts`：Agent 交互与状态迁移。
+- `src/brand/ui.tsx`：进入视口动画、键盘 Tab、自绘几何标识。
+- `src/components/Modal.tsx`：复用之前项目的通用弹窗能力。
 
-UI、数据驱动 SVG 时间线、布局与交互在本仓库实现；图表、图标及动效基础使用开源库。设计说明见 [UI design](docs/UI_DESIGN.md)，结构见 [项目地图](docs/PROJECT_MAP.md)，后续读代码路线见 [React walkthrough](docs/REACT_GUIDE.md)。
+旧 AgentLens 的页面、日志读取、图表、后端和无关依赖已移除；历史版本可以从 Git 记录查看。
 
-## 轻量本地后端
-
-Node 内置 HTTP、文件系统、Readline 流式解析和 SSE，不依赖数据库。只监听 127.0.0.1:5174，Vite 代理 `/api`。扫描使用文件 mtime / size 缓存；每 3 秒检查日志，变化时推送更新，没有变化也回报检查时间。SSE 断线自动重连，期间前端每 5 秒尝试读取快照。这里的“实时”指日志写入后自动更新，不是捕获模型尚未落盘的逐 token 生成。备注保存在被 git 忽略的 `.agentlens/annotations.json`，通过串行队列与临时文件 rename 原子保存。
-
-可在启动前设置：
-
-- `CODEX_HOME`：默认 `~/.codex`，读取 sessions 和 archived_sessions。
-- `CLAUDE_CONFIG_DIR`：默认 `~/.claude`，读取 projects。
-- `WORKBUDDY_HOME`：默认 `~/.workbuddy`，读取 traces。
-- `AGENTLENS_STORE`：备注文件路径。
-
-如修改 API 端口，同时修改 Vite proxy。目录没有日志时可以在数据源页面导入文件；在线演示的本地模式不能访问访客电脑，真实连接应在本机运行完整项目。
-
-## 数据定义与限制
-
-输入统一包含缓存读取与写入；Claude 原始普通输入需额外加缓存。推理输出若有，已包含在输出中。缓存命中率的分母只包含缓存字段可知的输入。上下文占用是单次输入 / 该次日志记录的上限，绝不是整场会话的累计用量。
-
-Codex 优先使用归属当前 thread 的 response ID 记录，去重显式与嵌入的压缩记录；旧版主会话回退到累计快照差分。旧版子 Agent 没有明确归属时不计入，避免复制历史带来重复消耗。不同版本日志可能缺字段，统计不是账单。
-
-Claude 按 message ID 合并重复 / 流式片段。WorkBuddy 按 trace 和 sessionId 汇总，利用 totalTokens 对账识别缓存独立输入；无法对账的异常缓存值不计算命中率。未连接 WorkBuddy 会话数据库，因此标题、用户消息、工具数和上下文上限保留未知。请求数在 WorkBuddy 是 trace 数，不一定等于底层模型调用数。
-
-本机 Codex 已做实际读取验证；Claude Code 和 WorkBuddy 做了合成格式测试，本机没有它们的日志，尚未做安装实例联调。项目名和使用时间也属于私人元数据；导出和分享请自行选择范围。
-
-适配口径参考 [ccusage Codex 文档](https://github.com/ccusage/ccusage/blob/main/docs/guide/codex/index.md)、[Claude Code monitoring](https://code.claude.com/docs/en/monitoring-usage)、[WorkBuddy usage data guide](https://github.com/clancy-feng/workbuddy-usage-status/blob/main/DATA-GUIDE.md)。代码为独立实现；没有复制这些项目的源代码或数据。
-
-验证范围见 [verification](docs/VERIFICATION.md)。
-
-MIT licensed. 第三方库保留各自许可。
+[UI 设计说明](docs/UI_DESIGN.md) · [项目定位图](docs/PROJECT_MAP.md) · [React 学习路线](docs/REACT_GUIDE.md) · [验证记录](docs/VERIFICATION.md)

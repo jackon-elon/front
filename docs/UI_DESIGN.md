@@ -1,36 +1,36 @@
-# AgentLens UI design
+# UI 设计与素材
 
-这是以真实 Agent 工作记录为内容的 React 交互作品。视觉探索、会话库、详情、变化分析和实时工作台共享同一数据源和视觉系统。
+## 视觉方向
 
-## 参考与独立实现
+采用苹果产品页常见的视觉组织方式：沉浸式产品主图、大字号标题、单一核心观点、宽幅产品亮点、功能场景切换与详情弹窗。所有代码与素材均为本项目实现，没有复制 Apple 页面源码或素材。
 
-构图参考 [Lusion](https://lusion.co/) 的视觉主角和 [Basement Studio](https://basement.studio/) 的页面节奏。功能参考 [ccusage 的会话统计](https://ccusage.com/guide/all-reports) 与 [Langfuse 的会话回放](https://langfuse.com/docs/observability/features/sessions)。本仓库独立实现页面、SVG 材质、指标计算与交互；未复制这些网站的代码、图片或数据。
+颜色以石墨黑、暖白、浅灰和医疗蓝为主。主标题桌面约 60–90 px，章节标题约 44–68 px，正文主要为 17–21 px。手机端重新排版，而不是整体缩小。字体采用设备系统字体，避免外部字体请求影响首屏。
 
-## 统一视觉系统
+黑色首屏呈现医学影像的切片质感；浅色云影像章节呈现协作产品；黑色 AI 章节提供影像对照；浅色 Agent 章节提供明确的协同路径；温暖的阅片空间平衡技术视觉。
 
-- 所有路由使用石墨色表面、暖白文字、铜色重点和少量绿灰色数据。语义颜色集中在 src/styles.css 顶部，外壳和首页布局在 src/experience.css，变化分析在 src/change.css。
-- 1280px 首屏标题约 83px；1920px 上限 118px。衬线斜体与无衬线配合，正文 18px / 大屏 21px。标题不做横向平移，页面自然滚动，唱片只做有限角度旋转及鼠标倾斜。
-- 桌面首屏两列：标题与整体用量，唱片与当前请求说明；下方整行可点击的真实用量轨迹。减少孤立主视觉和过长的空白滚动段。
-- 唱片由多层 SVG 制作：深色盘体、薄金属边缘、细密沟槽、斜向反光、轻微颗粒和铜色压印标签。外圈长度编码最多 64 个请求桶的输入加输出，不使用下载模型或随机粒子。缩略图禁用颗粒滤镜。
-- 收藏馆的前景卡片使用带反光边缘的深色封套；总量标签采用暖纸色。保留展开、叠放、拖动、键盘切换和有限渲染窗口。
-- 结尾取消整屏红色巨字，改为实时观测、记录检索、变化分析三个可操作入口。导航与会话列表、图表、详情侧栏使用同一表面和字号层次。
-- 手机自然单列，标题约 45px，唱片与说明位于正文后。Agent 筛选两列，表格仅内部横向滚动；全屏菜单保留焦点约束与 Escape。
+动画服务于内容与操作：首屏仅图片有限移动；卡片使用原生滚动吸附；Tab 内容使用短转场；弹窗使用原有 Portal 和焦点逻辑；Agent 以可取消状态迁移驱动进度。支持 prefers-reduced-motion。
 
-## 操作语义
+## 生成素材
 
-1. 首屏：用量轨迹按钮跳转到对应原始请求；长会话聚合最多 48 段，显示请求范围和桶内用量。唱片点击使用 SVG inverse matrix，中心标签和盘外不响应。
-2. 收藏馆：叠放最多 3 张，展开最多 5 张，首尾循环时选中会话保持居中。标题、项目、Agent 筛选同步改变用量、唱片和回放。
-3. 回放：明确标注“模型请求 N / 共 M 次”，而不是无说明分数。显示当前请求时间、模型、输入、输出和缓存。缓存读取属于输入，未知数据不补零。切换会话卸载旧计时器。
-4. 变化分析：选择项目后，一键加载最近两段，较早记录作为基准。可改基准、增加第三段、查看详情、拖动或键盘排序、导出真实统计 CSV。
-5. 差值：区分累计规模和平均每次输入 / 输出。缓存命中为按已知输入加权的比率，变化显示百分点，旁边展示字段覆盖。零基准只展示绝对变化；未知值保留未知。
-6. 上下文图：可按请求序号或各自会话进度对齐，按进度读取 101 个位置对应的真实请求，不宣称每个峰值都在抽样图上。每段会话独立颜色；上下文上限未知时比例图留空。
+使用内置 imagegen 生成，原图保留在 Codex generated_images 目录。项目使用 WebP 压缩版，保持画面内容：
 
-## React 与交互边界
+- `public/media/imaging-glass.webp`：1672 × 941，约 139 KB。玻璃医学影像切片模型。
+- `public/media/reading-room.webp`：1672 × 941，约 128 KB。医生阅片协作空间。
 
-Experience 持有筛选、session ID 和请求游标；SessionGallery、SessionPulse 和 SignalRecord 接收数据与稳定回调。业务指标放 shared 层，统计结果和 SVG 几何使用 memo / useMemo。服务端快照由 Query 管理；可分享的列表筛选与详情在 URL；对比集合在 Context 并持久化。
+主视觉提示词：
 
-Motion 负责卡片弹簧、滚动旋转、路由转场。系统或应用减弱动画关闭装饰变换，核心点击、检索、回放仍可用。Ctrl / Cmd K、滑块原生键盘、全屏菜单及详情的 Portal / 焦点恢复保留。开发模式 F8 显示组件、样式和选择器。
+> Create a premium photorealistic CGI medical technology product visual for a Chinese healthcare cloud imaging brand website, landscape 16:9. On a seamless very dark charcoal black background, an exquisitely detailed translucent frosted-glass human head and upper neck in three-quarter profile facing left, with a scientifically inspired three dimensional brain visible inside. The head is built out of many precise, very thin parallel MRI / CT volume slices, with a few elegant glass slice panels floating slightly separated to its right. Position the sculpture in the center-right of the composition; the left third mostly quiet black negative space. Clear cool silver anatomical structures, soft icy blue light passing through the glass, subtle warm gray reflections, dense realistic fine material detail, polished edges, physically realistic subsurface scattering. High-end studio product photography, like an Apple hardware campaign photographed as a sculptural object; calm, powerful, sophisticated, extremely clean art direction. The whole sculpture well within frame, no cropping of head. No text, no numbers, no logos, no UI, no chart, no neon beams, no particles, no network nodes, no purple, no sci-fi HUD, no stars. Illustration only, not an actual patient scan.
 
-## 数据与验证
+协作空间提示词：
 
-本机页面读取轻量 Node API，通过 SSE 更新；公开站点明确使用虚构演示。当前没有读取到的来源显示缺失，未使用模拟数据冒充真实日志。截图只包含演示记录。桌面 1280 / 1920 与手机 390px 的浏览器验收及计算边界测试见 VERIFICATION.md。
+> Premium architectural editorial photograph for a sophisticated healthcare technology company website, very wide landscape 16:9 composition. A beautiful contemporary hospital radiology consultation space in China, warm pale oak, matte warm white walls, floor to ceiling glass partitions, diffuse natural light from large windows. Two Chinese medical specialists in clean white coats seen mostly from behind, quietly collaborating at a long minimal workstation. Large dark diagnostic monitors displaying subtle grayscale medical scan imagery WITHOUT readable text. The people are small within the spacious architecture, the right half dominated by window light and layered glass. Refined restrained hospital architecture, realistic material textures, soft shadows, architectural magazine photography, premium Apple product lifestyle photograph quality, quiet humane atmosphere. No camera-facing portrait, no exaggerated futuristic holograms, no blue neon, no dramatic emergency, no robots, no logos, no visible text, no watermark. Beautiful natural desaturated warm color grading, photographed with 35mm lens.
+
+几何标识为本项目绘制的概念标识，不是官方 Logo。产品界面以 HTML/CSS 实现，可访问性与交互状态由 React 管理。
+
+## 公开内容来源
+
+- [影联网公开平台](https://www.imagingunion.com/iunet/login)：平台业务定位、服务协议与客服热线、联系邮箱。
+- [数坤科技官方网站](https://shukun.net/)：2026-06-04 的讯飞影联区域影像云与医学影像 AI 合作动态。
+- [合作动态入口](https://shukun.net/news/8/335.html)：官方新闻入口会跳转到官方微信文章。
+
+未添加医院客户 Logo、医疗性能数字、诊断准确率、资质证书或虚构临床案例。医疗 Agent 按用户指定方向设计为协作场景概念，不声称已正式发布某个产品。

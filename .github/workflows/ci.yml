@@ -1,4 +1,4 @@
-name: Validate AgentLens
+name: Validate imaging brand site
 on:
   push:
     branches: [main]

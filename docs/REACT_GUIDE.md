@@ -1,23 +1,15 @@
-# 从真实功能理解 React
+# 跟着真实官网学 React
 
-这个文档用于后续一起读代码；产品界面本身是围绕真实 Agent 工作记录构建的交互作品。
+建议按组件和交互阅读，不必先逐行理解全部样式。
 
-新版首页可以先跟踪「切换唱片 → 保留会话 ID → 重算请求图形 → 拖动回放滑块 → 柱图和首屏指针同步」。分别看局部 state、派生数据、useMemo、effect 清理、受控 range、MotionValue 和声明式动画。随后再读下面的查询与数据处理流程。
+1. `content.ts` 与 `Highlights.tsx`：认识数据配置、组件、props、列表与 key。修改产品文案并观察卡片和详情联动。
+2. `CloudProduct.tsx` 与 `ui.tsx`：学习受控组件、useState、Tab 状态、键盘导航与 ARIA。为新场景配置节点。
+3. `ImagingAI.tsx`：学习 range 表单、onChange 与状态映射到 CSS。分界线、图层裁剪、可访问文字共用一个状态值。
+4. `MedicalAgent.tsx` / `workflow.ts`：学习 useReducer、useEffect 清理、定时器与过期回调。切换场景和重置不应被上一个任务的回调覆盖。
+5. `Modal.tsx`：学习 Portal、useRef、useId、事件监听清理、焦点管理与 Escape。
+6. `BrandSite.tsx`：学习状态提升。页脚的方案选择与解决方案 Tab 共用状态，避免两个位置各自维护互不一致的数据。
+7. `Reveal` 和 `Hero`：学习组件封装、视口监听、Motion 的滚动值、有限变换与减少动态效果适配。
+8. `site.css`：学习设计参数、Flex/Grid、图片裁剪、原生滚动吸附、吸顶导航、响应式和层叠顺序。
+9. `workflow.test.ts` 与 GitHub CI：学习状态生命周期测试。关注取消、重新开始、越界和迟到事件，而不是验证某个颜色常量。
 
-首页组件边界：`Experience` 持有筛选和选中会话，`SessionGallery` 接收 props 展示有限唱片窗口，`RequestPlayback` 管理播放计时器，`SignalRecord` 生成 SVG。会话总量和图形用 useMemo 缓存；稳定的回调配合 memo，减少播放逐帧推进时无关图形的重算。回放组件以会话 ID 为 key，切换会话时卸载旧计时器。可以用这些实际变化理解 props、组件身份、派生状态与 effect 清理，而不是到处加缓存。
-
-新首屏还可以跟踪「点击 SessionPulse 请求桶 → 父组件更新 session ID 与游标 → 唱片标记、当前请求说明、回放柱图同时变化」。轨迹使用 shared 层的分桶函数，不在 JSX 中重新统计。标题不参与横向运动，唱片的 MotionValue 更新不需要整个 React 树逐帧 setState。
-
-变化分析从「选择项目 → 配对最近两次 → 替换 Context 对比集合 → 指定基准 → 派生差值 → 切换图表进度对齐」阅读。关注列表身份、未知值和零基准、相对变化与百分点的区别。图表使用安全的 series key，原始 session ID 不占用坐标字段；业务计算在 shared/comparison.ts，有加权缓存、空记录、配对和对齐边界测试。
-
-建议第一轮只跟踪一个操作：「点击会话标题 → URL 出现 session → 详情侧栏读取同一份查询结果 → 点击收藏 → 乐观更新 → API 确认或回滚」。涉及组件、props、state、Context、路由、Portal 和服务端状态，能先建立完整的逻辑图。
-
-第二轮看搜索：受控输入改变 URL，`useDeferredValue` 保持输入响应，TanStack Table 计算过滤与排序结果，Virtualizer 只渲染视口和 overscan 的行。分别理解「数据多」和「DOM 多」带来的成本。
-
-第三轮看图表联动：筛选条件改变 → Worker 执行聚合 → 序号检查丢弃旧结果 → 总览重绘。跟踪每个状态的归属，以及为什么不能每次 render 创建 Worker。
-
-第四轮看导入与数据边界：文件在 Worker 内解析 → Zod 校验 → 预览 → IndexedDB 事务保存 → Query 重新读取。理解 TypeScript 类型检查和运行时校验各自解决什么问题。
-
-第五轮看本地实时更新：Node 扫描 mtime / size 变化 → 请求元数据归一 → SSE 发布 revision → Query invalidation → UI 更新。接着看取消、清理、错误状态和重试，最后才读适配器的日志差异。
-
-阅读时可以先不逐行学习语法。每次说明「数据从哪来、状态在哪里、谁触发变化、哪些组件重新渲染、失败后怎么办」，再让 AI 指出对应实现。微调时用 F8 定位组件和选择器；全局字体或间距改 CSS，业务流程改页面组件，字段含义改 shared 层。
+工程使用 React + TypeScript + Vite + Motion。没有 WebGL、患者数据、云端诊断或 Token 后端。项目的难度来自可操作的交互、跨组件状态、响应式和可访问性，而不是添加很多无关依赖。

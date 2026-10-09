@@ -70,7 +70,8 @@ export function Modal({
       cancelAnimationFrame(frame);
       document.removeEventListener("keydown", handleKey);
       document.body.style.overflow = previousOverflow;
-      if (previousFocus?.isConnected) previousFocus.focus();
+      if (previousFocus?.isConnected)
+        previousFocus.focus({ preventScroll: true });
     };
   }, [open]);
 
