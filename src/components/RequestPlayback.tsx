@@ -4,7 +4,6 @@ import { ArrowUpRight, Pause, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { providerNames, type Session } from "../../shared/schema";
 import { compact, time } from "../lib/format";
-const number = (value: number) => String(value).padStart(2, "0");
 
 export function RequestPlayback({
   session,
@@ -41,8 +40,8 @@ export function RequestPlayback({
       data-region="请求回放与数据拆解"
     >
       <div className="x-section-label">
-        <span>03 / UNDER THE SURFACE</span>
-        <span>REQUEST PLAYBACK</span>
+        <span>REQUEST REPLAY / 请求回放</span>
+        <span>一次模型调用，三个指标</span>
       </div>
       <div className="x-breakdown-grid">
         <div className="x-breakdown-copy">
@@ -81,7 +80,7 @@ export function RequestPlayback({
               name: "INPUT",
               label: "输入",
               value: request?.input,
-              color: "#f95735",
+              color: "#c9a47b",
             },
             {
               name: "OUTPUT",
@@ -93,7 +92,7 @@ export function RequestPlayback({
               name: "CACHE READ",
               label: "缓存读取",
               value: request?.cacheRead,
-              color: "#777d6b",
+              color: "#91aba7",
             },
           ].map((item) => (
             <div className="x-tower" key={item.name}>
@@ -135,8 +134,8 @@ export function RequestPlayback({
           {playing ? <Pause /> : <Play />}
         </button>
         <span>
-          {number(request ? index + 1 : 0)}
-          <small> / {number(session.requests.length)}</small>
+          <small>模型请求</small> {request ? index + 1 : 0}
+          <small> / 共 {session.requests.length} 次</small>
         </span>
         <input
           type="range"
@@ -144,6 +143,7 @@ export function RequestPlayback({
           min="0"
           max={Math.max(0, session.requests.length - 1)}
           value={index}
+          aria-valuetext={`第 ${request ? index + 1 : 0} 次模型请求，共 ${session.requests.length} 次`}
           disabled={!session.requests.length}
           onChange={(e) => {
             setPlaying(false);
@@ -151,7 +151,7 @@ export function RequestPlayback({
           }}
         />
         <span className="x-player-status">
-          {playing ? "PLAYING" : "SCRUB TO EXPLORE"}
+          {playing ? "自动回放中" : "拖动查看每次调用"}
         </span>
       </div>
     </section>

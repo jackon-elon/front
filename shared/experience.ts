@@ -65,7 +65,7 @@ export function requestIndexFromAngle(x: number, y: number, count: number) {
 /** Labels in the center and the empty corners are not request sectors. */
 export function recordSector(x: number, y: number, count: number) {
   const radius = Math.hypot(x, y);
-  return count > 0 && radius >= 65 && radius <= 285
+  return count > 0 && radius >= 65 && radius <= 247
     ? requestIndexFromAngle(x, y, count)
     : null;
 }

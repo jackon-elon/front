@@ -33,7 +33,7 @@ const Inspector = lazy(() => import("./components/RegionInspector"));
 const nav = [
   { path: "/", label: "视觉探索", english: "Experience" },
   { path: "/sessions", label: "会话展册", english: "Sessions" },
-  { path: "/compare", label: "会话对比", english: "Compare" },
+  { path: "/compare", label: "变化分析", english: "Change analysis" },
   { path: "/workspace", label: "实时工作台", english: "Workspace" },
   { path: "/sources", label: "连接数据源", english: "Connections" },
 ];

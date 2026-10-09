@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { contextRows } from "../../shared/comparison";
 import {
   Area,
   AreaChart,
@@ -14,12 +15,12 @@ import {
 } from "recharts";
 import { compact, integer } from "../lib/format";
 import type { Analytics } from "../../shared/analytics";
-import { providerColors, type Session } from "../../shared/schema";
+import { type Session } from "../../shared/schema";
 const chartTheme = {
-  backgroundColor: "#fff",
-  border: "1px solid #dfe3eb",
+  backgroundColor: "var(--panel)",
+  border: "1px solid var(--line)",
   borderRadius: 12,
-  color: "#20283e",
+  color: "var(--ink)",
   fontSize: 15,
 };
 export function UsageChart({
@@ -57,27 +58,27 @@ export function UsageChart({
           >
             <defs>
               <linearGradient id="usage-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#4656d8" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#4656d8" stopOpacity={0} />
+                <stop offset="0%" stopColor="#d0ac82" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#d0ac82" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
               vertical={false}
-              stroke="#e1e5ef"
+              stroke="var(--line)"
               strokeDasharray="3 5"
             />
             <XAxis
               dataKey="label"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 14, fill: "#626b7c" }}
+              tick={{ fontSize: 14, fill: "var(--muted)" }}
               minTickGap={25}
             />
             <YAxis
               tickFormatter={compact}
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 14, fill: "#626b7c" }}
+              tick={{ fontSize: 14, fill: "var(--muted)" }}
             />
             <Tooltip
               contentStyle={chartTheme}
@@ -86,7 +87,7 @@ export function UsageChart({
             <Area
               type="monotone"
               dataKey={metric}
-              stroke="#4656d8"
+              stroke="#d0ac82"
               strokeWidth={3}
               fill="url(#usage-fill)"
               animationDuration={550}
@@ -140,37 +141,29 @@ export function ContextChart({
   syncId,
   selectedStep,
   onStep,
+  alignment = "step",
 }: {
   sessions: Session[];
   normalized?: boolean;
   syncId?: string;
   selectedStep?: number;
   onStep?: (step: number) => void;
+  alignment?: "step" | "progress";
 }) {
   const size = Math.max(0, ...sessions.map((s) => s.requests.length));
-  const data = Array.from({ length: size }, (_, i) =>
-    Object.fromEntries([
-      ["step", i + 1],
-      ...sessions.map((s) => {
-        const r = s.requests[i];
-        return [
-          s.id,
-          r
-            ? normalized
-              ? r.contextLimit
-                ? (r.input / r.contextLimit) * 100
-                : null
-              : r.input
-            : null,
-        ];
-      }),
-    ]),
+  const data = useMemo(
+    () => contextRows(sessions, normalized, alignment),
+    [sessions, normalized, alignment],
   );
   return (
     <div
       className="chart context-chart"
       role="img"
-      aria-label="按请求序号绘制输入上下文大小"
+      aria-label={
+        alignment === "progress"
+          ? "按会话进度绘制输入上下文大小"
+          : "按请求序号绘制输入上下文大小"
+      }
     >
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
@@ -181,29 +174,42 @@ export function ContextChart({
               state.activeTooltipIndex !== null &&
               state.activeTooltipIndex !== undefined
             )
-              onStep?.(Number(state.activeTooltipIndex) + 1);
+              onStep?.(
+                alignment === "progress"
+                  ? Math.floor(
+                      (Number(state.activeTooltipIndex) / 100) *
+                        Math.max(0, size - 1),
+                    ) + 1
+                  : Number(state.activeTooltipIndex) + 1,
+              );
           }}
           margin={{ top: 15, left: -15, right: 20 }}
         >
           <CartesianGrid
-            stroke="#e1e5ef"
+            stroke="var(--line)"
             vertical={false}
             strokeDasharray="3 5"
           />
           <XAxis
             dataKey="step"
+            tickFormatter={(v) =>
+              alignment === "progress" ? `${v}%` : String(v)
+            }
             tickLine={false}
             axisLine={false}
-            tick={{ fontSize: 14, fill: "#626b7c" }}
+            tick={{ fontSize: 14, fill: "var(--muted)" }}
           />
           <YAxis
             tickFormatter={(v) => (normalized ? `${v}%` : compact(v))}
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 14, fill: "#626b7c" }}
+            tick={{ fontSize: 14, fill: "var(--muted)" }}
           />
           <Tooltip
             contentStyle={chartTheme}
+            labelFormatter={(v) =>
+              alignment === "progress" ? `会话进度 ${v}%` : `第 ${v} 次模型请求`
+            }
             formatter={(v) =>
               normalized ? `${Number(v).toFixed(1)}%` : integer(Number(v))
             }
@@ -212,16 +218,16 @@ export function ContextChart({
           {selectedStep && (
             <ReferenceLine
               x={selectedStep}
-              stroke="#4656d8"
+              stroke="#d0ac82"
               strokeDasharray="4 4"
             />
           )}
-          {sessions.map((s) => (
+          {sessions.map((s, index) => (
             <Line
               key={s.id}
-              dataKey={s.id}
+              dataKey={`series${index}`}
               name={`${s.project} · ${s.id.slice(-5)}`}
-              stroke={providerColors[s.provider]}
+              stroke={["#d0ac82", "#9cbe9b", "#8aa9bd"][index % 3]}
               strokeWidth={2.5}
               dot={false}
               connectNulls={false}

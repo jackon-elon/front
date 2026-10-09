@@ -57,6 +57,7 @@ describe("experience request navigation", () => {
   it("ignores the record label, empty corners and missing data when selecting a request", () => {
     expect(recordSector(0, 0, 64)).toBeNull();
     expect(recordSector(260, 260, 64)).toBeNull();
+    expect(recordSector(250, 0, 64)).toBeNull();
     expect(recordSector(0, -180, 0)).toBeNull();
     expect(recordSector(0, -180, 64)).toBe(0);
     expect(recordSector(180, 0, 64)).toBe(16);

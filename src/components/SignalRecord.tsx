@@ -2,6 +2,7 @@ import { memo, useId, useMemo } from "react";
 import type { UsageRequest } from "../../shared/schema";
 import { recordBins, recordSector } from "../../shared/experience";
 
+/** Layered vinyl material; the outer marks encode chronological request bins. */
 export const SignalRecord = memo(function SignalRecord({
   requests,
   active = 0,
@@ -16,25 +17,13 @@ export const SignalRecord = memo(function SignalRecord({
   const id = useId().replace(/:/g, "");
   const bins = useMemo(() => recordBins(requests), [requests]);
   const peak = Math.max(1, ...bins.map((b) => b.input + b.output));
-  const paths = useMemo(
+  const grooves = useMemo(
     () =>
-      Array.from({ length: miniature ? 15 : 32 }, (_, ring) => {
-        const radius = 72 + ring * (miniature ? 10 : 5);
-        const points = Array.from({ length: 257 }, (_, step) => {
-          const angle = (step / 256) * Math.PI * 2 - Math.PI / 2;
-          const bin =
-            bins[
-              Math.min(bins.length - 1, Math.floor((step / 257) * bins.length))
-            ];
-          const value = bin ? Math.sqrt((bin.input + bin.output) / peak) : 0;
-          const r =
-            radius +
-            value * 29 * Math.sin((ring / (miniature ? 14 : 31)) * Math.PI);
-          return `${step ? "L" : "M"}${(260 + Math.cos(angle) * r).toFixed(2)} ${(260 + Math.sin(angle) * r).toFixed(2)}`;
-        });
-        return points.join(" ") + "Z";
-      }),
-    [bins, peak, miniature],
+      Array.from(
+        { length: miniature ? 48 : 86 },
+        (_, i) => 75 + i * (miniature ? 3.4 : 1.9),
+      ),
+    [miniature],
   );
   const activeBin = Math.max(
     0,
@@ -50,13 +39,12 @@ export const SignalRecord = memo(function SignalRecord({
       role={onSelect ? "img" : undefined}
       aria-label={
         onSelect
-          ? "按时间排列的请求唱片，点击扇区定位请求；也可使用下方请求滑块"
+          ? "请求唱片：外圈按时间显示用量，点击圆环定位请求；下方滑块可逐条查看"
           : undefined
       }
       onClick={
         onSelect
           ? (e) => {
-              // Convert screen coordinates through the SVG matrix, including parent tilt/rotation.
               const matrix = e.currentTarget.getScreenCTM();
               if (!matrix) return;
               const point = new DOMPoint(e.clientX, e.clientY).matrixTransform(
@@ -67,60 +55,123 @@ export const SignalRecord = memo(function SignalRecord({
                 point.y - 260,
                 bins.length,
               );
-              const bin = sector === null ? undefined : bins[sector];
-              if (bin) onSelect(bin.first);
+              if (sector !== null) onSelect(bins[sector].first);
             }
           : undefined
       }
     >
       <defs>
-        <radialGradient id={`${id}-ink`}>
-          <stop stopColor="#33251e" />
-          <stop offset="1" stopColor="#111110" />
+        <radialGradient id={`${id}-body`} cx="35%" cy="24%" r="85%">
+          <stop stopColor="#393d3c" />
+          <stop offset=".4" stopColor="#1a1d1d" />
+          <stop offset=".8" stopColor="#070a0b" />
+          <stop offset="1" stopColor="#25292a" />
         </radialGradient>
+        <linearGradient id={`${id}-edge`} x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#ddd6c9" />
+          <stop offset=".18" stopColor="#6d7472" />
+          <stop offset=".45" stopColor="#101414" />
+          <stop offset=".75" stopColor="#929a97" />
+          <stop offset="1" stopColor="#282c2c" />
+        </linearGradient>
+        <linearGradient id={`${id}-light`} x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#e5e6dd" stopOpacity=".5" />
+          <stop offset=".34" stopColor="#9db4be" stopOpacity=".03" />
+          <stop offset=".7" stopColor="#000" stopOpacity="0" />
+          <stop offset="1" stopColor="#c8b59b" stopOpacity=".38" />
+        </linearGradient>
+        <radialGradient id={`${id}-label`} cx="30%" cy="20%">
+          <stop stopColor="#d3bd99" />
+          <stop offset="1" stopColor="#a58b6a" />
+        </radialGradient>
+        <clipPath id={`${id}-clip`}>
+          <circle cx="260" cy="260" r="241" />
+        </clipPath>
+        {!miniature && (
+          <filter id={`${id}-grain`}>
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency=".85"
+              numOctaves="2"
+              stitchTiles="stitch"
+            />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+        )}
       </defs>
-      <circle cx="260" cy="260" r="242" fill={`url(#${id}-ink)`} />
+      <circle cx="260" cy="264" r="247" fill="#050808" />
+      <circle cx="260" cy="260" r="246" fill={`url(#${id}-edge)`} />
+      <circle cx="260" cy="260" r="242" fill={`url(#${id}-body)`} />
+      {grooves.map((r, i) => (
+        <circle
+          key={i}
+          cx="260"
+          cy="260"
+          r={r}
+          fill="none"
+          stroke={i % 5 === 0 ? "#98a3a0" : "#6c7876"}
+          strokeWidth={i % 5 === 0 ? ".7" : ".45"}
+          opacity={i % 5 === 0 ? ".34" : ".25"}
+        />
+      ))}
+      <g clipPath={`url(#${id}-clip)`}>
+        <path
+          d="M260 260L-50 15Q50 -95 165 -35ZM260 260L545 475Q470 640 355 568Z"
+          fill={`url(#${id}-light)`}
+        />
+        <path
+          d="M260 260L-50 65Q-65 0 -5 -45ZM260 260L570 370Q590 470 540 520Z"
+          fill="#c8d9d9"
+          opacity=".055"
+        />
+        {!miniature && (
+          <rect
+            x="12"
+            y="12"
+            width="496"
+            height="496"
+            opacity=".035"
+            filter={`url(#${id}-grain)`}
+          />
+        )}
+      </g>
+      {bins.map((bin, i) => {
+        const a = (i / bins.length) * Math.PI * 2 - Math.PI / 2;
+        const length = 3 + Math.sqrt((bin.input + bin.output) / peak) * 13;
+        return (
+          <path
+            key={i}
+            d={`M${260 + Math.cos(a) * 226} ${260 + Math.sin(a) * 226}L${260 + Math.cos(a) * (226 + length)} ${260 + Math.sin(a) * (226 + length)}`}
+            stroke={i === activeBin && !miniature ? "#f3e3c9" : "#c3976c"}
+            strokeWidth={miniature ? 1.2 : 1.7}
+            opacity={i === activeBin && !miniature ? 1 : 0.45}
+          />
+        );
+      })}
       <circle
         cx="260"
         cy="260"
-        r="243"
-        fill="none"
-        stroke="#f95735"
-        strokeWidth="1"
-        opacity=".35"
+        r="65"
+        fill="#0c1010"
+        stroke="#8e9286"
+        strokeWidth=".7"
       />
-      {paths.map((d, i) => (
-        <path
-          key={i}
-          d={d}
-          fill="none"
-          stroke={i % 7 === 0 ? "#ffd3b5" : "#f95735"}
-          strokeWidth={miniature ? 3 : 2.4}
-          opacity={i % 7 === 0 ? 0.75 : 0.48 + (i / paths.length) * 0.5}
-        />
-      ))}
-      {!miniature &&
-        bins.map((bin, i) => {
-          const a = (i / bins.length) * Math.PI * 2 - Math.PI / 2;
-          const length = 10 + Math.sqrt(bin.output / peak) * 28;
-          return (
-            <path
-              key={i}
-              d={`M${260 + Math.cos(a) * 246} ${260 + Math.sin(a) * 246}L${260 + Math.cos(a) * (246 + length)} ${260 + Math.sin(a) * (246 + length)}`}
-              stroke={i === activeBin ? "#f7eddb" : "#ed5b36"}
-              strokeWidth={i === activeBin ? 3 : 1}
-              opacity={i === activeBin ? 1 : 0.4}
-            />
-          );
-        })}
-      <circle cx="260" cy="260" r="60" fill="#f95735" />
-      <circle cx="260" cy="260" r="9" fill="#161411" />
+      <circle cx="260" cy="260" r="61" fill={`url(#${id}-label)`} />
+      <circle
+        cx="260"
+        cy="260"
+        r="54"
+        fill="none"
+        stroke="#514b40"
+        strokeWidth=".5"
+      />
+      <path d="M205 258H315" stroke="#574b3a" strokeWidth=".7" />
       <text
         x="260"
-        y="238"
+        y="237"
         textAnchor="middle"
-        fill="#171510"
-        fontSize="12"
+        fill="#272a24"
+        fontSize="11"
         fontWeight="700"
         letterSpacing="2"
       >
@@ -128,29 +179,39 @@ export const SignalRecord = memo(function SignalRecord({
       </text>
       <text
         x="260"
-        y="290"
+        y="282"
         textAnchor="middle"
-        fill="#171510"
-        fontSize="11"
-        letterSpacing="2"
+        fill="#37372f"
+        fontSize="8"
+        letterSpacing="1.7"
       >
-        SESSION RECORD
+        ACTIVITY ARCHIVE
       </text>
-      {!miniature && !!bins.length && (
-        <g>
-          <path
-            d={`M260 260L${260 + Math.cos(angle) * 243} ${260 + Math.sin(angle) * 243}`}
-            stroke="#f7eddb"
-            strokeWidth="1"
-            opacity=".8"
-          />
-          <circle
-            cx={260 + Math.cos(angle) * 243}
-            cy={260 + Math.sin(angle) * 243}
-            r="5"
-            fill="#f7eddb"
-          />
-        </g>
+      <text
+        x="260"
+        y="296"
+        textAnchor="middle"
+        fill="#37372f"
+        fontSize="7"
+        letterSpacing="1.6"
+      >
+        SIDE A · SESSION
+      </text>
+      <circle
+        cx="260"
+        cy="260"
+        r="7"
+        fill="#080c0c"
+        stroke="#d5c09e"
+        strokeWidth="2"
+      />
+      {!miniature && bins.length > 0 && (
+        <circle
+          cx={260 + Math.cos(angle) * 235}
+          cy={260 + Math.sin(angle) * 235}
+          r="4"
+          fill="#f3e3c9"
+        />
       )}
     </svg>
   );

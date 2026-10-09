@@ -6,6 +6,7 @@
 - 首页海报、滚动编排、筛选与选中状态：`src/pages/Experience.tsx`
 - 唱片卡片、叠放 / 展开、前后切换与对比入口：`src/components/SessionGallery.tsx`
 - 请求柱图、播放计时器与受控滑块：`src/components/RequestPlayback.tsx`
+- 首页可点击的会话用量轨迹：`src/components/SessionPulse.tsx`
 - 请求唱片图形与旋转后的点击定位：`src/components/SignalRecord.tsx`
 - 长会话分桶、可点击圆环与请求索引、展册循环窗口：`shared/experience.ts`
 - 新版视觉探索、全屏导航和顶栏的字号、布局、颜色：`src/experience.css`
@@ -16,7 +17,9 @@
 - 指针 / 键盘分隔条和宽度记忆：`src/components/SplitView.tsx`
 - 搜索、排序、收藏筛选、虚拟列表、CSV：`src/pages/Sessions.tsx`
 - 会话侧栏、请求明细、标签备注：`src/components/SessionDetail.tsx`
-- 对比槽位、排序、指标对照：`src/pages/Compare.tsx`
+- 同项目最近两次、基准选择、排序、差值和导出：`src/pages/Compare.tsx`
+- 加权缓存、基准差值、进度对齐：`shared/comparison.ts`
+- 变化分析卡片、选择器、差值表布局：`src/change.css`
 - 数据源状态、文件导入、密度与动画设置：`src/pages/Sources.tsx`
 - 折线、面积图、范围滑块：`src/components/Charts.tsx`
 - 通用面板、指标卡、空状态：`src/components/UI.tsx`
@@ -25,7 +28,7 @@
 - 开发时区域定位：`src/components/RegionInspector.tsx`
 - 颜色、字体大小、间距、响应式：`src/styles.css`
 
-例如「首页的大标题」对应 `src/experience.css` 中的 `.x-hero-title h1`；「唱片卡片标题」对应 `.x-vinyl-card h3`；「回放三个柱图的数字」对应 `.x-tower > strong`。数据逻辑在组件与 `shared/experience.ts`，不要通过 CSS 伪造指标。
+例如「首页的大标题」对应 `src/experience.css` 中的 `.x-hero-title h1`；「唱片卡片标题」对应 `.x-vinyl-card h3`；「回放三个柱图的数字」对应 `.x-tower > strong`。全站颜色修改 `src/styles.css` 顶部的语义变量。唱片材质在 SVG 组件，业务指标在 shared 层，不通过 CSS 伪造。
 
 ## 按数据流找文件
 

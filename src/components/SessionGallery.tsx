@@ -136,8 +136,9 @@ export const SessionGallery = memo(function SessionGallery({
             <ArrowLeft />
           </button>
           <strong>
-            {number(index + 1)}
-            <small> / {number(sessions.length)}</small>
+            <small>会话 </small>
+            {index + 1}
+            <small> / 共 {sessions.length} 段</small>
           </strong>
           <button aria-label="下一张唱片" onClick={() => onMove(1)}>
             <ArrowRight />

@@ -13,7 +13,16 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import { ArrowDown, ArrowUpRight, Layers, List, Search } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  Layers,
+  List,
+  Search,
+  Activity,
+  GitCompareArrows,
+  SlidersHorizontal,
+} from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   providerNames,
@@ -22,14 +31,14 @@ import {
   type Session,
 } from "../../shared/schema";
 import { useApp } from "../state/AppContext";
-import { compact } from "../lib/format";
+import { compact, time } from "../lib/format";
 import { SignalRecord } from "../components/SignalRecord";
 import { SessionGallery } from "../components/SessionGallery";
 import { RequestPlayback } from "../components/RequestPlayback";
+import { SessionPulse } from "../components/SessionPulse";
 
 const emptySessions: Session[] = [];
 const providers: Provider[] = ["codex", "claude", "workbuddy"];
-const number = (value: number) => String(value).padStart(2, "0");
 
 export default function Experience({
   animations = true,
@@ -55,9 +64,7 @@ export default function Experience({
     target: hero,
     offset: ["start start", "end start"],
   });
-  const titleX = useTransform(scrollYProgress, [0, 0.7], ["0%", "-15%"]);
-  const recordRotate = useTransform(scrollYProgress, [0, 1], [-18, 35]);
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.5, 0.85], [1, 1, 0]);
+  const recordRotate = useTransform(scrollYProgress, [0, 1], [-8, 16]);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const tiltX = useSpring(my, { stiffness: 100, damping: 22 });
@@ -107,7 +114,14 @@ export default function Experience({
     [sessions, catalog],
   );
   const request = active?.requests[safeRequestIndex];
-  const selectSession = useCallback((id: string) => setSelectedId(id), []);
+  const requestCount = useMemo(
+    () => sessions.reduce((sum, s) => sum + s.requests.length, 0),
+    [sessions],
+  );
+  const selectSession = useCallback((id: string) => {
+    setSelectedId(id);
+    setCursor({ sessionId: id, index: 0 });
+  }, []);
   const selectRequest = useCallback(
     (nextIndex: number) => {
       if (!activeId) return;
@@ -120,11 +134,11 @@ export default function Experience({
     (step: number) => {
       if (!sessions.length) return;
       setDirection(step);
-      setSelectedId(
+      selectSession(
         sessions[(index + step + sessions.length) % sessions.length].id,
       );
     },
-    [index, sessions],
+    [index, sessions, selectSession],
   );
   const jump = (id: string) =>
     document
@@ -160,73 +174,110 @@ export default function Experience({
       >
         <div className="x-hero-sticky">
           <div className="x-hero-kicker">
-            <span>AGENT ACTIVITY, IN A DIFFERENT FORM.</span>
-            <span>OPEN SOURCE / EST. 2026</span>
+            <span>AGENTLENS / ACTIVITY ARCHIVE</span>
+            <span>CODEX · CLAUDE CODE · WORKBUDDY</span>
           </div>
-          <motion.div
-            className="x-hero-title"
-            style={reduced ? {} : { x: titleX, opacity: titleOpacity }}
-          >
-            <h1>
-              BEHIND
-              <br />
-              <span>EVERY</span>
-              <br />
-              PROMPT<span className="x-star">✳</span>
-            </h1>
-            <p>
-              看见 AI 工作的另一面。
-              <br />
-              从一次调用，到完整的工作轨迹。
-            </p>
-            <button className="x-round-link" onClick={() => jump("archive")}>
-              进入会话展册 <ArrowDown size={22} />
-            </button>
-          </motion.div>
-          <motion.div
-            className="x-record-stage"
-            data-region="可交互信号唱片"
-            style={
-              reduced
-                ? {}
-                : { rotate: recordRotate, rotateX: tiltX, rotateY: tiltY }
-            }
-            onPointerMove={(e) => {
-              if (reduced || e.pointerType !== "mouse") return;
-              const r = e.currentTarget.getBoundingClientRect();
-              mx.set(((e.clientX - r.left) / r.width) * 10 - 5);
-              my.set(5 - ((e.clientY - r.top) / r.height) * 10);
-            }}
-            onPointerLeave={() => {
-              mx.set(0);
-              my.set(0);
-            }}
-          >
-            <SignalRecord
-              requests={active?.requests ?? []}
+          <div className="x-hero-grid">
+            <motion.div className="x-hero-title">
+              <span className="x-eyebrow">THE WORK BEHIND THE WINDOW</span>
+              <h1>
+                BEHIND
+                <br />
+                <span>THE PROMPT.</span>
+              </h1>
+              <p>
+                每一次调用，都留下自己的纹路。
+                <br />
+                从上下文增长到缓存复用，看见智能协作的全貌。
+              </p>
+              <div className="x-hero-actions">
+                <button
+                  className="x-round-link"
+                  onClick={() => jump("archive")}
+                >
+                  探索会话 <ArrowDown size={20} />
+                </button>
+                <Link className="x-text-link" to="/workspace">
+                  实时工作台 <ArrowUpRight size={19} />
+                </Link>
+              </div>
+              <div className="x-hero-stats" data-region="已记录用量概览">
+                <div>
+                  <strong>{compact(sessions.length)}</strong>
+                  <span>已记录会话</span>
+                </div>
+                <div>
+                  <strong>{compact(requestCount)}</strong>
+                  <span>模型调用</span>
+                </div>
+                <div>
+                  <strong>{compact(total)}</strong>
+                  <span>累计 Token</span>
+                </div>
+              </div>
+            </motion.div>
+            <div className="x-record-composition">
+              <span className="x-record-caption">
+                THE SESSION, PRESSED IN DATA.
+              </span>
+              <motion.div
+                className="x-record-stage"
+                data-region="可交互信号唱片"
+                style={
+                  reduced
+                    ? {}
+                    : { rotate: recordRotate, rotateX: tiltX, rotateY: tiltY }
+                }
+                onPointerMove={(e) => {
+                  if (reduced || e.pointerType !== "mouse") return;
+                  const r = e.currentTarget.getBoundingClientRect();
+                  mx.set(((e.clientX - r.left) / r.width) * 10 - 5);
+                  my.set(5 - ((e.clientY - r.top) / r.height) * 10);
+                }}
+                onPointerLeave={() => {
+                  mx.set(0);
+                  my.set(0);
+                }}
+              >
+                <SignalRecord
+                  requests={active?.requests ?? []}
+                  active={safeRequestIndex}
+                  onSelect={active?.requests.length ? selectRequest : undefined}
+                />
+              </motion.div>
+              <div className="x-record-label">
+                <span>
+                  {active ? providerNames[active.provider] : "等待连接"}{" "}
+                  <i>正在查看</i>
+                </span>
+                <strong>{active?.title ?? "当前数据源没有会话"}</strong>
+                <p>
+                  {request
+                    ? `第 ${safeRequestIndex + 1} 次模型请求 · 共 ${active.requests.length} 次`
+                    : "连接日志后生成请求图形"}
+                </p>
+                <div>
+                  <span>{request ? time(request.time) : "—"}</span>
+                  <b>
+                    {request ? compact(request.input + request.output) : "—"}{" "}
+                    <small>Token</small>
+                  </b>
+                </div>
+                {active && (
+                  <button onClick={() => open(active.id)}>
+                    查看会话明细 <ArrowUpRight size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+          {active && (
+            <SessionPulse
+              requests={active.requests}
               active={safeRequestIndex}
-              onSelect={active?.requests.length ? selectRequest : undefined}
+              onSelect={selectRequest}
             />
-          </motion.div>
-          <div className="x-record-label">
-            <span className="x-cross">+</span>
-            <span>
-              {active?.requests.length
-                ? `01—${number(active.requests.length)}`
-                : "NO REQUESTS"}{" "}
-              / SIGNAL RECORD
-            </span>
-            <strong>
-              {active ? providerNames[active.provider] : "NO SIGNAL"}
-            </strong>
-            <p>
-              {active?.title ?? "当前数据源没有会话"}
-              <br />
-              {request
-                ? `#${number(safeRequestIndex + 1)} · ${compact(request.input + request.output)} TOKENS`
-                : "连接日志后生成请求图形"}
-            </p>
-          </div>
+          )}
           <div className="x-hero-bottom">
             <div>
               <span className={`x-live-dot ${connected ? "connected" : ""}`} />
@@ -240,42 +291,30 @@ export default function Experience({
               <small>
                 {mode === "local"
                   ? `新增 ${eventCount} 条 · ${checkedAt ? new Date(checkedAt).toLocaleTimeString("zh-CN") : "等待扫描"}`
-                  : "当前唱片由会话 Token 记录生成"}
+                  : "所有指标来自当前数据源"}
               </small>
             </div>
             <span>
-              SCROLL TO CHANGE THE SCENE <ArrowDown size={17} />
+              探索更多记录 <ArrowDown size={17} />
             </span>
           </div>
         </div>
       </section>
-      <div className="x-ticker" aria-hidden="true">
-        <span>CODEX</span>
-        <i>↗</i>
-        <span>CLAUDE CODE</span>
-        <i>↗</i>
-        <span>WORKBUDDY</span>
-        <i>↗</i>
-        <span>BEHIND EVERY PROMPT</span>
-        <i>↗</i>
-      </div>
       <section className="x-archive" id="archive" data-region="交互会话展册">
         <div className="x-section-label">
-          <span>02 / SELECTED SESSIONS</span>
+          <span>SESSION COLLECTION / 会话收藏馆</span>
           <span>
-            {number(sessions.length)} RECORDS — {compact(total)} TOKENS
+            {sessions.length} 段会话 · {compact(total)} Token
           </span>
         </div>
         <div className="x-archive-heading">
           <h2>
-            工作，
-            <br />
-            <em>有迹可循。</em>
+            每一段工作，<em>都有迹可循。</em>
           </h2>
           <p>
-            每张唱片，对应一段会话记录。
+            拾起一张唱片，回看一次协作。
             <br />
-            切换、展开、拖动，走进其中一段。
+            展开、筛选，或沿时间轴逐次回放。
           </p>
           <Link
             to="/sessions"
@@ -351,23 +390,47 @@ export default function Experience({
           onIndex={selectRequest}
         />
       )}
-      <section className="x-finale" data-region="全功能工作区入口">
-        <span>KEEP EXPLORING / 04</span>
-        <Link to="/sessions">
-          深入
-          <br />
-          工作现场。
-          <ArrowUpRight />
-        </Link>
-        <div>
-          <p>
-            检索会话、联动图表、比较 Agent、标注记录。
-            <br />
-            所有操作，都连接同一份数据。
-          </p>
-          <Link to="/workspace">
-            打开实时工作台 <ArrowUpRight />
-          </Link>
+      <section className="x-finale" data-region="深入分析入口">
+        <div className="x-section-label">
+          <span>THE NEXT LAYER / 深入分析</span>
+          <span>同一份记录，三种视角</span>
+        </div>
+        <div className="x-finale-heading">
+          <h2>从看见，到理解。</h2>
+          <p>追踪用量、找出变化，把记录变成可操作的线索。</p>
+        </div>
+        <div className="x-destinations">
+          {[
+            {
+              to: "/workspace",
+              icon: Activity,
+              kicker: "LIVE OBSERVATORY",
+              title: "实时观测",
+              copy: "查看每日用量、时间桶与 Agent 分布，定位一次用量高峰。",
+            },
+            {
+              to: "/sessions",
+              icon: SlidersHorizontal,
+              kicker: "SESSION LIBRARY",
+              title: "记录检索",
+              copy: "搜索模型、项目和标签，保存筛选视图，展开原始请求指标。",
+            },
+            {
+              to: "/compare",
+              icon: GitCompareArrows,
+              kicker: "CHANGE ANALYSIS",
+              title: "变化分析",
+              copy: "以一段会话为基准，比较每次请求用量、缓存命中与上下文增长。",
+            },
+          ].map((item) => (
+            <Link to={item.to} key={item.to}>
+              <item.icon size={26} />
+              <span>{item.kicker}</span>
+              <h3>{item.title}</h3>
+              <p>{item.copy}</p>
+              <ArrowUpRight className="x-destination-arrow" size={24} />
+            </Link>
+          ))}
         </div>
       </section>
       <footer className="x-footer">

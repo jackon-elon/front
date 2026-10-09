@@ -50,6 +50,7 @@ interface Context {
   compare: string[];
   toggleCompare: (id: string) => void;
   clearCompare: () => void;
+  replaceCompare: (ids: string[]) => void;
   toast: (message: string) => void;
   notification: string;
   importData: (snapshot: Snapshot) => Promise<void>;
@@ -187,12 +188,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
   const toggleCompare = (id: string) =>
     setCompare((previous) => {
-      if (previous.includes(id)) return previous.filter((x) => x !== id);
-      if (previous.length === 3) {
+      const current = previous.filter((item) =>
+        query.data?.sessions.some((s) => s.id === item),
+      );
+      if (!query.data?.sessions.some((s) => s.id === id)) return current;
+      if (current.includes(id)) return current.filter((x) => x !== id);
+      if (current.length === 3) {
         toast("最多对比三个会话");
-        return previous;
+        return current;
       }
-      return [...previous, id];
+      return [...current, id];
     });
   const importData = async (snapshot: Snapshot) => {
     await saveImport(snapshot);
@@ -213,6 +218,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
         compare,
         toggleCompare,
         clearCompare: () => setCompare([]),
+        replaceCompare: (ids) =>
+          setCompare(
+            [...new Set(ids)]
+              .filter((id) => query.data?.sessions.some((s) => s.id === id))
+              .slice(0, 3),
+          ),
         toast,
         notification,
         importData,

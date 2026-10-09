@@ -6,6 +6,10 @@
 
 首页组件边界：`Experience` 持有筛选和选中会话，`SessionGallery` 接收 props 展示有限唱片窗口，`RequestPlayback` 管理播放计时器，`SignalRecord` 生成 SVG。会话总量和图形用 useMemo 缓存；稳定的回调配合 memo，减少播放逐帧推进时无关图形的重算。回放组件以会话 ID 为 key，切换会话时卸载旧计时器。可以用这些实际变化理解 props、组件身份、派生状态与 effect 清理，而不是到处加缓存。
 
+新首屏还可以跟踪「点击 SessionPulse 请求桶 → 父组件更新 session ID 与游标 → 唱片标记、当前请求说明、回放柱图同时变化」。轨迹使用 shared 层的分桶函数，不在 JSX 中重新统计。标题不参与横向运动，唱片的 MotionValue 更新不需要整个 React 树逐帧 setState。
+
+变化分析从「选择项目 → 配对最近两次 → 替换 Context 对比集合 → 指定基准 → 派生差值 → 切换图表进度对齐」阅读。关注列表身份、未知值和零基准、相对变化与百分点的区别。图表使用安全的 series key，原始 session ID 不占用坐标字段；业务计算在 shared/comparison.ts，有加权缓存、空记录、配对和对齐边界测试。
+
 建议第一轮只跟踪一个操作：「点击会话标题 → URL 出现 session → 详情侧栏读取同一份查询结果 → 点击收藏 → 乐观更新 → API 确认或回滚」。涉及组件、props、state、Context、路由、Portal 和服务端状态，能先建立完整的逻辑图。
 
 第二轮看搜索：受控输入改变 URL，`useDeferredValue` 保持输入响应，TanStack Table 计算过滤与排序结果，Virtualizer 只渲染视口和 overscan 的行。分别理解「数据多」和「DOM 多」带来的成本。

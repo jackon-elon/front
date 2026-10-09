@@ -6,6 +6,7 @@ const componentFiles: Record<string, string> = {
   ".x-breakdown": "src/components/RequestPlayback.tsx",
   ".x-gallery": "src/components/SessionGallery.tsx",
   ".x-vinyl-card": "src/components/SessionGallery.tsx",
+  ".x-pulse": "src/components/SessionPulse.tsx",
   ".x-record-stage": "src/components/SignalRecord.tsx",
   ".signal-record": "src/components/SignalRecord.tsx",
   ".studio-header": "src/App.tsx",
@@ -56,7 +57,7 @@ export default function RegionInspector() {
         return;
       }
       const font = getComputedStyle(
-        element.querySelector("h2,h1,h3,.metric-value") ?? element,
+        element.querySelector("h2,h1,h3,.metric-value,strong") ?? element,
       ).fontSize;
       setRegion({
         name: element.dataset.region ?? "",
@@ -74,7 +75,10 @@ export default function RegionInspector() {
   const styleFile =
     location.pathname === "/" || region?.selector === ".studio-header"
       ? "src/experience.css"
-      : "src/styles.css";
+      : location.pathname === "/compare" &&
+          region?.selector.startsWith(".change-")
+        ? "src/change.css"
+        : "src/styles.css";
   const descriptor = region
     ? `修改区域：${region.name}\n组件文件：${file}\n样式文件：${styleFile}\n选择器：${region.selector}\n区域标题/数值字号：${region.font}\n我的修改要求：`
     : "";
