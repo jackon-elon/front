@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useLocation } from "react-router-dom";
-import { useLab } from "../state/LabContext";
+import { useStudio } from "../state/StudioContext";
 import { getRegionSource, regions } from "./regions";
-import { inspectSceneAt, type SceneInspection } from "./sceneRegistry";
 import "./inspector.css";
 
-interface Selection extends SceneInspection {
+interface Selection {
+  title: string;
+  selector: string;
+  source: string;
+  note: string;
+  rect: { left: number; top: number; width: number; height: number };
   element?: Element;
   font?: string;
   fontSize?: string;
@@ -14,7 +18,7 @@ interface Selection extends SceneInspection {
 }
 export default function RegionInspector() {
   const { pathname } = useLocation();
-  const { notify } = useLab();
+  const { notify } = useStudio();
   const [enabled, setEnabled] = useState(() => {
     try {
       const saved = sessionStorage.getItem("form-flow:inspect");
@@ -167,8 +171,7 @@ export default function RegionInspector() {
         }
         return null;
       };
-      const hit =
-        match(false) ?? (modal ? null : inspectSceneAt(x, y)) ?? match(true);
+      const hit = match(false) ?? match(true);
       current.current = hit;
       setSelection(hit);
       setPoint(pointer);
@@ -344,7 +347,7 @@ export default function RegionInspector() {
               {Math.round(selection.rect.height)} px{" "}
               {selection.fontSize
                 ? "· 样式在 src/styles.css"
-                : "· 3D 对象投影范围"}
+                : "· 页面元素范围"}
             </div>
             <small>
               {pinned

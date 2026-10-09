@@ -1,73 +1,50 @@
-# 不必先读代码：从页面找到修改位置
+# 先找到区域，再让 AI 修改
 
-这是 React 项目。你只需要知道组件负责哪块画面、数据放在哪里、交互由谁管理，再让 AI 打开相应文件。
+你不必先读具体代码。先知道“哪个页面、哪个区域、什么行为”，再让 AI 检查对应文件。
 
-## 鼠标直接定位
+## 页面与文件
 
-左下角“区域定位”开关开启后，移动鼠标可查看区域名、对应文件、CSS 名称、实际字号和范围。Alt+点击或点“固定当前”固定信息，再点“复制定位”并粘贴给 AI，补充希望改变的效果。正常点击仍操作网页，Esc 取消固定，Alt+L 开关模式。
+- 全站顶部 Logo、导航、菜单：`src/components/StudioHeader.tsx`。
+- 首页大标题、叠放卡片、精选作品、底部邀请：`src/pages/DiscoverPage.tsx`。
+- 全部作品的搜索、分类、收藏筛选、排序：`src/pages/CatalogPage.tsx`。
+- 作品详情的实时预览、调色、节奏、保存表单：`src/pages/DesignPage.tsx`。
+- 我的收藏、卡片排序、版本恢复：`src/pages/ShelfPage.tsx`。
+- 关于页的学习折叠卡片：`src/pages/InfoPage.tsx`。
+- 每张海报内部的图形和英文排版：`src/components/Poster.tsx`。
+- 卡片的标题、爱心按钮、打开入口、排序按钮：`src/components/ProjectCard.tsx`。
+- 字号、间距、主色、布局、悬停动画、手机覆盖：`src/styles.css`。
+- 六张作品的中文名称、介绍、标签、默认颜色：`public/catalog.json`。
+- 数据类型与数据检查：`src/data/projects.ts`。
+- 收藏、草稿和保存版本的共享接口与持久化：`src/state/StudioContext.tsx`。
+- 修改、重置、保存、恢复、排序的状态规则：`src/state/studioModel.ts`。
+- 封面展开与页面转场：`src/components/TransitionLink.tsx` 及 CSS 的 `::view-transition-*`。
+- 筛选、排序时卡片移动：`src/hooks/useFlipList.ts`。
+- 请求作品数据、加载／错误／重试、取消请求：`src/hooks/useCatalog.tsx`。
+- 弹窗、焦点与 Escape：`src/components/Modal.tsx`。
+- 路由、滚动恢复、页脚和异常处理：`src/App.tsx`。
 
-本地开发默认开启；生产构建默认关闭。当前浏览器会话记住开关选择。区域说明集中在 src/learning/regions.ts，定位浮层在 RegionInspector.tsx，3D 命中由 createArtScene.ts 处理。
+## CSS 名称是什么
 
-它与 F12 的区别：定位模式提供业务区域名和项目文件线索；F12 可以深入检查真实 DOM、CSS 规则、布局盒子、网络请求与错误。定位模式里的字号也读取浏览器实际生效的样式。Three.js 的多个展品在 F12 中属于一块 canvas，定位模式额外识别场景对象。
+`.hero-title`、`.project-card`、`.design-controls` 是样式选择器，不是文件。组件用 className 给页面元素分配这些名称，`styles.css` 决定它们的外观。
 
-## 一眼定位
+`@media (max-width: 700px)` 表示浏览器可用宽度小于等于 700 像素时采用该组样式。手机、窄窗口和侧边预览都可能触发它。前面的基础样式仍生效，这里只覆盖需要调整的部分。
 
-- 顶部 Logo、探索/作品/关于、声音按钮、菜单：src/components/Header.tsx。
-- 首页四段内容、大标题、章节导航：src/pages/HomeExperience.tsx。
-- 全部作品页、搜索、收藏筛选：src/pages/WorksGallery.tsx。
-- 某个作品的标题、介绍、切换入口：src/pages/ExperimentPage.tsx。
-- 右侧参数面板、颜色按钮、保存实验表单：src/components/ExperimentPanel.tsx。
-- 我的收藏弹窗、保存版本列表、恢复与删除：src/components/CollectionModal.tsx。
-- 关于页面：src/pages/AboutPage.tsx。
-- 字号、间距、边框、颜色、手机布局：src/styles.css。样式按页面和组件分组，手机覆盖在后半部分。
-- 三件作品的名字、文案、搜索标签：src/data/artworks.ts。
-- 首页与粒子展品的形态、受力、GPU 反馈模拟和着色器：src/scene/particleField.ts。
-- 金属液滴与光影装置的几何和材质：src/scene/sculptures.ts。
-- 3D 摄像机、位置、大小、灯光、滚动时的分层：src/scene/createArtScene.ts。
-- 连接 React 参数与 Three.js 场景：src/components/ArtCanvas.tsx。
-- 参数、收藏、保存版本以及浏览器持久化：src/state/LabContext.tsx。
-- 默认参数、参数合法范围、存储清洗、状态变化规则：src/state/model.ts。
-- 页面地址、页面加载、异常处理：src/App.tsx。
+海报文字使用 `cqw`，根据海报容器宽度缩放，所以同一个 Poster 能放在小卡片和大预览里；页面标题使用 `clamp()` 限制最小、响应式和最大字号。
 
-## 两个“变大”的区别
+## 可直接复制给 AI 的修改描述
 
-“把参数面板放大”属于界面布局：改 styles.css 的 .experiment-panel，以及页面对它的宽度覆盖。
+> 首页叠放卡片区域：把正面的海报宽度增加 8%，后面的卡片仍露出边缘，390px 手机宽度不能横向溢出。先看 DiscoverPage.tsx 和 styles.css 的 hero-deck。
 
-“把液态雕塑放大”属于 3D 场景：改 createArtScene.ts 中实验布局的 group.scale。sculptures.ts 决定雕塑的形状，不负责整件作品在页面里占多大。
+> 作品页的卡片标题：字号增加到 20px，只改卡片下面的中文标题，不改海报里的英文。看 ProjectCard.tsx 与 project-info h3。
 
-“让液态雕塑更像水滴”才是模型形状：改 sculptures.ts 中 makeLiquid 的曲面顶点与材质参数。
+> 温柔的信号：只把橙色圆形中心的渐变改得柔和一些，保留紫色背景和白色圆环。看 Poster.tsx 的 soft-signal 分支和 styles.css 的 soft-orb。
 
-## 可以这样向 AI 描述
+> 点击封面进入详情：让展开更快，文字在封面展开后再出现。看 TransitionLink.tsx、view-transition 样式和设计详情的入场样式。
 
-> 在作品详情页，把右侧实验参数面板从 300px 改为 340px。保留中心雕塑的完整可见区域，手机布局仍占容器宽度。先看 ExperimentPage.tsx 和 styles.css。
+> 保存版本时增加一个“用途”输入框，收藏页显示它，刷新后仍保留。先解释要修改的表单、状态类型、存储清洗和版本展示，再实现。
 
-> 首页“解构”段落，让球体更晚开始重组，形态变化跟随滚动。看 createArtScene.ts 中传给 heroField 的 morph，以及 particleField.ts 的 targetPosition。
+## 定位模式与 F12
 
-> 只把粒子流场的点变大、变亮，不改变金属液滴的灯光。看 particleField.ts 的 drawVertex 与 drawFragment。
+定位模式把业务名称、项目文件线索和实际样式整理成容易复制的说明。F12 能继续追踪真实 DOM、CSS 来源、网络请求和错误。它们互相补充；日常微调先用定位模式，需要检查浏览器行为再用 F12。
 
-> 将默认蓝色改为紫色，同步修改默认参数和面板预设颜色。已有用户保存的实验保持原来的颜色。
-
-> 在全部作品页，给粒子流场增加“流动”搜索标签。只改 artworks.ts 的数据即可。
-
-你不必截图逐个指认：用“页面 + 区域名 + 要改变的属性 + 必须保持的行为”，AI 就能定位。若仍有歧义，让 AI 先列出它认为对应的组件与样式选择器。
-
-## 只需要理解的 React 逻辑
-
-1. **组件**：页面拆成 Header、ArtCanvas、ExperimentPanel 等区域。HomeExperience、ExperimentPage 复用同一个参数面板。
-2. **props**：页面告诉面板当前作品是哪一个。比如 kind 是 particles / liquid / light。
-3. **state**：当前颜色、速度、收藏、弹窗是否打开。状态变化后，React 更新画面。
-4. **受控表单**：滑块值来自状态，拖动滑块更新状态；不是只改变页面上显示的数字。
-5. **Context + reducer**：全站共享参数与收藏。reducer 明确规定修改、保存、恢复、重置怎么改变数据。
-6. **effect 和清理**：创建场景、读取浏览器偏好、存储数据。离开页面时释放 3D 资源与监听器，避免积累。
-7. **ref**：保存 Three.js 控制器和滚动进度。动画逐帧变化由场景控制器处理，避免整个 React 页面每帧重新渲染。
-8. **自定义 Hook**：useLab、useAmbientSound、useMotionPreference 复用逻辑。
-9. **路由与懒加载**：地址对应不同页面，只在需要时加载页面代码。
-10. **Portal**：弹窗渲染到页面顶层，避免被某块内容挡住；同时管理键盘焦点。
-
-TypeScript 是带类型检查的 JavaScript；这里主要约束作品种类、参数、组件输入。Three.js 和 GSAP 负责特殊视觉能力；React 负责组织与交互。当前项目不需要 Next.js，也没有后端。
-
-## 修改顺序
-
-先改一项能观察的效果 → 运行预览 → 检查桌面和手机 → 构建 → 提交。
-
-样式小改先看 CSS；改变作品介绍先看数据；增加操作先看组件和共享状态；改变 3D 效果先看场景或模型。别为了一个视觉调整同时改所有文件。
+描述顺序：**页面 → 区域 → 希望变化的属性／行为 → 保留的约束**。有歧义时，让 AI 先指出对应文件与选择器，再修改。

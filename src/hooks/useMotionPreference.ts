@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useLab } from "../state/LabContext";
+import { useStudio } from "../state/StudioContext";
 
 export function useMotionPreference() {
-  const { settings } = useLab();
+  const { reducedMotion } = useStudio();
   const [systemReduced, setSystemReduced] = useState(
     () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
@@ -14,5 +14,5 @@ export function useMotionPreference() {
     return () => query.removeEventListener("change", update);
   }, []);
 
-  return systemReduced || settings.motion === "reduced";
+  return systemReduced || reducedMotion;
 }
