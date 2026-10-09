@@ -23,7 +23,18 @@ export default function CommandPalette({
     }
   }, [open]);
   const routes = [
-    { label: "总览", sub: "查看用量和活动趋势", url: "/", provider: null },
+    {
+      label: "视觉探索",
+      sub: "信号唱片、会话展册与请求回放",
+      url: "/",
+      provider: null,
+    },
+    {
+      label: "实时工作台",
+      sub: "查看用量和活动趋势",
+      url: "/workspace",
+      provider: null,
+    },
     {
       label: "会话探索",
       sub: "检索与整理使用记录",

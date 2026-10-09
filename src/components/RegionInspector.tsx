@@ -50,23 +50,32 @@ export default function RegionInspector() {
     return () => window.removeEventListener("pointermove", move);
   }, [enabled]);
   const pages: Record<string, string> = {
-    "/": "Overview",
+    "/": "Experience",
+    "/workspace": "Overview",
     "/sessions": "Sessions",
     "/compare": "Compare",
     "/sources": "Sources",
   };
   const file =
-    region?.selector === ".trace-viz"
-      ? "src/components/LiveTrace.tsx"
-      : region?.selector === ".session-stack"
-        ? "src/components/SessionStack.tsx"
-        : region?.selector === ".session-deck"
-          ? "src/components/SessionDeck.tsx"
-          : region?.selector === ".metric"
-            ? "src/components/UI.tsx"
-            : `src/pages/${pages[location.pathname] ?? "Overview"}.tsx`;
+    region?.selector === ".studio-header"
+      ? "src/App.tsx"
+      : region?.selector === ".signal-record"
+        ? "src/components/SignalRecord.tsx"
+        : region?.selector === ".trace-viz"
+          ? "src/components/LiveTrace.tsx"
+          : region?.selector === ".session-stack"
+            ? "src/components/SessionStack.tsx"
+            : region?.selector === ".session-deck"
+              ? "src/components/SessionDeck.tsx"
+              : region?.selector === ".metric"
+                ? "src/components/UI.tsx"
+                : `src/pages/${pages[location.pathname] ?? "Overview"}.tsx`;
+  const styleFile =
+    location.pathname === "/" || region?.selector === ".studio-header"
+      ? "src/experience.css"
+      : "src/styles.css";
   const descriptor = region
-    ? `修改区域：${region.name}\n组件文件：${file}\n样式文件：src/styles.css\n选择器：${region.selector}\n区域标题/数值字号：${region.font}\n我的修改要求：`
+    ? `修改区域：${region.name}\n组件文件：${file}\n样式文件：${styleFile}\n选择器：${region.selector}\n区域标题/数值字号：${region.font}\n我的修改要求：`
     : "";
   return (
     <>
@@ -103,7 +112,7 @@ export default function RegionInspector() {
             <p>
               {file}
               <br />
-              src/styles.css
+              {styleFile}
               <br />
               字号：{region.font}
             </p>

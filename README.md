@@ -1,10 +1,10 @@
 # AgentLens
 
-本地优先的 Agent 用量观测台，用 React 和 TypeScript 构建。支持 Codex、Claude Code 与 WorkBuddy 的用量记录，围绕会话探索、请求下钻和跨 Agent 对比组织界面。
+围绕 Agent 工作记录构建的 React 交互作品。入口采用大字海报、数据生成的信号唱片、可拖动叠放展册和请求回放；深入后可以检索、标注和比较 Codex、Claude Code 与 WorkBuddy 的用量记录。
 
 [在线演示](https://agentlens-front.proudash8.chatgpt.site) · [UI 设计](docs/UI_DESIGN.md) · [结构地图](docs/PROJECT_MAP.md)
 
-![AgentLens overview](docs/images/overview.jpg)
+![AgentLens interactive experience](docs/images/overview.jpg)
 
 在线演示使用 **180 个确定性虚构会话**。本地模式通过轻量 Node API 只读取统计元数据；没有内置真实对话或认证信息。
 
@@ -27,6 +27,10 @@ npm run build
 
 ## 产品功能
 
+- 视觉探索：固定首屏中的滚动编排、指针倾斜、由请求记录生成的 SVG 唱片；点击唱片扇区定位真实请求，旋转后的坐标通过 SVG 矩阵还原。
+- 会话展册：拖动 / 方向键 / 按钮切换，叠放与横向展开采用弹簧布局；搜索、来源筛选、详情与对比联动。实时重排保持当前 session ID。
+- 请求回放：播放 / 暂停、键盘滑块逐条检查输入、输出和缓存；柱图与首屏指针使用相同选中请求。
+- 全屏排版导航、路由遮幅转场；手机重新编排场景，支持系统与应用减弱动画。
 - 实时请求脉冲：15 分钟 / 1 小时 / 6 小时范围，点击时间柱联动会话；画面暂停而采集继续，恢复时查看待更新数量。
 - 叠放会话卡片与可展开列表切换；会话请求轨迹；指针 / 键盘调整面板宽度并持久化；真实新增请求数量与最近检查时间；时间、项目、Agent 联动统计。
 - 可排序、可搜索的虚拟会话列表；URL 筛选；收藏、标签备注、保存视图与 CSV 导出。
