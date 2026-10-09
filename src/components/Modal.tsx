@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { Icon } from "./Icon";
+import { X } from "lucide-react";
 
 export function Modal({
   open,
@@ -97,7 +97,7 @@ export function Modal({
             aria-label="关闭弹窗"
             onClick={onClose}
           >
-            <Icon name="close" />
+            <X size={20} />
           </button>
         </div>
         {children}

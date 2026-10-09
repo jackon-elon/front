@@ -1,4 +1,4 @@
-name: Validate frontend
+name: Validate AgentLens
 on:
   push:
     branches: [main]

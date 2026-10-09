@@ -1,53 +1,73 @@
-# FORM & FLOW · React 创意空间
+# AgentLens
 
-一个用 React + TypeScript 制作的动态作品集与设计编辑器。米白底色、大字排版、六张由 CSS / SVG 绘制的海报；从发现、筛选、打开作品，到实时调色、收藏排序和保存版本，形成完整的交互流程。
+本地优先的 Agent 用量观测台，用 React 和 TypeScript 构建。支持 Codex、Claude Code 与 WorkBuddy 的用量记录，围绕会话探索、请求下钻和跨 Agent 对比组织界面。
+
+[在线演示](https://agentlens-front.proudash8.chatgpt.site) · [UI 设计](docs/UI_DESIGN.md) · [结构地图](docs/PROJECT_MAP.md)
+
+![AgentLens overview](docs/images/overview.jpg)
+
+在线演示使用 **180 个确定性虚构会话**。本地模式通过轻量 Node API 只读取统计元数据；没有内置真实对话或认证信息。
 
 ## 运行
 
-需要 Node.js 22.12 或更高版本。
+需要 Node.js 22.12+。
 
 ```sh
-npm ci
-npm run dev
+npm install
+npm run dev:all
 ```
 
-打开 http://127.0.0.1:5173/ 。终端里的服务需要保持运行；停止服务用 Ctrl+C。
+打开 http://127.0.0.1:5173/ 。默认是演示模式，在顶部切换到本地模式读取已安装 Agent 的日志。只体验前端可运行 `npm run dev`，无需 API。
 
 ```sh
 npm test
+npm run typecheck
 npm run build
-npm run preview
 ```
 
-构建产物在 `dist/`，可放到普通静态网站服务器。HashRouter 使用 `/#/works` 形式的地址，不需要服务器路由重写。没有账号、后端和云同步；作品数据通过真实 fetch 读取 `public/catalog.json`，收藏和设计版本保存在当前浏览器的 localStorage。
+## 产品功能
 
-## 体验路径
+- 时间、项目、Agent 联动总览；趋势缩放与日期下钻；Token 分布和活动热图。
+- 可排序、可搜索的虚拟会话列表；URL 筛选；收藏、标签备注、保存视图与 CSV 导出。
+- 会话详情侧栏；输入上下文走势；虚拟请求明细；单次请求的输入、输出、缓存、推理与上限口径。
+- 三槽对比工作台；原生拖动 / 键盘排序；跨 Agent 曲线与指标对照；缺失指标保留未知。
+- 浏览器 Worker 文件解析与规范校验；预览后导入 IndexedDB；演示 / 本地 / 导入工作区切换。
+- Ctrl / Cmd K 搜索跳转；路由懒加载、错误边界、键盘焦点约束、动画减弱与移动布局。
+- 开发模式 F8 区域定位，显示组件与样式位置，方便和 AI 描述具体修改。
 
-1. 首页用箭头或键盘切换精选卡片，点击卡片进入作品。
-2. 作品页搜索、分类、排序或筛选收藏，卡片随布局变化移动。
-3. 详情页调整主色、动态节奏，暂停、重置或保存命名版本和备注。
-4. 我的收藏中拖动卡片或用前移／后移按钮排序，恢复保存的版本。
-5. 关于页用可展开的学习卡片了解每个交互对应的 React 概念。
+## 前端实现
 
-## React 学习重点
+React 19、TypeScript strict、React Router 7、TanStack Query 5、Table 8 / Virtual 3、Motion、Recharts、React Hook Form 与 Zod。
 
-- 复用组件与 props：Poster、ProjectCard、Modal、TransitionLink。
-- 局部 state、受控表单与列表 key。
-- Context + reducer：跨页面共享收藏、独立草稿和版本快照。
-- 自定义 Hook：异步数据、动画、系统动态偏好。
-- effect 清理：取消网络请求、撤销 GSAP 动画、移除事件监听、恢复焦点。
-- ref：读取 DOM 布局和设置指针位置，避免动画逐帧触发 React 渲染。
-- 路由、URL 查询参数、滚动位置恢复与异常边界。
-- Portal 弹窗、键盘焦点约束、减少动态效果。
+服务端状态由 Query 管理；筛选在 URL；表单和视图状态留在组件；全局工作区和对比选择在 Context。聚合与文件解析使用独立 Worker，并处理过期响应和进程清理。请求列表与会话表分别虚拟化，路由和重型图表按需加载。标签备注支持乐观更新、错误回滚和持久化。
 
-React 管理界面和交互状态。GSAP Flip 管理筛选／排序后的卡片位移，ScrollTrigger 管理首页内容入场；原生 View Transitions 管理封面从列表展开到详情。浏览器不支持 View Transitions 时仍可直接导航；减少动态效果时跳过这些动画。React 的并发调度与视觉转场是不同的事情，搜索使用 useDeferredValue 延后结果更新。
+UI、SVG 流线、布局与交互在本仓库实现；图表、图标及动效基础使用开源库。设计说明见 [UI design](docs/UI_DESIGN.md)，结构见 [项目地图](docs/PROJECT_MAP.md)，后续读代码路线见 [React walkthrough](docs/REACT_GUIDE.md)。
 
-没有 Three.js 依赖。海报是本项目编写的 CSS / SVG 图形，未使用外部 3D 模型、图库海报或他站源码。视觉采用常见的编辑排版与几何海报语言，不宣称这些设计手法是独创。Manrope 来自 Google Fonts，网络不可用时使用系统字体。
+## 轻量本地后端
 
-## 准确描述修改位置
+Node 内置 HTTP、文件系统、Readline 流式解析和 SSE，不依赖数据库。只监听 127.0.0.1:5174，Vite 代理 `/api`。扫描使用文件 mtime / size 缓存；每 10 秒发现变化，向前端推送版本更新。备注保存在被 git 忽略的 `.agentlens/annotations.json`，通过串行队列与临时文件 rename 原子保存。
 
-开发时左下角“区域定位”可显示中文区域名、组件路径、CSS 选择器和实际字号。Alt+点击固定，再点复制定位；Alt+L 开关，Esc 取消固定。正式构建默认关闭，可主动开启。区域映射集中在 `src/learning/regions.ts`，不在每个元素上重复添加说明。
+可在启动前设置：
 
-从 [页面与文件指南](docs/PROJECT_MAP.md) 开始，再按 [React 学习路线](docs/REACT_GUIDE.md) 逐步修改。当前验收范围见 [验收记录](docs/VERIFICATION.md)。
+- `CODEX_HOME`：默认 `~/.codex`，读取 sessions 和 archived_sessions。
+- `CLAUDE_CONFIG_DIR`：默认 `~/.claude`，读取 projects。
+- `WORKBUDDY_HOME`：默认 `~/.workbuddy`，读取 traces。
+- `AGENTLENS_STORE`：备注文件路径。
 
-参考文档：[React Hooks](https://react.dev/reference/react/hooks)、[useDeferredValue](https://react.dev/reference/react/useDeferredValue)、[GSAP Flip](https://gsap.com/docs/v3/Plugins/Flip/)、[View Transitions](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)。
+如修改 API 端口，同时修改 Vite proxy。目录没有日志时可以在数据源页面导入文件；在线演示的本地模式不能访问访客电脑，真实连接应在本机运行完整项目。
+
+## 数据定义与限制
+
+输入统一包含缓存读取与写入；Claude 原始普通输入需额外加缓存。推理输出若有，已包含在输出中。缓存命中率的分母只包含缓存字段可知的输入。上下文占用是单次输入 / 该次日志记录的上限，绝不是整场会话的累计用量。
+
+Codex 优先使用归属当前 thread 的 response ID 记录，去重显式与嵌入的压缩记录；旧版主会话回退到累计快照差分。旧版子 Agent 没有明确归属时不计入，避免复制历史带来重复消耗。不同版本日志可能缺字段，统计不是账单。
+
+Claude 按 message ID 合并重复 / 流式片段。WorkBuddy 按 trace 和 sessionId 汇总，利用 totalTokens 对账识别缓存独立输入；无法对账的异常缓存值不计算命中率。未连接 WorkBuddy 会话数据库，因此标题、用户消息、工具数和上下文上限保留未知。请求数在 WorkBuddy 是 trace 数，不一定等于底层模型调用数。
+
+本机 Codex 已做实际读取验证；Claude Code 和 WorkBuddy 做了合成格式测试，本机没有它们的日志，尚未做安装实例联调。项目名和使用时间也属于私人元数据；导出和分享请自行选择范围。
+
+适配口径参考 [ccusage Codex 文档](https://github.com/ccusage/ccusage/blob/main/docs/guide/codex/index.md)、[Claude Code monitoring](https://code.claude.com/docs/en/monitoring-usage)、[WorkBuddy usage data guide](https://github.com/clancy-feng/workbuddy-usage-status/blob/main/DATA-GUIDE.md)。代码为独立实现；没有复制这些项目的源代码或数据。
+
+验证范围见 [verification](docs/VERIFICATION.md)。
+
+MIT licensed. 第三方库保留各自许可。

@@ -1,4 +1,6 @@
 node_modules/
+/.agentlens/
+/.openai/credentials/
 dist/
 coverage/
 *.tsbuildinfo
