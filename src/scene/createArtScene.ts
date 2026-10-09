@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { createSculpture, createExhibit } from "./sculptures";
+import { createExhibit } from "./sculptures";
+import { createParticleField } from "./particleField";
 import type { SceneInspection } from "../learning/sceneRegistry";
 import { artworks } from "../data/artworks";
 import { artworkKinds, type ArtworkKind } from "../data/artworks";
@@ -50,45 +51,27 @@ export function createArtScene(
   const edge = new THREE.DirectionalLight("#92aaff", 4);
   edge.position.set(-4, 1, -2);
   scene.add(edge);
-  const hero = createSculpture(defaultSettings.color);
+  const fieldSize = container.clientWidth < 760 ? 64 : 128;
+  const heroField =
+    options.mode === "story"
+      ? createParticleField(renderer, defaultSettings.color, fieldSize)
+      : null;
+  const exhibitField = createParticleField(
+    renderer,
+    defaultSettings.color,
+    fieldSize,
+  );
+  const hero = heroField?.group ?? new THREE.Group();
   scene.add(hero);
   const exhibits = artworkKinds.map((kind) => {
-    const group = createExhibit(kind, defaultSettings.color);
+    const group =
+      kind === "particles"
+        ? exhibitField.group
+        : createExhibit(kind, defaultSettings.color);
     group.userData.kind = kind;
     scene.add(group);
     return group;
   });
-  const floorMaterial = new THREE.MeshBasicMaterial({
-    color: "#8b8b89",
-    transparent: true,
-    opacity: 0.065,
-  });
-  const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(2.5, 64),
-    floorMaterial,
-  );
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -2.9;
-  scene.add(floor);
-  // Small satellites echo the material of the main sculpture without loading models.
-  const orbit = new THREE.Group();
-  const satelliteGeometry = new THREE.IcosahedronGeometry(0.045, 0);
-  const satelliteMaterial = new THREE.MeshStandardMaterial({
-    color: "#acb6cb",
-    metalness: 1,
-    roughness: 0.23,
-  });
-  for (let i = 0; i < 24; i++) {
-    const satellite = new THREE.Mesh(satelliteGeometry, satelliteMaterial);
-    const a = i * 2.39996;
-    satellite.position.set(
-      Math.cos(a) * (2.5 + (i % 3) * 0.25),
-      (i / 23 - 0.5) * 4.8,
-      Math.sin(a) * 1.5,
-    );
-    orbit.add(satellite);
-  }
-  scene.add(orbit);
   let settings = { ...defaultSettings };
   let reducedMotion = false;
   let progress = 0;
@@ -106,15 +89,31 @@ export function createArtScene(
   const pointer = new THREE.Vector2();
   const drift = new THREE.Vector2();
   const aim = new THREE.Vector3();
+  let pointerActive = false;
+  let simulationTime = 0;
+  let adaptiveScale = 1;
+  let slowFrames = 0;
+  const forceRay = new THREE.Raycaster();
+  const forcePlane = new THREE.Plane();
+  const forceNormal = new THREE.Vector3();
+  const forceWorld = new THREE.Vector3();
+  const localPointer = new THREE.Vector3();
+  container.dataset.simulation = exhibitField.backend;
+  container.dataset.particles = String(exhibitField.count);
   const resize = () => {
     width = Math.max(1, container.clientWidth);
     height = Math.max(1, container.clientHeight);
     renderer.setSize(width, height);
     renderer.setPixelRatio(
-      Math.min(
-        window.devicePixelRatio || 1,
-        settings.quality === "high" ? 2 : settings.quality === "eco" ? 1 : 1.5,
-      ),
+      adaptiveScale *
+        Math.min(
+          window.devicePixelRatio || 1,
+          settings.quality === "high"
+            ? 2
+            : settings.quality === "eco"
+              ? 1
+              : 1.5,
+        ),
     );
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
@@ -124,6 +123,11 @@ export function createArtScene(
   observer.observe(container);
   const pointerMove = (event: PointerEvent) => {
     const bounds = container.getBoundingClientRect();
+    pointerActive =
+      event.clientX >= bounds.left &&
+      event.clientX <= bounds.right &&
+      event.clientY >= bounds.top &&
+      event.clientY <= bounds.bottom;
     pointer.set(
       THREE.MathUtils.clamp(
         ((event.clientX - bounds.left) / width) * 2 - 1,
@@ -139,6 +143,7 @@ export function createArtScene(
     dirty = true;
   };
   const pointerLeave = () => {
+    pointerActive = false;
     pointer.set(0, 0);
     dirty = true;
   };
@@ -173,25 +178,16 @@ export function createArtScene(
         ? THREE.MathUtils.smoothstep(progress, 0.55, 1.35)
         : 0;
     hero.visible = options.mode === "story" && reveal < 0.999;
-    orbit.visible = hero.visible;
-    floor.visible = hero.visible;
     if (hero.visible) {
-      const scale = mobile ? (wide ? 0.75 : 0.66) : 1.1;
-      hero.scale.setScalar(scale * (1 - reveal));
-      hero.position.set(mobile ? 0.05 : 2.05, mobile ? -0.62 : 0.05, 0);
+      const scale = mobile ? (wide ? 1.15 : 1.08) : 1.95;
+      hero.scale.setScalar(scale * (1 - reveal * 0.2));
+      heroField?.setOpacity(1 - reveal);
+      hero.position.set(mobile ? 0.05 : 2.0, mobile ? -0.92 : 0.03, 0);
       hero.rotation.set(
         0.04 + drift.y * 0.05,
         -0.38 + Math.sin(clock * 0.14) * 0.12 + drift.x * 0.13,
         -0.08,
       );
-      const directions = hero.userData.layerDirections as THREE.Vector3[];
-      hero.children.forEach((layer, index) =>
-        layer.position.copy(directions[index]).multiplyScalar(explode * 1.25),
-      );
-      orbit.position.copy(hero.position);
-      orbit.scale.copy(hero.scale);
-      orbit.rotation.y = clock * 0.03;
-      floor.position.x = hero.position.x;
       if (progress > 0.6) camera.position.z -= explode * 0.5;
     }
     exhibits.forEach((group, index) => {
@@ -211,16 +207,16 @@ export function createArtScene(
             ? 0.85 - index * 1.85
             : 2.05 - index * 2.1
           : -0.05;
-      const galleryScale = mobile && !wide ? 0.74 : 1.05;
+      const galleryScale = mobile && !wide ? 0.54 : 0.8;
       const targetScale = mobile
         ? options.mode === "story"
-          ? 1.05
+          ? 0.93
           : 1.3
         : 1.85;
       group.position.set(
         THREE.MathUtils.lerp(
           galleryX,
-          mobile ? (options.mode === "story" ? 0.65 : 0) : -0.05,
+          mobile ? (options.mode === "story" ? 0.35 : 0) : -0.05,
           focus,
         ),
         THREE.MathUtils.lerp(
@@ -228,7 +224,7 @@ export function createArtScene(
           mobile ? (options.mode === "experiment" ? -1.2 : 0.2) : 0,
           focus,
         ),
-        0,
+        -0.5,
       );
       group.scale.setScalar(
         reveal *
@@ -237,7 +233,7 @@ export function createArtScene(
             : galleryScale * (1 - focus)),
       );
       group.rotation.z = drift.x * 0.04;
-      group.userData.animate(clock);
+      if (kind !== "particles") group.userData.animate(clock);
     });
     camera.position.x += drift.x * 0.18;
     camera.position.y += drift.y * 0.13;
@@ -258,6 +254,53 @@ export function createArtScene(
     const interval = settings.quality === "eco" ? 1000 / 30 : 1000 / 60;
     if (now - lastDraw < interval || (!active && !moving && !dirty)) return;
     layout();
+    scene.updateMatrixWorld(true);
+    camera.updateMatrixWorld(true);
+    const simElapsed = simulationTime
+      ? Math.min((now - simulationTime) / 1000, 0.05)
+      : 1 / 60;
+    simulationTime = now;
+    camera.getWorldDirection(forceNormal);
+    forceRay.setFromCamera(pointer, camera);
+    for (const field of [heroField, exhibitField]) {
+      if (!field) continue;
+      if (!field.group.visible) continue;
+      forcePlane.setFromNormalAndCoplanarPoint(
+        forceNormal,
+        field.group.position,
+      );
+      const hit =
+        pointerActive && !document.querySelector('[aria-modal="true"]')
+          ? forceRay.ray.intersectPlane(forcePlane, forceWorld)
+          : null;
+      const target = hit
+        ? field.group.worldToLocal(localPointer.copy(hit))
+        : null;
+      const morph =
+        field === heroField
+          ? THREE.MathUtils.smoothstep(progress, 0.15, 1.3) * 2
+          : settings.formation === "sphere"
+            ? 0
+            : settings.formation === "helix"
+              ? 1
+              : 2;
+      field.advance(simElapsed, morph, target);
+    }
+    // Auto quality reduces raster cost after sustained slow frames, with a floor.
+    // It never changes the solver's timestep or user's saved density setting.
+    if (
+      settings.quality === "auto" &&
+      active &&
+      elapsed > 0.028 &&
+      elapsed < 0.09
+    )
+      slowFrames++;
+    else slowFrames = Math.max(0, slowFrames - 1);
+    if (slowFrames > 90 && adaptiveScale > 0.6) {
+      adaptiveScale = Math.max(0.6, adaptiveScale - 0.15);
+      slowFrames = 0;
+      resize();
+    }
     renderer.render(scene, camera);
     lastDraw = now;
     dirty = false;
@@ -288,10 +331,12 @@ export function createArtScene(
       const kind = group.userData.kind as ArtworkKind | undefined;
       let box: THREE.Box3;
       let distance: number;
-      if (kind === "particles") {
+      if (group.userData.particleField) {
         // GPU positions aren't DOM elements or CPU vertices. Use the field's
         // volume for learning-mode picking rather than the seed geometry.
-        const sphere = particleBounds.clone().applyMatrix4(group.matrixWorld);
+        const sphere = particleBounds.clone();
+        sphere.radius = group.userData.inspectionRadius;
+        sphere.applyMatrix4(group.matrixWorld);
         const hit = inspectionRay.ray.intersectSphere(
           sphere,
           new THREE.Vector3(),
@@ -312,8 +357,10 @@ export function createArtScene(
           distance,
           title: kind
             ? "3D 展品 · " + artworks.find((art) => art.kind === kind)!.title
-            : "首页 3D 雕塑",
-          name: kind ? "createExhibit('" + kind + "')" : "createSculpture()",
+            : "首页交互粒子场",
+          name: group.userData.particleField
+            ? "createParticleField()"
+            : "createExhibit('" + kind + "')",
         };
     }
     if (!picked) return null;
@@ -337,8 +384,12 @@ export function createArtScene(
     return {
       title: picked.title,
       selector: "Three.js 对象 / " + picked.name,
-      source: "src/scene/sculptures.ts / src/scene/createArtScene.ts",
-      note: "形状、材质和粒子改 sculptures.ts；大小、位置、摄像机和滚动解构改 createArtScene.ts。蓝框是对象的投影范围。",
+      source: picked.group.userData.particleField
+        ? "src/scene/particleField.ts / src/scene/createArtScene.ts"
+        : "src/scene/sculptures.ts / src/scene/createArtScene.ts",
+      note: picked.group.userData.particleField
+        ? "粒子形态、速度积分和鼠标力场改 particleField.ts；构图和滚动进度改 createArtScene.ts。蓝框为近似体积。"
+        : "形状和材质改 sculptures.ts；构图、摄像机改 createArtScene.ts。",
       rect: {
         left: bounds.left,
         top: bounds.top,
@@ -365,20 +416,23 @@ export function createArtScene(
       const qualityChanged = settings.quality !== next.quality;
       settings = next;
       reducedMotion = reduce;
-      const blue = hero.getObjectByName("blue-ribbon") as THREE.Mesh<
-        THREE.BufferGeometry,
-        THREE.MeshPhysicalMaterial
-      >;
-      blue.material.color.set(next.color);
+      heroField?.configure(next, reduce);
+      exhibitField.configure(next, reduce);
       exhibits.forEach((group) =>
-        group.userData.setParameters({ ...next, reducedMotion: reduce }),
+        group.userData.setParameters?.({ ...next, reducedMotion: reduce }),
       );
-      if (qualityChanged) resize();
+      if (qualityChanged) {
+        adaptiveScale = 1;
+        slowFrames = 0;
+        resize();
+      }
       dirty = true;
     },
     dispose: () => {
       disposed = true;
       cancelAnimationFrame(frame);
+      heroField?.dispose();
+      exhibitField.dispose();
       observer.disconnect();
       window.removeEventListener("pointermove", pointerMove);
       document.removeEventListener("pointerleave", pointerLeave);

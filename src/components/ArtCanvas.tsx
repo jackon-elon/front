@@ -37,6 +37,7 @@ export const ArtCanvas = forwardRef<ArtCanvasHandle, Props>(function ArtCanvas(
     "loading",
   );
   const [attempt, setAttempt] = useState(0);
+  const [compatible, setCompatible] = useState(false);
   const latest = useRef({ settings, reduced, kind, available });
   latest.current = { settings, reduced, kind, available };
   useImperativeHandle(
@@ -59,6 +60,7 @@ export const ArtCanvas = forwardRef<ArtCanvasHandle, Props>(function ArtCanvas(
         onLost: () => setState("fallback"),
       });
       scene.current = controller;
+      setCompatible(host.current.dataset.simulation === "analytic");
       controller.configure(latest.current.settings, latest.current.reduced);
       controller.setAvailable(latest.current.available);
       controller.setProgress(progress.current);
@@ -90,6 +92,9 @@ export const ArtCanvas = forwardRef<ArtCanvasHandle, Props>(function ArtCanvas(
   return (
     <div className={"art-canvas art-canvas--" + mode} data-scene-state={state}>
       <div className="art-canvas__host" ref={host} aria-hidden="true" />
+      {state === "ready" && compatible && (
+        <p className="simulation-note" role="status">当前设备使用兼容动画，鼠标粒子力场暂不可用。</p>
+      )}
       {state === "loading" && (
         <div className="scene-status" role="status">
           正在准备空间

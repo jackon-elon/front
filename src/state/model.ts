@@ -8,6 +8,8 @@ export interface LabSettings {
   paused: boolean;
   quality: Quality;
   motion: "auto" | "reduced";
+  formation: "sphere" | "helix" | "vortex";
+  interaction: "repel" | "attract";
 }
 export interface SavedExperiment {
   id: string;
@@ -30,6 +32,8 @@ export const defaultSettings: LabSettings = {
   paused: false,
   quality: "auto",
   motion: "auto",
+  formation: "sphere",
+  interaction: "repel",
 };
 
 function record(value: unknown): Record<string, unknown> {
@@ -64,6 +68,10 @@ export function normalizeSettings(value: unknown): LabSettings {
       ? (input.quality as Quality)
       : defaultSettings.quality,
     motion: input.motion === "reduced" ? "reduced" : "auto",
+    formation: ["sphere", "helix", "vortex"].includes(String(input.formation))
+      ? (input.formation as LabSettings["formation"])
+      : defaultSettings.formation,
+    interaction: input.interaction === "attract" ? "attract" : "repel",
   };
 }
 

@@ -79,6 +79,8 @@ svg {
   color: white;
 }
 html {
+  color: var(--ink);
+  background: var(--paper);
   transition:
     background 0.5s,
     color 0.5s;
@@ -294,6 +296,16 @@ html[data-appearance="dark"] {
   font-size: 12px;
   letter-spacing: 2px;
 }
+.simulation-note {
+  position: absolute;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 85%;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+}
 .loading-dot {
   display: inline-block;
   width: 5px;
@@ -356,6 +368,22 @@ html[data-appearance="dark"] {
 }
 .home-experience {
   position: relative;
+}
+.story-atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 72% 40%, #25498035, transparent 52%);
+}
+.home-experience .hero-title {
+  color: #eaf1ff;
+}
+.home-experience .hero-title span {
+  color: #9db9ff;
+}
+.home-experience .hero-caption .button {
+  background: #d8e5ff;
+  color: #101a31;
 }
 .story-section {
   position: relative;
@@ -634,6 +662,48 @@ html[data-appearance="dark"] {
 .panel-heading .icon-button {
   width: 30px;
   height: 30px;
+}
+.field-controls {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+}
+.field-control-label {
+  color: #b7bdcc;
+}
+.field-formations {
+  display: flex;
+  gap: 5px;
+  margin-top: 12px;
+}
+.field-formations button {
+  flex: 1;
+  padding: 9px 4px;
+  border: 1px solid #ffffff20;
+  border-radius: 3px;
+}
+.field-formations [aria-pressed="true"] {
+  background: #d8e5ff;
+  color: #0d1425;
+  border-color: #d8e5ff;
+}
+.field-interaction {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 13px;
+}
+.field-interaction span {
+  margin-right: auto;
+  color: #b7bdcc;
+}
+.field-interaction button {
+  padding: 5px 8px;
+  opacity: 0.5;
+}
+.field-interaction [aria-pressed="true"] {
+  opacity: 1;
+  border-bottom: 1px solid currentColor;
 }
 .slider-row {
   display: grid;

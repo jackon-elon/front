@@ -29,6 +29,18 @@ describe("persisted experimental controls", () => {
     });
     expect(state.favorites).toEqual(["particles"]);
     expect(state.saved).toEqual([]);
+    // Existing v1 browser saves predate force/formation controls and must migrate.
+    expect(normalizeSettings({ speed: 1.4 })).toMatchObject({
+      speed: 1.4,
+      formation: "sphere",
+      interaction: "repel",
+    });
+    expect(
+      normalizeSettings({ formation: "unknown", interaction: null }),
+    ).toMatchObject({
+      formation: "sphere",
+      interaction: "repel",
+    });
   });
 
   it("restores saved controls, resumes motion and keeps favorites independent of reset", () => {
@@ -45,6 +57,8 @@ describe("persisted experimental controls", () => {
             speed: 1.4,
             color: "#abcdef",
             paused: true,
+            formation: "vortex",
+            interaction: "attract",
           },
         },
       ],
@@ -55,6 +69,8 @@ describe("persisted experimental controls", () => {
       speed: 1.4,
       color: "#abcdef",
       paused: false,
+      formation: "vortex",
+      interaction: "attract",
     });
     const reset = labReducer(restored, { type: "reset" });
     expect(reset.favorites).toEqual(["light"]);

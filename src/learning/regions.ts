@@ -14,6 +14,12 @@ const experiment = "src/pages/ExperimentPage.tsx";
 // so page components don't need a second set of teaching-only labels.
 export const regions: RegionDefinition[] = [
   {
+    title: "粒子重组与鼠标力场",
+    selector: ".field-controls",
+    source: panel + " / src/scene/particleField.ts / src/state/model.ts",
+    note: "按钮和参数入口改 ExperimentPanel；三种形态、显卡模拟与力场改 particleField；参数保存与恢复由共享状态处理。",
+  },
+  {
     title: "首页大标题 · 第二行",
     selector: ".hero-title span",
     source: home,

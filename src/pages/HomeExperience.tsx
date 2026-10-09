@@ -22,20 +22,43 @@ export default function HomeExperience() {
   useEffect(() => {
     if (!root.current) return;
     let lastStage = -1;
-    let dark = false;
-    setAppearance("light");
+    setAppearance("dark");
     const drive = { progress: 0 };
+    const html = document.documentElement;
+    const background = gsap.utils.interpolate("#101d37", "#080d19");
+    const outgoing = root.current.querySelectorAll(
+      ".section-copy, .deconstruct-label",
+    );
+    const heroCopy = root.current.querySelectorAll(
+      ".hero-eyebrow, .hero-title, .hero-caption, .hero-coordinate",
+    );
+    const galleryCopy = root.current.querySelectorAll(
+      ".gallery-heading, .exhibit-labels, .gallery-footer",
+    );
+    const visibility = (start: number, end: number, p: number) =>
+      gsap.utils.clamp(0, 1, (p - start) / (end - start));
     const update = () => {
       canvas.current?.setProgress(drive.progress);
+      const blend = gsap.utils.clamp(0, 1, (drive.progress - 0.8) / 1.1);
+      html.style.setProperty("--paper", background(blend));
+      html.style.setProperty("--ink", "#eef3ff");
+      html.style.setProperty("--muted", "#949fb6");
+      html.style.setProperty("--line", "rgba(239,239,237,.18)");
+      gsap.set(heroCopy, {
+        opacity: 1 - visibility(0.05, 0.65, drive.progress),
+      });
+      gsap.set(outgoing, {
+        opacity: 1 - visibility(1.05, 1.5, drive.progress),
+      });
+      gsap.set(galleryCopy, {
+        opacity:
+          visibility(1.65, 1.98, drive.progress) *
+          (1 - visibility(2.1, 2.65, drive.progress)),
+      });
       const nextStage = Math.min(3, Math.round(drive.progress));
       if (lastStage !== nextStage) {
         lastStage = nextStage;
         setStage(nextStage);
-      }
-      const nextDark = drive.progress >= 1.55;
-      if (nextDark !== dark) {
-        dark = nextDark;
-        setAppearance(dark ? "dark" : "light");
       }
     };
     const tween = gsap.to(drive, {
@@ -53,18 +76,19 @@ export default function HomeExperience() {
     return () => {
       tween.scrollTrigger?.kill();
       tween.kill();
+      for (const name of ["--paper", "--ink", "--muted", "--line"])
+        html.style.removeProperty(name);
     };
   }, [setAppearance, reduced]);
   const go = (index: number) => {
-    document
-      .getElementById("stage-" + index)
-      ?.scrollIntoView({
-        behavior: reduced ? "instant" : "smooth",
-        block: "start",
-      });
+    document.getElementById("stage-" + index)?.scrollIntoView({
+      behavior: reduced ? "instant" : "smooth",
+      block: "start",
+    });
   };
   return (
     <main className="home-experience" ref={root}>
+      <div className="story-atmosphere" aria-hidden="true" />
       <ArtCanvas ref={canvas} mode="story" kind={kind} />
       <div className="story-rail" aria-label="体验章节">
         {stages.map((title, i) => (
@@ -97,9 +121,9 @@ export default function HomeExperience() {
         </h1>
         <div className="hero-caption">
           <p>
-            在形态与流动之间，
+            触碰粒子，打破秩序。
             <br />
-            发现另一种可能。
+            松开，让形态重新生长。
           </p>
           <button className="button button-dark" onClick={() => go(1)}>
             进入空间
@@ -116,7 +140,7 @@ export default function HomeExperience() {
           <button onClick={() => go(1)}>
             向下滚动，改变视角 <Icon name="down" />
           </button>
-          <span>REAL-TIME / 3D</span>
+          <span>MOVE YOUR CURSOR / FEEL THE FIELD</span>
         </div>
       </section>
       <section
@@ -127,24 +151,24 @@ export default function HomeExperience() {
         <div className="section-copy">
           <span className="eyebrow">02 / BEYOND THE SURFACE</span>
           <h2 id="deconstruct-title">
-            每一种形态，
+            秩序之外，
             <br />
-            都有另一面。
+            还有引力。
           </h2>
           <p>
             靠近一点。
             <br />
-            让层次展开，让边界松动。
+            光点随着你的动作散开，又聚拢。
             <br />
-            熟悉的形状，会在运动中重新出现。
+            继续滚动，见证形态重新编织。
           </p>
           <button className="text-button" onClick={() => go(2)}>
             继续探索 <Icon name="arrow" />
           </button>
         </div>
         <div className="deconstruct-label">
-          <span>BLUE / CHROME / GLASS</span>
-          <span>Three materials. One continuous flow.</span>
+          <span>SCATTER / REASSEMBLE / FLOW</span>
+          <span>One field. Infinite possibilities.</span>
         </div>
       </section>
       <section
