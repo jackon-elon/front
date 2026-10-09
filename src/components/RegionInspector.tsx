@@ -58,11 +58,13 @@ export default function RegionInspector() {
   const file =
     region?.selector === ".trace-viz"
       ? "src/components/LiveTrace.tsx"
-      : region?.selector === ".session-deck"
-        ? "src/components/SessionDeck.tsx"
-        : region?.selector === ".metric"
-          ? "src/components/UI.tsx"
-          : `src/pages/${pages[location.pathname] ?? "Overview"}.tsx`;
+      : region?.selector === ".session-stack"
+        ? "src/components/SessionStack.tsx"
+        : region?.selector === ".session-deck"
+          ? "src/components/SessionDeck.tsx"
+          : region?.selector === ".metric"
+            ? "src/components/UI.tsx"
+            : `src/pages/${pages[location.pathname] ?? "Overview"}.tsx`;
   const descriptor = region
     ? `修改区域：${region.name}\n组件文件：${file}\n样式文件：src/styles.css\n选择器：${region.selector}\n区域标题/数值字号：${region.font}\n我的修改要求：`
     : "";

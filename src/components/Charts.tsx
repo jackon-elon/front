@@ -16,11 +16,11 @@ import { compact, integer } from "../lib/format";
 import type { Analytics } from "../../shared/analytics";
 import { providerColors, type Session } from "../../shared/schema";
 const chartTheme = {
-  backgroundColor: "#242730",
-  border: "1px solid #40434c",
+  backgroundColor: "#fff",
+  border: "1px solid #dfe3eb",
   borderRadius: 12,
-  color: "#fff",
-  fontSize: 13,
+  color: "#20283e",
+  fontSize: 15,
 };
 export function UsageChart({
   data,
@@ -57,27 +57,27 @@ export function UsageChart({
           >
             <defs>
               <linearGradient id="usage-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#a9d7b7" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#a9d7b7" stopOpacity={0} />
+                <stop offset="0%" stopColor="#4656d8" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#4656d8" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
               vertical={false}
-              stroke="#2a3031"
+              stroke="#e1e5ef"
               strokeDasharray="3 5"
             />
             <XAxis
               dataKey="label"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: "#8a8995" }}
+              tick={{ fontSize: 14, fill: "#626b7c" }}
               minTickGap={25}
             />
             <YAxis
               tickFormatter={compact}
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 12, fill: "#8a8995" }}
+              tick={{ fontSize: 14, fill: "#626b7c" }}
             />
             <Tooltip
               contentStyle={chartTheme}
@@ -86,7 +86,7 @@ export function UsageChart({
             <Area
               type="monotone"
               dataKey={metric}
-              stroke="#a9d7b7"
+              stroke="#4656d8"
               strokeWidth={3}
               fill="url(#usage-fill)"
               animationDuration={550}
@@ -186,7 +186,7 @@ export function ContextChart({
           margin={{ top: 15, left: -15, right: 20 }}
         >
           <CartesianGrid
-            stroke="#2a3031"
+            stroke="#e1e5ef"
             vertical={false}
             strokeDasharray="3 5"
           />
@@ -194,13 +194,13 @@ export function ContextChart({
             dataKey="step"
             tickLine={false}
             axisLine={false}
-            tick={{ fontSize: 11, fill: "#a5b19e" }}
+            tick={{ fontSize: 14, fill: "#626b7c" }}
           />
           <YAxis
             tickFormatter={(v) => (normalized ? `${v}%` : compact(v))}
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11, fill: "#a5b19e" }}
+            tick={{ fontSize: 14, fill: "#626b7c" }}
           />
           <Tooltip
             contentStyle={chartTheme}
@@ -208,11 +208,11 @@ export function ContextChart({
               normalized ? `${Number(v).toFixed(1)}%` : integer(Number(v))
             }
           />
-          <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+          <Legend wrapperStyle={{ fontSize: 14, paddingTop: 8 }} />
           {selectedStep && (
             <ReferenceLine
               x={selectedStep}
-              stroke="#e8a97d"
+              stroke="#4656d8"
               strokeDasharray="4 4"
             />
           )}

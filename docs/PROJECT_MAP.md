@@ -6,6 +6,7 @@
 - 实时工作台、过滤与时间线暂停：`src/pages/Overview.tsx`
 - 请求时间桶与 SVG 点击联动：`src/components/LiveTrace.tsx`、`shared/live.ts`
 - 会话卡片展开与对比：`src/components/SessionDeck.tsx`
+- 会话叠放、前后切换、单会话请求轨迹：`src/components/SessionStack.tsx`
 - 指针 / 键盘分隔条和宽度记忆：`src/components/SplitView.tsx`
 - 搜索、排序、收藏筛选、虚拟列表、CSV：`src/pages/Sessions.tsx`
 - 会话侧栏、请求明细、标签备注：`src/components/SessionDetail.tsx`

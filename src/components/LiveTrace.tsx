@@ -21,6 +21,17 @@ export function LiveTrace({
   const total = bins.reduce((sum, b) => sum + b.input + b.output, 0);
   const count = bins.reduce((sum, b) => sum + b.count, 0);
   const selected = hover === null ? null : bins[hover];
+  const points = bins.map((b, i) => [
+    i * 20 + 9,
+    205 - ((b.input + b.output) / peak) * 166,
+  ]);
+  // Quadratic midpoint interpolation stays between adjacent real bucket values.
+  const curve =
+    points.reduce((path, p, i) => {
+      if (!i) return `M${p[0]} ${p[1]}`;
+      const previous = points[i - 1];
+      return `${path} Q${previous[0]} ${previous[1]} ${(previous[0] + p[0]) / 2} ${(previous[1] + p[1]) / 2}`;
+    }, "") + ` L${points.at(-1)![0]} ${points.at(-1)![1]}`;
   const clock = (t: number) =>
     new Date(t).toLocaleTimeString("zh-CN", {
       hour: "2-digit",
@@ -31,7 +42,7 @@ export function LiveTrace({
       <div className="trace-readout">
         <strong>
           {compact(selected ? selected.input + selected.output : total)}
-          <small> tokens</small>
+          <small> TOKENS</small>
         </strong>
         <span>
           {selected
@@ -47,18 +58,34 @@ export function LiveTrace({
         >
           <defs>
             <linearGradient id={`trace-${id}`} x1="0" y1="0" x2="0" y2="1">
-              <stop stopColor="#a9d7b7" stopOpacity=".9" />
-              <stop offset="1" stopColor="#a9d7b7" stopOpacity=".1" />
+              <stop stopColor="#8199ff" stopOpacity=".85" />
+              <stop offset="1" stopColor="#8199ff" stopOpacity=".05" />
             </linearGradient>
           </defs>
           {[40, 95, 150, 205].map((y) => (
             <path
               key={y}
               d={`M0 ${y}H960`}
-              stroke="#2a3031"
+              stroke="#303850"
               strokeDasharray="2 5"
             />
           ))}
+          {!!count && (
+            <path
+              d={`${curve} L949 205 L9 205 Z`}
+              fill={`url(#trace-${id})`}
+              opacity=".35"
+            />
+          )}
+          {!!count && (
+            <path
+              d={curve}
+              stroke="#b2c1ff"
+              strokeWidth="2"
+              fill="none"
+              vectorEffect="non-scaling-stroke"
+            />
+          )}
           {bins.map((b, i) => {
             const height = Math.max(
               b.count ? 4 : 1,
@@ -76,7 +103,8 @@ export function LiveTrace({
                   width="12"
                   height={height}
                   rx="2"
-                  fill={`url(#trace-${id})`}
+                  fill="#8199ff"
+                  opacity=".5"
                 />
                 {!!b.output && (
                   <rect
@@ -85,7 +113,7 @@ export function LiveTrace({
                     width="12"
                     height={Math.max(2, outputHeight)}
                     rx="1"
-                    fill="#e8a97d"
+                    fill="#d1ee91"
                   />
                 )}
               </g>
@@ -94,11 +122,12 @@ export function LiveTrace({
           {hover !== null && (
             <path
               d={`M${hover * 20 + 9} 12V210`}
-              stroke="#e8a97d"
+              stroke="#d1ee91"
               strokeDasharray="3 5"
             />
           )}
         </svg>
+        <span className="trace-peak">{count ? compact(peak) : "—"} / 桶</span>
         <div className="trace-hit-grid" onMouseLeave={() => setHover(null)}>
           {bins.map((b, i) => (
             <button
@@ -132,7 +161,7 @@ export function LiveTrace({
           <i />
           输出
         </span>
-        <small>每列一个时间区间 · 点击定位会话</small>
+        <small>曲线为总量 · 点击筛选会话</small>
       </div>
     </div>
   );

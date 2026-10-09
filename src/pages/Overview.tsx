@@ -103,12 +103,11 @@ export default function Overview() {
     <div className="control-room">
       <div className="room-heading">
         <div>
-          <span className="eyebrow">AGENTLENS / OBSERVATORY</span>
+          <span className="eyebrow">YOUR AGENTS, IN FOCUS</span>
           <h1>
-            工作现场<span> / </span>
-            <em>Live desk</em>
+            看清每一次调用<span className="title-dot">.</span>
           </h1>
-          <p>请求、缓存与上下文。关注正在发生的事。</p>
+          <p>从整体投入，到每一条请求。你的 AI 工作，一目了然。</p>
         </div>
         <div className="room-clock">
           <strong>{clock(now)}</strong>
@@ -165,21 +164,34 @@ export default function Overview() {
             </button>
           ))}
         </div>
-        <select
-          aria-label="按项目筛选"
-          value={filters.project}
-          onChange={(e) => update("project", e.target.value)}
-        >
-          <option value="">所有工作区</option>
-          {projects.map((p) => (
-            <option key={p}>{p}</option>
-          ))}
-        </select>
+        <div className="overview-filters">
+          <select
+            aria-label="统计时间范围"
+            value={filters.days}
+            onChange={(e) => update("days", e.target.value)}
+          >
+            {[7, 14, 28].map((d) => (
+              <option key={d} value={d}>
+                最近 {d} 天
+              </option>
+            ))}
+          </select>
+          <select
+            aria-label="按项目筛选"
+            value={filters.project}
+            onChange={(e) => update("project", e.target.value)}
+          >
+            <option value="">所有工作区</option>
+            {projects.map((p) => (
+              <option key={p}>{p}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <SplitView>
         <Panel
-          title="请求脉冲"
-          eyebrow="01 / LIVE TELEMETRY"
+          title="调用正在发生"
+          eyebrow="01 / LIVE ACTIVITY"
           className="pulse-panel"
           action={
             <div className="pulse-actions">
@@ -233,8 +245,8 @@ export default function Overview() {
           </div>
         </Panel>
         <Panel
-          title="会话速览"
-          eyebrow="02 / SESSION DECK"
+          title="最近的工作"
+          eyebrow="02 / RECENT SESSIONS"
           className="deck-panel"
           action={
             <Link className="text-link" to="/sessions">
@@ -256,26 +268,11 @@ export default function Overview() {
           </Link>
         </Panel>
       </SplitView>
-      <div className="section-divider">
-        <span>统计概览</span>
-        <span className="divider-line" />
-        <select
-          aria-label="统计时间范围"
-          value={filters.days}
-          onChange={(e) => update("days", e.target.value)}
-        >
-          {[7, 14, 28].map((d) => (
-            <option key={d} value={d}>
-              最近 {d} 天
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="metric-grid" aria-busy={pending}>
+      <div className="overview-summary" aria-busy={pending}>
         <Metric
           label="Token 用量"
           value={compact(a.total)}
-          sub={`输入 ${compact(a.input)} / 输出 ${compact(a.output)}`}
+          sub={`输入 ${compact(a.input)} · 输出 ${compact(a.output)}`}
           index={0}
           accent
         />
@@ -305,6 +302,11 @@ export default function Overview() {
           }
           index={3}
         />
+      </div>
+      <div className="section-divider">
+        <span>把工作看得更深入</span>
+        <span className="divider-line" />
+        <span className="eyebrow">HISTORY & INSIGHTS</span>
       </div>
       <div className="history-grid">
         <Panel

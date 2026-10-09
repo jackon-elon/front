@@ -208,15 +208,13 @@ function Shell() {
                 key={path}
                 to={path}
                 end={path === "/"}
+                title={english}
                 className={({ isActive }) =>
                   `nav-link ${isActive ? "active" : ""}`
                 }
               >
                 <Icon size={19} />
-                <span>
-                  {label}
-                  <small>{english}</small>
-                </span>
+                <span>{label}</span>
                 {path === "/compare" && compare.length > 0 && (
                   <b>{compare.length}</b>
                 )}

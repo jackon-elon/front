@@ -66,9 +66,9 @@ export const providerNames: Record<Provider, string> = {
   workbuddy: "WorkBuddy",
 };
 export const providerColors: Record<Provider, string> = {
-  codex: "#a9d7b7",
-  claude: "#e8a97d",
-  workbuddy: "#91bbd8",
+  codex: "#237b60",
+  claude: "#ad642f",
+  workbuddy: "#4656d8",
 };
 export function sessionTotals(session: Session) {
   return session.requests.reduce(

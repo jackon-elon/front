@@ -1,4 +1,5 @@
 import { useDeferredValue, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useSearchParams, Link } from "react-router-dom";
 import {
   useReactTable,
@@ -460,28 +461,33 @@ export default function Sessions() {
           <span>点击标题查看详情 · 筛选条件保存在 URL</span>
         </div>
       </section>
-      {!!compare.length && (
-        <motion.div
-          className="compare-tray"
-          initial={{ y: 100 }}
-          animate={{ y: 0 }}
-        >
-          <div className="tray-stack">
-            {compare.map((id, i) => (
-              <span key={id} style={{ transform: `rotate(${(i - 1) * 8}deg)` }}>
-                {i + 1}
-              </span>
-            ))}
-          </div>
-          <div>
-            <strong>{compare.length} 个会话已加入对比</strong>
-            <span>可以跨 Agent 对比，最多三个</span>
-          </div>
-          <Link className="button primary" to="/compare">
-            打开对比工作台 <ArrowUpRight size={16} />
-          </Link>
-        </motion.div>
-      )}
+      {!!compare.length &&
+        createPortal(
+          <motion.div
+            className="compare-tray"
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+          >
+            <div className="tray-stack">
+              {compare.map((id, i) => (
+                <span
+                  key={id}
+                  style={{ transform: `rotate(${(i - 1) * 8}deg)` }}
+                >
+                  {i + 1}
+                </span>
+              ))}
+            </div>
+            <div>
+              <strong>{compare.length} 个会话已加入对比</strong>
+              <span>可以跨 Agent 对比，最多三个</span>
+            </div>
+            <Link className="button primary" to="/compare">
+              打开对比工作台 <ArrowUpRight size={16} />
+            </Link>
+          </motion.div>,
+          document.body,
+        )}
     </>
   );
 }
