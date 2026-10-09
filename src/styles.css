@@ -2414,6 +2414,140 @@ em {
   font-size: 12px;
   color: var(--muted);
 }
+@media (min-width: 760px) {
+  :root {
+    --text-body: clamp(16px, 1.1vw, 18px);
+    --text-control: 16px;
+    --text-meta: 14px;
+    --text-card-title: 22px;
+  }
+  .desktop-nav a,
+  .header-collection,
+  .button,
+  .text-link,
+  .hero-actions .button,
+  .hero-actions .text-link,
+  .category-tabs button,
+  .catalog-search input,
+  .favorite-filter,
+  .catalog-count select,
+  .design-back .text-link,
+  .design-color,
+  .design-range,
+  .design-range output,
+  .design-actions > .button,
+  .design-favorite,
+  .save-form label,
+  .save-form input,
+  .save-form textarea,
+  .motion-setting,
+  .saved-actions,
+  .shelf-heading .text-link {
+    font-size: var(--text-control);
+  }
+  .hero-description,
+  .selected-heading p,
+  .page-heading p,
+  .design-description,
+  .info-intro p,
+  .guide-answer p,
+  .catalog-error p,
+  .empty-state p,
+  .shelf-empty p,
+  .saved-empty,
+  .saved-card p {
+    font-size: var(--text-body);
+    line-height: 1.85;
+    color: var(--muted);
+  }
+  .hero-description {
+    font-size: clamp(18px, 1.25vw, 20px);
+  }
+  .eyebrow,
+  .hero-eyebrow,
+  .design-controls > .eyebrow,
+  .deck-counter,
+  .deck-controls strong,
+  .project-info div > span,
+  .project-number,
+  .catalog-count,
+  .category-tabs sup,
+  .design-tags span,
+  .preview-caption,
+  .local-note,
+  .design-back > span,
+  .design-next > span,
+  .design-next > a > span,
+  .guide-answer span,
+  .guide-item > button > span:first-child,
+  .save-form p,
+  .save-form label > span,
+  .info-limit,
+  .motion-setting small,
+  .saved-card .eyebrow,
+  .reorder-actions,
+  .shelf-heading > span,
+  .toast {
+    font-size: var(--text-meta);
+  }
+  .project-info h3,
+  .saved-card h3 {
+    font-size: var(--text-card-title);
+  }
+  .guide-item h3,
+  .design-control-heading h2 {
+    font-size: 18px;
+  }
+  .hero-footnote {
+    font-size: 14px;
+  }
+  .hero-footnote small,
+  .brand small {
+    font-size: 9px;
+  }
+  .site-footer > span,
+  .site-footer small {
+    font-size: 12px;
+  }
+  .header-collection sup {
+    font-size: 12px;
+    min-width: 24px;
+    height: 24px;
+  }
+  .catalog-search input {
+    width: clamp(140px, 15vw, 200px);
+  }
+  .hero-deck .poster-topline,
+  .project-cover-link .poster-topline,
+  .design-preview .poster-topline {
+    font-size: clamp(10px, 2cqw, 14px);
+  }
+  .project-cover-link .poster-topline {
+    right: 58px;
+    gap: 8px;
+    letter-spacing: 0.03em;
+  }
+  .project-cover-link .poster-topline span {
+    white-space: nowrap;
+  }
+  .hero-deck .poster-bottomline,
+  .project-cover-link .poster-bottomline,
+  .design-preview .poster-bottomline,
+  .hero-deck .poster-caption,
+  .project-cover-link .poster-caption,
+  .design-preview .poster-caption {
+    font-size: clamp(10px, 2cqw, 14px);
+  }
+}
+@media (min-width: 760px) and (max-width: 1100px) {
+  .catalog-toolbar {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .catalog-tools {
+    margin-left: auto;
+  }
+}
 @media (max-width: 759px) {
   .hero-actions .button,
   .hero-actions .text-link,

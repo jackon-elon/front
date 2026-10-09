@@ -31,6 +31,8 @@
 
 海报文字使用 `cqw`，根据海报容器宽度缩放，所以同一个 Poster 能放在小卡片和大预览里；页面标题使用 `clamp()` 限制最小、响应式和最大字号。
 
+电脑端的常用字号集中在 styles.css 的 `@media (min-width: 760px)` 中：`--text-body` 是正文 16–18px，`--text-control` 是操作文字 16px，`--text-meta` 是辅助说明 14px，`--text-card-title` 是卡片标题 22px。这些是 CSS 变量，修改后对应的一组区域会一起更新。
+
 ## 可直接复制给 AI 的修改描述
 
 > 首页叠放卡片区域：把正面的海报宽度增加 8%，后面的卡片仍露出边缘，390px 手机宽度不能横向溢出。先看 DiscoverPage.tsx 和 styles.css 的 hero-deck。
