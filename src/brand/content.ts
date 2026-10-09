@@ -1,5 +1,4 @@
 export const media = {
-  anatomy: `${import.meta.env.BASE_URL}media/imaging-glass.webp`,
   care: `${import.meta.env.BASE_URL}media/reading-room.webp`,
 };
 export const products = [

@@ -4,7 +4,8 @@
 
 - 首屏：`CinemaHero.tsx` / `.cinema-hero` / `.cinema-heading` / `.cinema-hero-image`。
 - 连续影像旅程：`ImagingStory.tsx` / `.story-track` / `.story-pin` / `.story-caption`。
-- 切片展开：`SlicePlane` / `.story-slice`，位置与旋转由滚动进度映射。
+- 资料窗口展开：`WorkspacePlane` / `.story-slice`，位置与旋转由滚动进度映射。
+- 产品视觉：`WorkspaceArtwork.tsx` / `.workspace-artwork`，横竖布局和整理状态由 props 控制。
 - 云端连接：`.cloud-orbit` / `.orbit-label`。
 - AI 近看：`.story-ai-scan` / `.story-scan-line` / `.ai-reticle`。
 - 协作报告：`.story-report` / `.report-sheet` / `.report-task`。
@@ -19,4 +20,4 @@
 - 首页视觉主要改 `src/narrative.css`，展台与通用样式主要改 `src/site.css`。
 - 手机适配：两个 CSS 文件底部的 `@media`，600 px 以下为手机布局，小高度手机另有规则。
 
-描述微调时可以说：把首屏 `.cinema-heading h1` 再放大；减少云端阶段切片之间的距离；把 `.story-report` 加宽；让 AI 展台默认分界线在 60%。不必复制整页代码。
+描述微调时可以说：把首屏 `.cinema-heading h1` 再放大；减少云端阶段资料窗口之间的距离；把 `.story-report` 加宽；让 AI 展台默认分界线在 60%。不必复制整页代码。

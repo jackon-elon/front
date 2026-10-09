@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { usePresentationMotion } from "./ui";
+import { WorkspaceArtwork } from "./WorkspaceArtwork";
 
 export function CinemaHero() {
   const target = useRef<HTMLElement>(null);
@@ -35,13 +36,17 @@ export function CinemaHero() {
         className="cinema-hero-image"
         style={reduce ? {} : { scale, y }}
       >
-        <img
-          src={`${import.meta.env.BASE_URL}media/imaging-hero-v2.webp`}
-          width="1672"
-          height="941"
-          fetchPriority="high"
-          alt="医学影像玻璃切片组成精密的对称展开结构"
-        />
+        <div className="hero-workspace-deck">
+          <div className="hero-workspace-layer layer-back" aria-hidden="true" />
+          <div
+            className="hero-workspace-layer layer-middle"
+            aria-hidden="true"
+          />
+          <WorkspaceArtwork
+            landscape
+            label="云端资料与医疗协作空间的产品设计示意"
+          />
+        </div>
       </motion.div>
       <div className="cinema-hero-foot">
         <span>让影像，连接更好的医疗。</span>

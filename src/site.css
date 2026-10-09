@@ -452,15 +452,15 @@ button:focus:not(:focus-visible) {
 }
 .workspace-image {
   overflow: hidden;
-  background: #08090b;
+  background: #eaf0f7;
   border-radius: 11px;
   position: relative;
 }
-.workspace-image img {
+.workspace-image .workspace-artwork {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 75% center;
+  object-position: center;
 }
 .image-label {
   position: absolute;
@@ -470,8 +470,8 @@ button:focus:not(:focus-visible) {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #bcc3cd;
-  background: linear-gradient(transparent, #08090be6);
+  color: #526c8d;
+  background: linear-gradient(transparent, #edf3fbf5);
   padding: 24px 14px 13px;
   font-size: 11px;
 }
@@ -560,8 +560,8 @@ button:focus:not(:focus-visible) {
   background: #060709;
   overflow: hidden;
 }
-.comparison-view > img,
-.comparison-overlay > img {
+.comparison-view > .workspace-artwork,
+.comparison-overlay > .workspace-artwork {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -569,68 +569,9 @@ button:focus:not(:focus-visible) {
   object-fit: cover;
   object-position: center;
 }
-.comparison-view > img {
-  filter: saturate(0.35);
-}
 .comparison-overlay {
   position: absolute;
   inset: 0;
-}
-.comparison-overlay > img {
-  filter: sepia(0.15) saturate(1.45) hue-rotate(155deg) brightness(1.15);
-}
-.anatomy-outline {
-  position: absolute;
-  border: 1px solid #9fcefa80;
-  border-radius: 48% 42% 45% 45%;
-  box-shadow:
-    0 0 20px #5197d420,
-    inset 0 0 22px #5197d418;
-}
-.outline-one {
-  left: 39%;
-  top: 18%;
-  width: 28%;
-  height: 42%;
-  transform: rotate(10deg);
-}
-.outline-two {
-  left: 33%;
-  top: 35%;
-  width: 16%;
-  height: 24%;
-  transform: rotate(-16deg);
-}
-.anatomy-label {
-  position: absolute;
-  left: 12%;
-  top: 31%;
-  color: #bad5ef;
-  font-size: 12px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  border: 1px solid #668aaf70;
-  background: #18263495;
-  backdrop-filter: blur(8px);
-  padding: 10px 13px;
-  border-radius: 7px;
-}
-.scan-axis {
-  position: absolute;
-  background: #79b6ec40;
-}
-.axis-horizontal {
-  top: 53%;
-  left: 30%;
-  width: 43%;
-  height: 1px;
-}
-.axis-vertical {
-  top: 13%;
-  left: 52%;
-  width: 1px;
-  height: 70%;
 }
 .comparison-tag {
   position: absolute;
@@ -1341,11 +1282,6 @@ button:focus:not(:focus-visible) {
   .comparison-view {
     aspect-ratio: 1.55;
   }
-  .anatomy-label {
-    font-size: 10px;
-    left: 7%;
-    padding: 7px;
-  }
   .about-content > p:not(.eyebrow) {
     font-size: 19px;
   }
@@ -1535,10 +1471,6 @@ button:focus:not(:focus-visible) {
     aspect-ratio: 1.08;
     border-radius: 18px;
   }
-  .comparison-view > img,
-  .comparison-overlay > img {
-    object-position: 63% center;
-  }
   .comparison-tag {
     top: 15px;
     font-size: 10px;
@@ -1559,27 +1491,6 @@ button:focus:not(:focus-visible) {
     bottom: 15px;
     gap: 5px;
     padding: 7px 10px;
-  }
-  .anatomy-label {
-    top: 29%;
-    left: 6%;
-    font-size: 8px;
-    gap: 4px;
-  }
-  .anatomy-label > svg {
-    width: 12px;
-  }
-  .outline-one {
-    left: 27%;
-    width: 38%;
-    height: 35%;
-    top: 23%;
-  }
-  .outline-two {
-    left: 25%;
-    width: 23%;
-    top: 40%;
-    height: 21%;
   }
   .ai-feature-list {
     grid-template-columns: 1fr;

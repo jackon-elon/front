@@ -9,8 +9,9 @@ import {
   ChevronRight,
   ShieldCheck,
 } from "lucide-react";
-import { cloudModes, media } from "./content";
+import { cloudModes } from "./content";
 import { Reveal, Tabs } from "./ui";
+import { WorkspaceArtwork } from "./WorkspaceArtwork";
 export function CloudProduct() {
   const [mode, setMode] = useState(0);
   const current = cloudModes[mode];
@@ -96,13 +97,9 @@ export function CloudProduct() {
                   transition={{ duration: 0.25 }}
                 >
                   <div className="workspace-image">
-                    <img
-                      src={media.anatomy}
-                      alt="医学影像切片概念模型"
-                      loading="lazy"
-                    />
+                    <WorkspaceArtwork label="云端资料与协作空间示意" />
                     <div className="image-label">
-                      <Scan size={16} /> 影像资料预览 <span>概念示意</span>
+                      <Scan size={16} /> 云端资料空间 <span>概念示意</span>
                     </div>
                   </div>
                   <div className="connection-list">

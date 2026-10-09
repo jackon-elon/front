@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { media } from "./content";
 import { usePresentationMotion } from "./ui";
+import { WorkspaceArtwork } from "./WorkspaceArtwork";
 
 const chapters = [
   {
@@ -61,9 +62,7 @@ const chapters = [
     description: "让影像、报告与知识，围绕一次协作有序展开。",
   },
 ];
-const slice = `${import.meta.env.BASE_URL}media/imaging-slice.webp`;
-
-function SlicePlane({
+function WorkspacePlane({
   progress,
   index,
   chapter,
@@ -102,16 +101,15 @@ function SlicePlane({
   const scale = useTransform(
     progress,
     [0, 0.25, 0.36, 0.58, 0.75, 1],
-    [1, 1, 1.18, 1.18, 0.8, 0.8],
+    [1, 1, 1.05, 1.05, 0.8, 0.8],
   );
   return (
-    <motion.img
+    <motion.div
       className="story-slice"
-      src={slice}
-      alt=""
-      loading="lazy"
       style={{ x, y, rotateY, opacity, scale, zIndex: 7 - index }}
-    />
+    >
+      <WorkspaceArtwork annotated={chapter === 1} />
+    </motion.div>
   );
 }
 
@@ -162,11 +160,18 @@ export function ImagingStory({
                 进入{item.product}展台 <ArrowUpRight size={18} />
               </button>
             </div>
-            <img
-              src={i === 2 ? media.care : slice}
-              alt="医学影像与协作视觉示意"
-              loading="lazy"
-            />
+            {i === 2 ? (
+              <img
+                src={media.care}
+                alt="医疗团队协作的场景示意"
+                loading="lazy"
+              />
+            ) : (
+              <WorkspaceArtwork
+                annotated={i === 1}
+                label="云端资料空间设计示意"
+              />
+            )}
           </article>
         ))}
       </section>
@@ -214,7 +219,7 @@ export function ImagingStory({
         </div>
         <div className="story-object" aria-hidden="true">
           {[4, 3, 2, 1, 0].map((i) => (
-            <SlicePlane
+            <WorkspacePlane
               progress={progress}
               index={i}
               chapter={chapter}
@@ -264,7 +269,7 @@ export function ImagingStory({
             <div className="ai-detail-label">
               <ScanLine size={17} />
               <span>
-                辅助分析
+                信息整理
                 <br />
                 <small>让影像信息更清晰</small>
               </span>
@@ -331,7 +336,7 @@ export function ImagingStory({
             随滚动探索 <span>↓</span>
           </span>
         </div>
-        <p className="story-visual-note">影像与标注为视觉示意</p>
+        <p className="story-visual-note">产品界面与协作路径为设计示意</p>
       </motion.div>
     </section>
   );

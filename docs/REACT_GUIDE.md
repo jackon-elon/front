@@ -4,7 +4,7 @@
 
 1. `content.ts` 与 `BrandSite.tsx`：认识数据配置、组件、props、列表与 key。修改产品配置并观察导航和展台标题联动。
 2. `CloudProduct.tsx` 与 `ui.tsx`：学习受控组件、useState、Tab 状态、键盘导航与 ARIA。为新场景配置节点。
-3. `ImagingAI.tsx`：学习 range 表单、onChange 与状态映射到 CSS。分界线、图层裁剪、可访问文字共用一个状态值。
+3. `ImagingAI.tsx` 与 `WorkspaceArtwork.tsx`：学习 range 表单、props、条件渲染、useId 与状态映射到 CSS。分界线、图层裁剪、可访问文字共用一个状态值；SVG 渐变标识在每个实例之间保持唯一。
 4. `MedicalAgent.tsx` / `workflow.ts`：学习 useReducer、useEffect 清理、定时器与过期回调。切换场景和重置不应被上一个任务的回调覆盖。
 5. `Modal.tsx`：学习 Portal、useRef、useId、事件监听清理、焦点管理与 Escape。
 6. `BrandSite.tsx` 与 `CareScene.tsx`：学习状态提升、方案 Tab、React.lazy / Suspense。产品展台按需加载，页脚与场景共用选择状态。

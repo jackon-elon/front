@@ -54,14 +54,47 @@
 .cinema-hero-image {
   position: absolute;
   left: 50%;
-  top: 290px;
-  width: min(1520px, 122vw);
+  top: 360px;
+  width: min(1240px, 94vw);
   translate: -50% 0;
   will-change: transform;
 }
-.cinema-hero-image img {
+.workspace-artwork {
+  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+.hero-workspace-deck {
+  position: relative;
+  aspect-ratio: 1200 / 740;
+  perspective: 1800px;
+}
+.hero-workspace-deck > .workspace-artwork {
+  position: relative;
+  z-index: 3;
+  transform: rotateX(8deg) rotateY(-10deg) rotateZ(2deg);
+  border-radius: 27px;
+  box-shadow:
+    0 35px 90px #0009,
+    -8px 4px 0 #8da4bd50;
+}
+.hero-workspace-layer {
+  position: absolute;
+  inset: 0;
+  border: 1px solid #afc0d05c;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #7d96b855, #dbe7f420 65%);
+  box-shadow: 0 30px 70px #0006;
+}
+.hero-workspace-layer.layer-back {
+  transform: translate(4%, -4%) rotateY(-12deg) rotateZ(-2deg);
+  opacity: 0.45;
+}
+.hero-workspace-layer.layer-middle {
+  transform: translate(2%, -2%) rotateY(-10deg) rotateZ(-1deg);
+  opacity: 0.75;
 }
 .cinema-hero-foot {
   position: absolute;
@@ -262,7 +295,7 @@
   position: absolute;
   inset: 19% 10% 27%;
   border: 1px solid #8daecc20;
-  border-radius: 40%;
+  border-radius: 16px;
 }
 .ai-reticle i {
   position: absolute;
@@ -522,7 +555,8 @@
   line-height: 1.8;
   margin: 25px 0;
 }
-.story-static article > img {
+.story-static article > img,
+.story-static article > .workspace-artwork {
   max-height: 580px;
   margin: auto;
   object-fit: contain;
@@ -713,8 +747,8 @@
     font-size: 122px;
   }
   .cinema-hero-image {
-    width: 1780px;
-    top: 325px;
+    width: 1440px;
+    top: 425px;
   }
   .story-caption {
     top: 25%;
@@ -734,8 +768,8 @@
     font-size: 74px;
   }
   .cinema-hero-image {
-    top: 300px;
-    width: 138vw;
+    top: 350px;
+    width: 95vw;
   }
   .story-caption {
     left: 36px;
@@ -806,8 +840,8 @@
     font-size: 15px;
   }
   .cinema-hero-image {
-    top: 305px;
-    width: 160vw;
+    top: 320px;
+    width: 110vw;
   }
   .cinema-hero-foot {
     padding-inline: 30px;
@@ -971,7 +1005,7 @@
     margin-top: 22px;
   }
   .cinema-hero-image {
-    width: 195vw;
+    width: 124vw;
     top: 335px;
     translate: -50% 0;
   }
@@ -1166,7 +1200,8 @@
   .story-static h2 + p {
     font-size: 15px;
   }
-  .story-static article > img {
+  .story-static article > img,
+  .story-static article > .workspace-artwork {
     max-height: 400px;
   }
   .care-scene {

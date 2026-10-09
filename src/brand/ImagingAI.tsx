@@ -1,7 +1,7 @@
 import { useId, useState } from "react";
 import { ScanLine, Crosshair, ListChecks, MoveHorizontal } from "lucide-react";
-import { media } from "./content";
 import { Reveal } from "./ui";
+import { WorkspaceArtwork } from "./WorkspaceArtwork";
 export function ImagingAI() {
   const [reveal, setReveal] = useState(55);
   const id = useId();
@@ -24,27 +24,16 @@ export function ImagingAI() {
       </Reveal>
       <Reveal className="ai-stage wrap">
         <div className="comparison-view">
-          <img
-            src={media.anatomy}
-            alt="用于交互演示的医学影像艺术模型"
-            loading="lazy"
-          />
+          <WorkspaceArtwork landscape label="云端资料的基础视图示意" />
           <div
             className="comparison-overlay"
             style={{ clipPath: `inset(0 ${100 - reveal}% 0 0)` }}
             aria-hidden="true"
           >
-            <img src={media.anatomy} alt="" loading="lazy" />
-            <div className="anatomy-outline outline-one" />
-            <div className="anatomy-outline outline-two" />
-            <div className="anatomy-label">
-              <Crosshair size={16} /> 影像信息辅助标注
-            </div>
-            <div className="scan-axis axis-horizontal" />
-            <div className="scan-axis axis-vertical" />
+            <WorkspaceArtwork landscape annotated />
           </div>
-          <span className="comparison-tag left">辅助标注</span>
-          <span className="comparison-tag right">原始视图</span>
+          <span className="comparison-tag left">信息整理</span>
+          <span className="comparison-tag right">基础视图</span>
           <div
             className="comparison-line"
             style={{ left: `${reveal}%` }}
@@ -62,8 +51,8 @@ export function ImagingAI() {
             max="92"
             value={reveal}
             onChange={(e) => setReveal(Number(e.target.value))}
-            aria-label="调整影像对照分界线"
-            aria-valuetext={`辅助标注区域 ${reveal}%`}
+            aria-label="调整信息整理对照分界线"
+            aria-valuetext={`信息整理区域 ${reveal}%`}
           />
           <label htmlFor={id} className="comparison-hint">
             <MoveHorizontal size={15} /> 拖动分界线，探索不同视图
@@ -95,7 +84,7 @@ export function ImagingAI() {
           ))}
         </div>
         <p className="visual-note">
-          影像及标注为设计示意，不代表实际检查或临床结果。
+          资料关联与整理为交互设计示意，不呈现患者影像或临床结果。
         </p>
       </Reveal>
     </section>
