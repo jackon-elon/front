@@ -3,9 +3,11 @@
 ## 按界面找文件
 
 - 整体导航、全局栏、路由转场：`src/App.tsx`
-- 首页海报、滚动编排、展册布局、筛选与请求回放：`src/pages/Experience.tsx`
+- 首页海报、滚动编排、筛选与选中状态：`src/pages/Experience.tsx`
+- 唱片卡片、叠放 / 展开、前后切换与对比入口：`src/components/SessionGallery.tsx`
+- 请求柱图、播放计时器与受控滑块：`src/components/RequestPlayback.tsx`
 - 请求唱片图形与旋转后的点击定位：`src/components/SignalRecord.tsx`
-- 长会话分桶、扇区与请求索引映射：`shared/experience.ts`
+- 长会话分桶、可点击圆环与请求索引、展册循环窗口：`shared/experience.ts`
 - 新版视觉探索、全屏导航和顶栏的字号、布局、颜色：`src/experience.css`
 - 实时工作台、过滤与时间线暂停：`src/pages/Overview.tsx`
 - 请求时间桶与 SVG 点击联动：`src/components/LiveTrace.tsx`、`shared/live.ts`

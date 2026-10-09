@@ -1,8 +1,8 @@
-import { useId, useMemo } from "react";
+import { memo, useId, useMemo } from "react";
 import type { UsageRequest } from "../../shared/schema";
-import { recordBins, requestIndexFromAngle } from "../../shared/experience";
+import { recordBins, recordSector } from "../../shared/experience";
 
-export function SignalRecord({
+export const SignalRecord = memo(function SignalRecord({
   requests,
   active = 0,
   onSelect,
@@ -53,7 +53,7 @@ export function SignalRecord({
           ? "按时间排列的请求唱片，点击扇区定位请求；也可使用下方请求滑块"
           : undefined
       }
-      onPointerDown={
+      onClick={
         onSelect
           ? (e) => {
               // Convert screen coordinates through the SVG matrix, including parent tilt/rotation.
@@ -62,14 +62,12 @@ export function SignalRecord({
               const point = new DOMPoint(e.clientX, e.clientY).matrixTransform(
                 matrix.inverse(),
               );
-              const bin =
-                bins[
-                  requestIndexFromAngle(
-                    point.x - 260,
-                    point.y - 260,
-                    bins.length,
-                  )
-                ];
+              const sector = recordSector(
+                point.x - 260,
+                point.y - 260,
+                bins.length,
+              );
+              const bin = sector === null ? undefined : bins[sector];
               if (bin) onSelect(bin.first);
             }
           : undefined
@@ -156,4 +154,4 @@ export function SignalRecord({
       )}
     </svg>
   );
-}
+});

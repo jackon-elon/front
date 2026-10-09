@@ -4,6 +4,8 @@
 
 新版首页可以先跟踪「切换唱片 → 保留会话 ID → 重算请求图形 → 拖动回放滑块 → 柱图和首屏指针同步」。分别看局部 state、派生数据、useMemo、effect 清理、受控 range、MotionValue 和声明式动画。随后再读下面的查询与数据处理流程。
 
+首页组件边界：`Experience` 持有筛选和选中会话，`SessionGallery` 接收 props 展示有限唱片窗口，`RequestPlayback` 管理播放计时器，`SignalRecord` 生成 SVG。会话总量和图形用 useMemo 缓存；稳定的回调配合 memo，减少播放逐帧推进时无关图形的重算。回放组件以会话 ID 为 key，切换会话时卸载旧计时器。可以用这些实际变化理解 props、组件身份、派生状态与 effect 清理，而不是到处加缓存。
+
 建议第一轮只跟踪一个操作：「点击会话标题 → URL 出现 session → 详情侧栏读取同一份查询结果 → 点击收藏 → 乐观更新 → API 确认或回滚」。涉及组件、props、state、Context、路由、Portal 和服务端状态，能先建立完整的逻辑图。
 
 第二轮看搜索：受控输入改变 URL，`useDeferredValue` 保持输入响应，TanStack Table 计算过滤与排序结果，Virtualizer 只渲染视口和 overscan 的行。分别理解「数据多」和「DOM 多」带来的成本。

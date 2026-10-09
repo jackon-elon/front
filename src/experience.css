@@ -102,6 +102,7 @@
   cursor: pointer;
 }
 .studio-header-tools select {
+  color-scheme: dark;
   background: #252520;
   color: inherit;
   border: 1px solid #414139;
@@ -109,6 +110,10 @@
   padding: 7px 9px;
   font-size: 14px;
   min-height: 37px;
+}
+.studio-header-tools select option {
+  color: #f1ebde;
+  background: #252520;
 }
 .studio-status {
   display: flex;
@@ -390,10 +395,11 @@
   position: absolute;
   right: 7%;
   bottom: 96px;
-  width: 240px;
+  width: 270px;
   z-index: 3;
-  padding-left: 22px;
-  border-left: 1px solid #757265;
+  padding: 16px 20px;
+  border-left: 2px solid #f95735;
+  background: #151512eb;
   color: #c1bcad;
 }
 .x-record-label > span {
@@ -622,7 +628,9 @@
   border-color: #bd3c20;
 }
 .x-card-select {
-  display: block;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) 65px auto auto;
+  gap: 8px;
   width: 100%;
   height: 100%;
   text-align: left;
@@ -639,17 +647,21 @@
 }
 .x-card-record {
   position: relative;
-  width: 240px;
-  margin: 10px auto 0;
-  height: 242px;
+  width: auto;
+  max-width: 240px;
+  margin: 0 auto;
+  height: 100%;
+  aspect-ratio: 1;
+  min-height: 0;
 }
 .x-card-record .signal-record {
-  width: 240px;
+  width: 100%;
+  height: 100%;
 }
 .x-card-record > span {
   position: absolute;
   left: -10px;
-  top: 87px;
+  top: 35%;
   font-size: 38px;
   font-weight: 700;
   letter-spacing: -2px;
@@ -668,7 +680,7 @@
 .x-vinyl-card h3 {
   font-size: 24px;
   letter-spacing: -1px;
-  margin: 7px 0 5px;
+  margin: 0;
   line-height: 1.35;
   height: 65px;
   display: -webkit-box;
@@ -689,7 +701,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 0;
   padding-top: 13px;
   border-top: 1px solid currentColor;
   font-size: 12px;
@@ -1036,11 +1048,10 @@
     height: 610px;
   }
   .x-card-record {
-    width: 265px;
-    height: 265px;
+    max-width: 265px;
   }
-  .x-card-record .signal-record {
-    width: 265px;
+  .x-card-select {
+    grid-template-rows: auto minmax(0, 1fr) 76px auto auto;
   }
   .x-vinyl-card h3 {
     font-size: 28px;
@@ -1116,9 +1127,9 @@
     display: none;
   }
   .studio-header-tools select {
-    font-size: 12px;
+    font-size: 14px;
     padding: 6px;
-    width: 92px;
+    width: 100px;
   }
   .studio-header-tools .studio-menu-button {
     font-size: 0;
@@ -1295,9 +1306,16 @@
     padding: 14px 0;
   }
   .x-gallery-controls [role="group"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100%;
-    gap: 0;
+    gap: 6px;
+  }
+  .x-gallery-controls [role="group"] button {
     justify-content: space-between;
+    white-space: nowrap;
+    padding: 12px;
+    font-size: 14px;
   }
   .x-gallery-controls button {
     padding: 9px 7px;
@@ -1329,17 +1347,14 @@
     top: 40px;
   }
   .x-card-select {
+    grid-template-rows: auto minmax(0, 1fr) 57px auto auto;
     padding: 18px;
   }
   .x-card-top {
     font-size: 11px;
   }
   .x-card-record {
-    width: 225px;
-    height: 225px;
-  }
-  .x-card-record .signal-record {
-    width: 225px;
+    max-width: 225px;
   }
   .x-card-record > span {
     font-size: 33px;

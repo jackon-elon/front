@@ -2,6 +2,25 @@ import { useEffect, useState } from "react";
 import { MousePointer2, X, Copy } from "lucide-react";
 import { useApp } from "../state/AppContext";
 import { useLocation } from "react-router-dom";
+const componentFiles: Record<string, string> = {
+  ".x-breakdown": "src/components/RequestPlayback.tsx",
+  ".x-gallery": "src/components/SessionGallery.tsx",
+  ".x-vinyl-card": "src/components/SessionGallery.tsx",
+  ".x-record-stage": "src/components/SignalRecord.tsx",
+  ".signal-record": "src/components/SignalRecord.tsx",
+  ".studio-header": "src/App.tsx",
+  ".trace-viz": "src/components/LiveTrace.tsx",
+  ".session-stack": "src/components/SessionStack.tsx",
+  ".session-deck": "src/components/SessionDeck.tsx",
+  ".metric": "src/components/UI.tsx",
+};
+const pages: Record<string, string> = {
+  "/": "Experience",
+  "/workspace": "Overview",
+  "/sessions": "Sessions",
+  "/compare": "Compare",
+  "/sources": "Sources",
+};
 export default function RegionInspector() {
   const [enabled, setEnabled] = useState(false);
   const [region, setRegion] = useState<{
@@ -37,39 +56,21 @@ export default function RegionInspector() {
         return;
       }
       const font = getComputedStyle(
-        element.querySelector("h2,h1,.metric-value") ?? element,
+        element.querySelector("h2,h1,h3,.metric-value") ?? element,
       ).fontSize;
       setRegion({
         name: element.dataset.region ?? "",
         rect: element.getBoundingClientRect(),
-        selector: `.${element.className.split(" ")[0]}`,
+        selector: `.${element.classList[0]}`,
         font,
       });
     };
     window.addEventListener("pointermove", move);
     return () => window.removeEventListener("pointermove", move);
   }, [enabled]);
-  const pages: Record<string, string> = {
-    "/": "Experience",
-    "/workspace": "Overview",
-    "/sessions": "Sessions",
-    "/compare": "Compare",
-    "/sources": "Sources",
-  };
   const file =
-    region?.selector === ".studio-header"
-      ? "src/App.tsx"
-      : region?.selector === ".signal-record"
-        ? "src/components/SignalRecord.tsx"
-        : region?.selector === ".trace-viz"
-          ? "src/components/LiveTrace.tsx"
-          : region?.selector === ".session-stack"
-            ? "src/components/SessionStack.tsx"
-            : region?.selector === ".session-deck"
-              ? "src/components/SessionDeck.tsx"
-              : region?.selector === ".metric"
-                ? "src/components/UI.tsx"
-                : `src/pages/${pages[location.pathname] ?? "Overview"}.tsx`;
+    componentFiles[region?.selector ?? ""] ??
+    `src/pages/${pages[location.pathname] ?? "Overview"}.tsx`;
   const styleFile =
     location.pathname === "/" || region?.selector === ".studio-header"
       ? "src/experience.css"
