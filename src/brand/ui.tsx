@@ -1,5 +1,11 @@
 import { useId, useRef, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
+export function usePresentationMotion() {
+  return (
+    useReducedMotion() ||
+    new URLSearchParams(window.location.search).get("motion") === "off"
+  );
+}
 export function Reveal({
   children,
   className = "",
@@ -7,7 +13,7 @@ export function Reveal({
   children: ReactNode;
   className?: string;
 }) {
-  const reduce = useReducedMotion();
+  const reduce = usePresentationMotion();
   return (
     <motion.div
       className={className}

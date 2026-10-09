@@ -3,9 +3,16 @@ import { createRoot } from "react-dom/client";
 import { MotionConfig } from "motion/react";
 import App from "./App";
 import "./site.css";
+import "./narrative.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <MotionConfig reducedMotion="user">
+    <MotionConfig
+      reducedMotion={
+        new URLSearchParams(window.location.search).get("motion") === "off"
+          ? "always"
+          : "user"
+      }
+    >
       <App />
     </MotionConfig>
   </StrictMode>,

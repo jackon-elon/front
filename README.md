@@ -23,8 +23,11 @@ npm run preview
 ## 已实现的交互
 
 - 双层导航、吸顶模糊背景、章节定位、移动端导航弹窗。
-- 首屏影像在画框内随滚动轻微移动，文字不横向移动；系统减少动态效果设置自动生效。
-- 支持触摸/触控板的吸附卡片轨道、上一张/下一张与位置指示、产品详情弹窗。
+- 居中大标题与双面玻璃影像主视觉，首屏图片有限移动，文字保持稳定。
+- 连续滚动旅程：玻璃切片展开连接云端、收拢近看影像、转为协作报告；章节导航可直接定位。
+- 章节内容与吸顶导航联动，单个标题按阶段切换，避免多层文字重叠。
+- 产品展台使用 React.lazy / Suspense 按需加载；首页负责叙事，详情保留实际交互。
+- 全幅医疗协作场景与解决方案切换；系统减少动态效果设置生效，也可用 `?motion=off` 查看静态布局。
 - 云影像场景切换，展示内容、工作流节点与说明随受控 Tab 联动。
 - 可拖动、可用键盘操作的 AI 影像对照分界线。
 - 医疗 Agent 的可取消流程演示；切换场景或重置会取消旧流程，过期回调不会污染新场景。最终状态保留人工复核。
@@ -34,10 +37,13 @@ npm run preview
 
 ## 代码入口
 
-- `src/brand/BrandSite.tsx`：网站组合、首屏、导航、解决方案和弹窗状态。
+- `src/brand/BrandSite.tsx`：页面组合、导航、跨组件方案状态和按需加载弹窗。
+- `src/brand/CinemaHero.tsx`：居中首屏与产品主视觉。
+- `src/brand/ImagingStory.tsx`：连续滚动旅程、章节切换、切片几何变换和静态替代布局。
+- `src/brand/CareScene.tsx`：全幅医疗协作场景与方案 Tab。
 - `src/brand/content.ts`：产品文案、场景配置、图片路径和公开资料链接。
-- `src/site.css`：全站设计参数、组件样式及 1100/800/600 px 响应式规则。
-- `src/brand/Highlights.tsx`：卡片轨道与详情入口。
+- `src/site.css`：基础设计参数、通用组件与产品展台样式。
+- `src/narrative.css`：首屏、滚动场景与医疗协作的布局及响应式规则。
 - `src/brand/CloudProduct.tsx`：云影像产品切换。
 - `src/brand/ImagingAI.tsx`：影像对照交互。
 - `src/brand/MedicalAgent.tsx` / `workflow.ts`：Agent 交互与状态迁移。

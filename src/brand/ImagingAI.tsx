@@ -2,13 +2,13 @@ import { useId, useState } from "react";
 import { ScanLine, Crosshair, ListChecks, MoveHorizontal } from "lucide-react";
 import { media } from "./content";
 import { Reveal } from "./ui";
-export function ImagingAI({ onDetail }: { onDetail: () => void }) {
+export function ImagingAI() {
   const [reveal, setReveal] = useState(55);
   const id = useId();
   return (
     <section
       className="ai-section section-pad"
-      id="ai"
+      id="ai-exhibit"
       aria-labelledby="ai-title"
     >
       <Reveal className="center-heading wrap">
@@ -98,9 +98,6 @@ export function ImagingAI({ onDetail }: { onDetail: () => void }) {
           影像及标注为设计示意，不代表实际检查或临床结果。
         </p>
       </Reveal>
-      <button className="dark-pill" onClick={onDetail}>
-        进一步了解 AI 辅助诊断 <span>+</span>
-      </button>
     </section>
   );
 }

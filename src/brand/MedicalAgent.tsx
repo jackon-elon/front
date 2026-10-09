@@ -41,7 +41,7 @@ export function MedicalAgent() {
   return (
     <section
       className="agent-section section-pad"
-      id="agent"
+      id="agent-exhibit"
       aria-labelledby="agent-title"
     >
       <Reveal className="center-heading wrap">

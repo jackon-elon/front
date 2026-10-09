@@ -1,13 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
+
 import {
-  motion,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-  AnimatePresence,
-} from "motion/react";
-import {
-  ArrowDown,
   ArrowUpRight,
   ChevronRight,
   Check,
@@ -18,12 +11,20 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Modal } from "../components/Modal";
-import { media, products, solutions, sources } from "./content";
-import { BrandMark, Reveal, Tabs } from "./ui";
-import { Highlights } from "./Highlights";
-import { CloudProduct } from "./CloudProduct";
-import { ImagingAI } from "./ImagingAI";
-import { MedicalAgent } from "./MedicalAgent";
+import { products, solutions, sources } from "./content";
+import { BrandMark, Reveal } from "./ui";
+import { CinemaHero } from "./CinemaHero";
+import { ImagingStory } from "./ImagingStory";
+import { CareScene } from "./CareScene";
+const CloudProduct = lazy(() =>
+  import("./CloudProduct").then((module) => ({ default: module.CloudProduct })),
+);
+const ImagingAI = lazy(() =>
+  import("./ImagingAI").then((module) => ({ default: module.ImagingAI })),
+);
+const MedicalAgent = lazy(() =>
+  import("./MedicalAgent").then((module) => ({ default: module.MedicalAgent })),
+);
 
 const navigation = [
   { id: "cloud", name: "云影像" },
@@ -31,154 +32,6 @@ const navigation = [
   { id: "agent", name: "医疗 Agent" },
   { id: "solutions", name: "解决方案" },
 ];
-
-function Hero() {
-  const hero = useRef<HTMLElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: hero,
-    offset: ["start start", "end start"],
-  });
-  const imageY = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.07]);
-  return (
-    <section ref={hero} className="hero" id="top" aria-labelledby="hero-title">
-      <motion.div
-        className="hero-visual"
-        style={reduce ? {} : { y: imageY, scale: imageScale }}
-      >
-        <img
-          src={media.anatomy}
-          width="1672"
-          height="941"
-          fetchPriority="high"
-          alt="银白色玻璃切片构成的人体头部医学影像艺术模型"
-        />
-      </motion.div>
-      <div className="hero-shade" />
-      <div className="hero-copy wrap">
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9 }}
-        >
-          <p className="eyebrow">讯飞影联 · 数智医疗</p>
-          <h1 id="hero-title">
-            让影像，
-            <br />
-            <span>连接更好的医疗。</span>
-          </h1>
-          <p className="hero-description">
-            从云端连接，到智能洞察。
-            <br />
-            让专业的每一步，看得更远。
-          </p>
-          <div className="hero-actions">
-            <a className="button blue-button" href="#products">
-              探索产品 <ChevronRight size={18} />
-            </a>
-            <a className="hero-link" href="#solutions">
-              了解解决方案 <ArrowUpRight size={18} />
-            </a>
-          </div>
-        </motion.div>
-      </div>
-      <div className="hero-bottom wrap">
-        <span>
-          云影像 <i /> AI 辅助诊断 <i /> 医疗 Agent
-        </span>
-        <a href="#products" aria-label="向下探索产品">
-          <ArrowDown size={20} />
-        </a>
-      </div>
-    </section>
-  );
-}
-
-function Solutions({
-  onContact,
-  mode,
-  onChange,
-}: {
-  onContact: () => void;
-  mode: number;
-  onChange: (mode: number) => void;
-}) {
-  const current = solutions[mode];
-  return (
-    <section
-      className="solutions-section section-pad"
-      id="solutions"
-      aria-labelledby="solutions-title"
-    >
-      <Reveal className="section-heading wrap">
-        <div>
-          <p className="eyebrow">解决方案</p>
-          <h2 id="solutions-title">
-            面向不同场景。
-            <br />
-            连接同一种关怀。
-          </h2>
-        </div>
-        <p className="heading-aside">
-          让技术融入真实的医疗协作，
-          <br />
-          从一家医院，到一个区域。
-        </p>
-      </Reveal>
-      <div className="product-tabs">
-        <Tabs
-          labels={solutions.map((s) => s.name)}
-          value={mode}
-          onChange={onChange}
-          label="医疗解决方案"
-          panelId="solution-panel"
-        />
-      </div>
-      <div
-        className="solution-card wrap"
-        id="solution-panel"
-        role="tabpanel"
-        aria-label={current.name}
-      >
-        <img
-          src={media.care}
-          width="1672"
-          height="941"
-          alt="两位医生在通透、明亮的影像阅片空间中协作，场景为生成式视觉设计"
-          loading="lazy"
-        />
-        <div className="solution-photo-note">协作场景 · 视觉示意</div>
-        <div className="solution-info">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={mode}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
-            >
-              <p className="eyebrow">{current.name}</p>
-              <h3>{current.headline}</h3>
-              <p>{current.text}</p>
-              <ul>
-                {current.points.map((point) => (
-                  <li key={point}>
-                    <Check size={18} />
-                    {point}
-                  </li>
-                ))}
-              </ul>
-              <button className="text-link" onClick={onContact}>
-                联系与合作 <ArrowUpRight size={18} />
-              </button>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export function BrandSite() {
   const [detail, setDetail] = useState<number | null>(null);
@@ -281,12 +134,9 @@ export function BrandSite() {
         </div>
       </div>
       <main id="main">
-        <Hero />
-        <Highlights onDetail={setDetail} />
-        <CloudProduct />
-        <ImagingAI onDetail={() => setDetail(1)} />
-        <MedicalAgent />
-        <Solutions
+        <CinemaHero />
+        <ImagingStory onExplore={setDetail} onActive={setActive} />
+        <CareScene
           mode={solutionMode}
           onChange={setSolutionMode}
           onContact={() => setContact(true)}
@@ -403,42 +253,19 @@ export function BrandSite() {
         className="product-modal"
       >
         {selected && (
-          <>
-            <div className={`detail-visual detail-${selected.id}`}>
-              {selected.id === "agent" ? (
-                <div className="detail-agent-mark">
-                  <BrandMark />
-                  <span>医疗 Agent</span>
-                  <p>理解问题，连接行动。</p>
+          <div className="product-exhibit">
+            <Suspense
+              fallback={
+                <div className="exhibit-loading" role="status">
+                  正在打开产品展台…
                 </div>
-              ) : (
-                <img
-                  src={selected.id === "cloud" ? media.care : media.anatomy}
-                  alt="产品视觉设计示意"
-                />
-              )}
-            </div>
-            <div className="detail-content">
-              <p className="eyebrow">{selected.eyebrow}</p>
-              <h3>{selected.title}</h3>
-              <p>{selected.detail}</p>
-              <ul>
-                {selected.features.map((feature) => (
-                  <li key={feature}>
-                    <Check size={18} />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href={`#${selected.id}`}
-                className="button blue-button"
-                onClick={() => setDetail(null)}
-              >
-                探索{selected.label} <ChevronRight size={18} />
-              </a>
-            </div>
-          </>
+              }
+            >
+              {detail === 0 && <CloudProduct />}
+              {detail === 1 && <ImagingAI />}
+              {detail === 2 && <MedicalAgent />}
+            </Suspense>
+          </div>
         )}
       </Modal>
       <Modal
