@@ -3204,3 +3204,27 @@ kbd {
     padding: 0;
   }
 }
+.sidebar {
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+@media (max-height: 800px) and (min-width: 951px) {
+  .sidebar {
+    padding-top: 23px;
+  }
+  .workspace-picker {
+    margin: 23px 0;
+  }
+  .nav-link {
+    padding-block: 10px;
+  }
+  .sidebar-spacer {
+    min-height: 16px;
+  }
+  .sidebar-callout {
+    padding-top: 16px;
+  }
+  .sidebar-footer {
+    padding-top: 16px;
+  }
+}
