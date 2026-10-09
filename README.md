@@ -17,7 +17,7 @@ npm install
 npm run dev:all
 ```
 
-打开 http://127.0.0.1:5173/ 。默认是演示模式，在顶部切换到本地模式读取已安装 Agent 的日志。只体验前端可运行 `npm run dev`，无需 API。
+打开 http://127.0.0.1:5173/ 。本地首次打开默认读取本机真实日志；无日志时显示空状态，连接失败时显示错误，不自动用演示数据替代。顶部可以主动选择演示或导入模式，选择会保存。公开在线站点默认演示模式，不能读取访问者电脑文件。只体验前端可运行 `npm run dev` 后主动选择演示模式。
 
 ```sh
 npm test
@@ -27,7 +27,8 @@ npm run build
 
 ## 产品功能
 
-- 时间、项目、Agent 联动总览；趋势缩放与日期下钻；Token 分布和活动热图。
+- 实时请求脉冲：15 分钟 / 1 小时 / 6 小时范围，点击时间柱联动会话；画面暂停而采集继续，恢复时查看待更新数量。
+- 可展开会话卡片；指针 / 键盘调整面板宽度并持久化；真实新增请求数量与最近检查时间；时间、项目、Agent 联动统计。
 - 可排序、可搜索的虚拟会话列表；URL 筛选；收藏、标签备注、保存视图与 CSV 导出。
 - 会话详情侧栏；输入上下文走势；虚拟请求明细；单次请求的输入、输出、缓存、推理与上限口径。
 - 三槽对比工作台；原生拖动 / 键盘排序；跨 Agent 曲线与指标对照；缺失指标保留未知。
@@ -41,11 +42,11 @@ React 19、TypeScript strict、React Router 7、TanStack Query 5、Table 8 / Vir
 
 服务端状态由 Query 管理；筛选在 URL；表单和视图状态留在组件；全局工作区和对比选择在 Context。聚合与文件解析使用独立 Worker，并处理过期响应和进程清理。请求列表与会话表分别虚拟化，路由和重型图表按需加载。标签备注支持乐观更新、错误回滚和持久化。
 
-UI、SVG 流线、布局与交互在本仓库实现；图表、图标及动效基础使用开源库。设计说明见 [UI design](docs/UI_DESIGN.md)，结构见 [项目地图](docs/PROJECT_MAP.md)，后续读代码路线见 [React walkthrough](docs/REACT_GUIDE.md)。
+UI、数据驱动 SVG 时间线、布局与交互在本仓库实现；图表、图标及动效基础使用开源库。设计说明见 [UI design](docs/UI_DESIGN.md)，结构见 [项目地图](docs/PROJECT_MAP.md)，后续读代码路线见 [React walkthrough](docs/REACT_GUIDE.md)。
 
 ## 轻量本地后端
 
-Node 内置 HTTP、文件系统、Readline 流式解析和 SSE，不依赖数据库。只监听 127.0.0.1:5174，Vite 代理 `/api`。扫描使用文件 mtime / size 缓存；每 10 秒发现变化，向前端推送版本更新。备注保存在被 git 忽略的 `.agentlens/annotations.json`，通过串行队列与临时文件 rename 原子保存。
+Node 内置 HTTP、文件系统、Readline 流式解析和 SSE，不依赖数据库。只监听 127.0.0.1:5174，Vite 代理 `/api`。扫描使用文件 mtime / size 缓存；每 3 秒检查日志，变化时推送更新，没有变化也回报检查时间。SSE 断线自动重连，期间前端每 5 秒尝试读取快照。这里的“实时”指日志写入后自动更新，不是捕获模型尚未落盘的逐 token 生成。备注保存在被 git 忽略的 `.agentlens/annotations.json`，通过串行队列与临时文件 rename 原子保存。
 
 可在启动前设置：
 

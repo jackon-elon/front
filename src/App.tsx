@@ -4,6 +4,7 @@ import {
   Suspense,
   useEffect,
   useState,
+  useRef,
   type ReactNode,
 } from "react";
 import {
@@ -86,9 +87,55 @@ function Shell() {
     error,
     notification,
     toast,
+    snapshot,
   } = useApp();
   const [command, setCommand] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [compactNav, setCompactNav] = useState(
+    () => window.matchMedia("(max-width: 950px)").matches,
+  );
+  const rail = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 950px)");
+    const resize = () => {
+      setCompactNav(media.matches);
+      if (!media.matches) setMobile(false);
+    };
+    media.addEventListener("change", resize);
+    return () => media.removeEventListener("change", resize);
+  }, []);
+  useEffect(() => {
+    if (!mobile) return;
+    const previous = document.activeElement as HTMLElement;
+    const focusables = () => [
+      ...(rail.current?.querySelectorAll<HTMLElement>("a[href],button") ?? []),
+    ];
+    focusables()[0]?.focus();
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMobile(false);
+      }
+      if (e.key === "Tab") {
+        const items = focusables();
+        const first = items[0];
+        const last = items.at(-1);
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+        if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+    window.addEventListener("keydown", key);
+    return () => {
+      window.removeEventListener("keydown", key);
+      previous?.focus();
+    };
+  }, [mobile]);
   const [animations, setAnimations] = useState(() =>
     readSetting("motion", true),
   );
@@ -121,7 +168,13 @@ function Shell() {
   return (
     <MotionConfig reducedMotion={animations ? "user" : "always"}>
       <div className="app-shell">
-        <aside className={`sidebar ${mobile ? "mobile-open" : ""}`}>
+        <aside
+          id="workspace-nav"
+          ref={rail}
+          inert={compactNav && !mobile}
+          aria-hidden={compactNav && !mobile}
+          className={`sidebar ${mobile ? "mobile-open" : ""}`}
+        >
           <Link className="brand" to="/">
             <span className="brand-mark">
               <i />
@@ -133,13 +186,22 @@ function Shell() {
             </span>
           </Link>
           <button className="workspace-picker" onClick={() => setCommand(true)}>
-            <span className="workspace-avatar">A</span>
+            <span className="workspace-avatar">
+              <Command size={17} />
+            </span>
             <span>
-              我的工作空间<small>Personal workspace</small>
+              {mode === "local"
+                ? "本机工作区"
+                : mode === "demo"
+                  ? "展示工作区"
+                  : "导入工作区"}
+              <small>
+                {mode === "local" ? "Local filesystem" : "Browser workspace"}
+              </small>
             </span>
             <Command size={14} />
           </button>
-          <span className="nav-heading">WORKSPACE</span>
+          <span className="nav-heading">EXPLORER / 01—04</span>
           <nav aria-label="主导航">
             {nav.map(({ path, label, english, icon: Icon }) => (
               <NavLink
@@ -163,26 +225,47 @@ function Shell() {
           </nav>
           <div className="sidebar-spacer" />
           <div className="sidebar-callout">
-            <span className="sidebar-star">✳</span>
-            <h3>
-              更少猜测，
-              <br />
-              更多洞察。
-            </h3>
-            <p>为每一次与 Agent 的协作，留下一张数据地图。</p>
+            <span className="nav-heading">DATA SOURCES</span>
+            {snapshot?.sources.map((s) => (
+              <Link className="rail-source" key={s.provider} to="/sources">
+                <i className={s.status === "ready" ? "ready" : ""} />
+                <span>
+                  {s.provider === "codex"
+                    ? "Codex"
+                    : s.provider === "claude"
+                      ? "Claude Code"
+                      : "WorkBuddy"}
+                </span>
+                <small>
+                  {s.status === "ready"
+                    ? "已发现"
+                    : s.status === "demo"
+                      ? "示例"
+                      : "未连接"}
+                </small>
+              </Link>
+            ))}
             <a
               href="https://github.com/jackon-elon/front"
               target="_blank"
               rel="noreferrer"
             >
-              探索开源项目 <ArrowUpRight size={14} />
+              GitHub 源码 <ArrowUpRight size={14} />
             </a>
           </div>
           <div className="sidebar-footer">
             <span className="profile-avatar">J</span>
             <div>
-              <strong>本地优先</strong>
-              <small>数据由你掌握</small>
+              <strong>
+                {mode === "local"
+                  ? "LOCAL / LIVE"
+                  : mode === "demo"
+                    ? "DEMO / FICTIONAL"
+                    : "IMPORT / HISTORY"}
+              </strong>
+              <small>
+                {mode === "local" ? "元数据留在本机" : "仅当前浏览器"}
+              </small>
             </div>
             <span className="status-circle" />
           </div>
@@ -199,6 +282,8 @@ function Shell() {
             <button
               className="icon-button mobile-menu"
               aria-label="打开导航"
+              aria-expanded={mobile}
+              aria-controls="workspace-nav"
               onClick={() => setMobile(true)}
             >
               <Menu size={21} />
@@ -210,6 +295,7 @@ function Shell() {
             <div className="topbar-actions">
               <button
                 className="global-search"
+                aria-label="搜索与跳转"
                 onClick={() => setCommand(true)}
               >
                 <Search size={16} />
@@ -225,7 +311,7 @@ function Shell() {
                   : mode === "import"
                     ? "已导入记录"
                     : connected
-                      ? "LOCAL · 已连接"
+                      ? "LOCAL · 实时监听"
                       : "LOCAL · 等待连接"}
               </span>
               <select
@@ -270,9 +356,9 @@ function Shell() {
                             <div className="empty-actions">
                               <button
                                 className="button primary"
-                                onClick={() => setMode("demo")}
+                                onClick={refresh}
                               >
-                                先体验演示模式
+                                重试连接
                               </button>
                               <Link className="button" to="/sources">
                                 管理数据源
@@ -310,7 +396,7 @@ function Shell() {
           </main>
           <footer className="app-footer">
             <span>
-              AGENTLENS <i>·</i> A clearer view of your agents.
+              AGENTLENS <i>·</i> Agent observability, on your terms.
             </span>
             <span>Local first. Open source.</span>
           </footer>

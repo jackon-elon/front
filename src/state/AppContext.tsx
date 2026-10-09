@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -19,6 +20,7 @@ import {
   saveImport,
   saveSetting,
 } from "../lib/storage";
+import { usageChanges, type RequestEvent } from "../../shared/live";
 
 export type Mode = "demo" | "local" | "import";
 const loopback = ["127.0.0.1", "localhost", "[::1]"].includes(
@@ -52,13 +54,18 @@ interface Context {
   notification: string;
   importData: (snapshot: Snapshot) => Promise<void>;
   connected: boolean;
+  checkedAt: string | null;
+  events: RequestEvent[];
+  eventCount: number;
 }
 const AppContext = createContext<Context | null>(null);
 export function AppProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [mode, updateMode] = useState<Mode>(() => {
-    const saved = readSetting<Mode>("mode", "demo");
-    return ["demo", "local", "import"].includes(saved) ? saved : "demo";
+    const fallback = loopback ? "local" : "demo";
+    // A versioned preference removes the old default-to-demo behavior on localhost.
+    const saved = readSetting<Mode>("mode:v3", fallback);
+    return ["demo", "local", "import"].includes(saved) ? saved : fallback;
   });
   const [compare, setCompare] = useState<string[]>(() => {
     const saved = readSetting<unknown>("comparison", []);
@@ -75,6 +82,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [compare]);
   const [notification, toast] = useState("");
   const [connected, setConnected] = useState(false);
+  const [checkedAt, setCheckedAt] = useState<string | null>(null);
+  const [events, setEvents] = useState<RequestEvent[]>([]);
+  const [eventCount, setEventCount] = useState(0);
+  const baseline = useRef<{ mode: Mode; snapshot: Snapshot } | null>(null);
   const query = useQuery({
     queryKey: ["snapshot", mode],
     queryFn: async ({ signal }) => {
@@ -107,19 +118,45 @@ export function AppProvider({ children }: { children: ReactNode }) {
     retry: false,
     staleTime: mode === "local" ? 10000 : Infinity,
     refetchOnWindowFocus: mode === "local",
+    refetchInterval: mode === "local" && !connected ? 5000 : false,
   });
+  useEffect(() => {
+    const current = query.data;
+    if (!current) return;
+    const before = baseline.current;
+    if (!before || before.mode !== mode) {
+      setEvents([]);
+      setEventCount(0);
+    } else {
+      const changes = usageChanges(before.snapshot, current);
+      if (changes.length) {
+        setEvents((old) => [...changes, ...old].slice(0, 100));
+        setEventCount((n) => n + changes.length);
+      }
+    }
+    baseline.current = { mode, snapshot: current };
+    setCheckedAt(current.generatedAt);
+  }, [query.data, mode]);
   useEffect(() => {
     if (mode !== "local" || !loopback) {
       setConnected(false);
       return;
     }
     const source = new EventSource("/api/events");
-    source.addEventListener("connected", () => setConnected(true));
+    source.addEventListener("connected", () => {
+      setConnected(true);
+      // Reconcile changes that happened while the stream was disconnected.
+      void queryClient.invalidateQueries({ queryKey: ["snapshot", "local"] });
+    });
     source.addEventListener("updated", () => {
       setConnected(true);
       void queryClient.invalidateQueries({ queryKey: ["snapshot", "local"] });
     });
     source.onerror = () => setConnected(false);
+    source.addEventListener("scanned", (event: MessageEvent) => {
+      setConnected(true);
+      setCheckedAt(event.data);
+    });
     return () => {
       source.close();
       setConnected(false);
@@ -143,7 +180,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     updateMode(next);
     setCompare([]);
     try {
-      saveSetting("mode", next);
+      saveSetting("mode:v3", next);
     } catch {
       toast("浏览器存储不可用，设置仅在当前页面生效");
     }
@@ -180,6 +217,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         notification,
         importData,
         connected,
+        checkedAt,
+        events,
+        eventCount,
       }}
     >
       {children}

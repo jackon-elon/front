@@ -41,7 +41,7 @@ export default function Compare() {
     <>
       <PageTitle
         kicker="WORKSPACE / COMPARE"
-        title="并排看，才更清晰"
+        title="对比工作台"
         description="跨 Agent 检查输入增长、缓存和请求结构。拖动卡片调整顺序。"
       >
         <Link className="button" to="/sessions">

@@ -36,7 +36,12 @@ const refresh = () =>
     .then((result) => {
       snapshotSchema.parse(result);
       const fingerprint = createHash("sha256")
-        .update(JSON.stringify(result.sessions))
+        .update(
+          JSON.stringify({
+            sessions: result.sessions,
+            sources: result.sources,
+          }),
+        )
         .digest("hex");
       if (fingerprint !== previous) {
         previous = fingerprint;
@@ -45,6 +50,8 @@ const refresh = () =>
           client.write(`event: updated\ndata: ${revision}\n\n`);
       }
       snapshot = result;
+      for (const client of clients)
+        client.write(`event: scanned\ndata: ${result.generatedAt}\n\n`);
       return result;
     })
     .finally(() => {
@@ -136,10 +143,13 @@ const server = createServer(async (req, res) => {
 server.listen(port, "127.0.0.1", () =>
   console.log(`AgentLens local API: http://127.0.0.1:${port}`),
 );
-const interval = setInterval(() => {
-  refresh().catch(() => {});
-  for (const client of clients) client.write(": heartbeat\n\n");
-}, 10000);
+const interval = setInterval(
+  () => {
+    refresh().catch(() => {});
+    for (const client of clients) client.write(": heartbeat\n\n");
+  },
+  Math.max(500, Number(process.env.AGENTLENS_SCAN_MS) || 3000),
+);
 refresh().catch((err) => console.error("Scan failed:", err.message));
 const close = () => {
   clearInterval(interval);

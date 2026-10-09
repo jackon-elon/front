@@ -246,8 +246,8 @@ export default function Sessions() {
     <>
       <PageTitle
         kicker="WORKSPACE / SESSIONS"
-        title="每次探索，都有记录"
-        description="检索、整理、深入请求细节。选择最多三个会话，发现不同的工作方式。"
+        title="会话档案"
+        description="搜索真实记录，定位请求，或选取三个会话进行对比。"
       >
         <button className="button" onClick={download}>
           <Download size={16} />
@@ -275,7 +275,7 @@ export default function Sessions() {
         </div>
         <div className="summary-hint">
           <span className="live-dot" />
-          列表只渲染视口内的行
+          当前工作区记录
         </div>
       </div>
       <section className="panel table-panel" data-region="会话虚拟列表">

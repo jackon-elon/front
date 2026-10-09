@@ -143,7 +143,7 @@ export default function Sources() {
             {mode === "demo"
               ? "虚构示例记录，完整体验筛选、对比、标签和图表。"
               : mode === "local"
-                ? `SSE ${connected ? "已连接 · 每 10 秒扫描增量" : "等待连接"} · 日志元数据留在本机。`
+                ? `SSE ${connected ? "已连接 · 每 3 秒检查日志" : "等待连接"} · 日志元数据留在本机。`
                 : "导入记录使用 IndexedDB 保存在当前浏览器。"}
           </p>
         </div>

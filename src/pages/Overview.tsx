@@ -1,199 +1,294 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import {
   ArrowUpRight,
-  ChevronRight,
-  Layers,
-  SlidersHorizontal,
+  Radio,
+  Pause,
+  Play,
   X,
+  Filter,
+  ArrowDownRight,
 } from "lucide-react";
 import { useApp } from "../state/AppContext";
 import { useAnalytics, useFilters } from "../lib/useAnalytics";
-import { compact, percent, time } from "../lib/format";
-import {
-  Metric,
-  PageTitle,
-  Panel,
-  ProviderBadge,
-  Empty,
-  Skeleton,
-} from "../components/UI";
+import { compact, percent, integer } from "../lib/format";
+import { Metric, Panel, ProviderBadge, Skeleton } from "../components/UI";
 import { UsageChart } from "../components/Charts";
+import { LiveTrace } from "../components/LiveTrace";
+import { SessionDeck } from "../components/SessionDeck";
+import { SplitView } from "../components/SplitView";
 import {
-  providerColors,
   providerNames,
-  sessionTotals,
+  type Provider,
+  type Session,
 } from "../../shared/schema";
 
-function FlowArtwork() {
-  return (
-    <div className="flow-art" aria-hidden="true">
-      <svg viewBox="0 0 700 240" fill="none">
-        <defs>
-          <linearGradient id="ribbon">
-            <stop stopColor="#aa94ff" />
-            <stop offset=".45" stopColor="#f0cbdc" />
-            <stop offset="1" stopColor="#b9e8d2" />
-          </linearGradient>
-          <linearGradient id="ribbon-shade" x1="0" x2="0" y1="0" y2="1">
-            <stop stopColor="#c1b0ff" stopOpacity=".7" />
-            <stop offset="1" stopColor="#c1b0ff" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {Array.from({ length: 24 }, (_, i) => (
-          <path
-            key={i}
-            className="flow-line"
-            style={{ animationDelay: `${i * -0.2}s` }}
-            d={`M -20 ${100 + i * 3} C 110 ${210 - i * 4}, 160 ${-100 + i * 7}, 300 ${80 + i * 3} S 470 ${300 - i * 6}, 720 ${20 + i * 4}`}
-            stroke="url(#ribbon)"
-            strokeWidth="1"
-            opacity={0.15 + i / 70}
-          />
-        ))}
-        <path
-          d="M-20 135 C110 240 160 -25 300 110 S470 220 720 85 L720 245 L-20 245Z"
-          fill="url(#ribbon-shade)"
-          opacity=".16"
-        />
-      </svg>
-      <div className="flow-label one">● Codex</div>
-      <div className="flow-label two">✳ Claude Code</div>
-      <div className="flow-label three">↗ WorkBuddy</div>
-    </div>
-  );
-}
 export default function Overview() {
-  const { snapshot, mode } = useApp();
-  const sessions = snapshot?.sessions ?? [];
+  const { snapshot, mode, connected, checkedAt, events, eventCount } = useApp();
   const { filters, update } = useFilters();
   const [, setParams] = useSearchParams();
-  const { result: a, pending } = useAnalytics(sessions, filters);
+  const [now, setNow] = useState(Date.now());
+  const [minutes, setMinutes] = useState(60);
+  const [held, setHeld] = useState<{
+    sessions: Session[];
+    end: number;
+    count: number;
+  } | null>(null);
+  const [drill, setDrill] = useState<string[] | null>(null);
   const [metric, setMetric] = useState<"total" | "input" | "output" | "cache">(
     "total",
   );
-  const [selectedDay, setDay] = useState<string | null>(null);
-  const [activityDay, setActivityDay] = useState<number | null>(null);
+  const sessions = useMemo(() => snapshot?.sessions ?? [], [snapshot]);
+  const { result: a, pending } = useAnalytics(sessions, filters);
   useEffect(() => {
-    setDay(null);
-    setActivityDay(null);
-  }, [filters.days, filters.provider, filters.project]);
-  if (!a) return <Skeleton />;
-  const active = sessions.filter((s) => a.activeSessions.includes(s.id));
-  const visible = active.filter(
-    (s) =>
-      (!selectedDay ||
-        s.requests.some((r) => {
-          const d = new Date(r.time);
-          return (
-            `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}` ===
-            selectedDay
-          );
-        })) &&
-      (activityDay === null ||
-        s.requests.some(
-          (r) => (new Date(r.time).getDay() + 6) % 7 === activityDay,
-        )),
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    setHeld(null);
+    setDrill(null);
+  }, [mode]);
+  const selected = useMemo(
+    () =>
+      (held?.sessions ?? sessions).filter(
+        (s) =>
+          (filters.provider === "all" || s.provider === filters.provider) &&
+          (!filters.project || filters.project === s.project),
+      ),
+    [sessions, held, filters.provider, filters.project],
   );
-  const open = (id: string) =>
-    setParams((previous) => {
-      const p = new URLSearchParams(previous);
-      p.set("session", id);
-      return p;
-    });
+  const historicalEnd = useMemo(
+    () =>
+      selected.reduce(
+        (end, s) =>
+          s.requests.reduce(
+            (latest, r) => Math.max(latest, Date.parse(r.time)),
+            end,
+          ),
+        0,
+      ),
+    [selected],
+  );
+  const end = held?.end ?? (mode === "local" ? now : historicalEnd || now);
+  const clock = (t: number | string) =>
+    new Date(t).toLocaleTimeString("zh-CN", { hour12: false });
+  const age = checkedAt
+    ? Math.max(0, Math.floor((now - Date.parse(checkedAt)) / 1000))
+    : null;
+  const recent = useMemo(
+    () =>
+      [...selected]
+        .sort((a, b) => Date.parse(b.updatedAt) - Date.parse(a.updatedAt))
+        .filter((s) => !drill || drill.includes(s.id)),
+    [selected, drill],
+  );
+  const records = useMemo(
+    () =>
+      selected
+        .flatMap((s) => s.requests.map((r) => ({ session: s, request: r })))
+        .sort((a, b) => Date.parse(b.request.time) - Date.parse(a.request.time))
+        .slice(0, 7),
+    [selected],
+  );
   const projects = [...new Set(sessions.map((s) => s.project))];
-  const topProjects = projects
-    .map((name) => ({
-      name,
-      total: active
-        .filter((s) => s.project === name)
-        .reduce((sum, s) => sum + sessionTotals(s).total, 0),
-    }))
-    .filter((x) => x.total)
-    .sort((x, y) => y.total - x.total)
-    .slice(0, 4);
-  const top = a.breakdown
-    .filter((b) => b.total > 0)
-    .sort((x, y) => y.total - x.total);
-  let accumulated = 0;
-  const conic = top
-    .map((b) => {
-      const start = accumulated;
-      accumulated += (b.total / a.total) * 100;
-      return `${providerColors[b.provider]} ${start}% ${accumulated}%`;
-    })
-    .join(",");
+  const open = (id: string) =>
+    setParams((p) => {
+      const next = new URLSearchParams(p);
+      next.set("session", id);
+      return next;
+    });
+  if (!a) return <Skeleton />;
   return (
-    <>
-      <PageTitle
-        kicker="WORKSPACE / OVERVIEW"
-        title="看清每一份投入"
-        description="把分散的 Agent 使用记录，变成一张清晰的工作地图。"
+    <div className="control-room">
+      <div className="room-heading">
+        <div>
+          <span className="eyebrow">AGENTLENS / OBSERVATORY</span>
+          <h1>
+            工作现场<span> / </span>
+            <em>Live desk</em>
+          </h1>
+          <p>请求、缓存与上下文。关注正在发生的事。</p>
+        </div>
+        <div className="room-clock">
+          <strong>{clock(now)}</strong>
+          <span>
+            {new Date(now).toLocaleDateString("zh-CN", {
+              month: "long",
+              day: "numeric",
+              weekday: "long",
+            })}
+          </span>
+        </div>
+      </div>
+      <div
+        className={`connection-strip ${mode === "local" && connected ? "connected" : ""}`}
       >
-        <div className="filter-controls">
-          <SlidersHorizontal size={16} />
-          <select
-            aria-label="按项目筛选"
-            value={filters.project}
-            onChange={(e) => update("project", e.target.value)}
-          >
-            <option value="">所有工作区</option>
-            {projects.map((p) => (
-              <option key={p}>{p}</option>
-            ))}
-          </select>
-          <select
-            aria-label="统计时间范围"
-            value={filters.days}
-            onChange={(e) => update("days", e.target.value)}
-          >
-            {[7, 14, 28].map((d) => (
-              <option key={d} value={d}>
-                最近 {d} 天
-              </option>
-            ))}
-          </select>
+        <span className="signal-dot" />
+        <strong>
+          {mode === "local"
+            ? connected
+              ? "本机日志 · 正在监听"
+              : "本机日志 · 连接中断"
+            : mode === "demo"
+              ? "在线展示 · 虚构数据"
+              : "导入记录 · 历史回放"}
+        </strong>
+        <span>
+          {mode === "local"
+            ? `每 3 秒检查文件 · 最近检查 ${age === null ? "—" : `${age} 秒前`}`
+            : "此页面不会实时读取电脑日志"}
+        </span>
+        <Link to="/sources">
+          连接管理
+          <ArrowUpRight size={14} />
+        </Link>
+      </div>
+      <div className="room-filter">
+        <div className="provider-tabs" role="group" aria-label="筛选 Agent">
+          {(["all", "codex", "claude", "workbuddy"] as const).map((p) => (
+            <button
+              key={p}
+              aria-pressed={filters.provider === p}
+              className={filters.provider === p ? "active" : ""}
+              onClick={() => {
+                update("source", p);
+                setDrill(null);
+              }}
+            >
+              {p === "all" ? "全部 Agent" : providerNames[p]}
+              <span>
+                {p === "all"
+                  ? sessions.length
+                  : sessions.filter((s) => s.provider === p).length}
+              </span>
+            </button>
+          ))}
         </div>
-      </PageTitle>
-      <section className="overview-hero" data-region="总览主视觉">
-        <div className="hero-copy">
-          <span className="eyebrow">YOUR AGENTS. ONE CLEAR PICTURE.</span>
-          <h2>让数据，有迹可循。</h2>
-          <p>
-            {mode === "demo"
-              ? "正在探索演示工作区 · 所有记录均为虚构示例"
-              : mode === "import"
-                ? "已导入的使用记录 · 数据保存在当前浏览器"
-                : "你的本地使用记录 · 仅提取统计元数据"}
-          </p>
-          <Link className="hero-link" to="/sessions">
-            探索会话 <ArrowUpRight size={17} />
+        <select
+          aria-label="按项目筛选"
+          value={filters.project}
+          onChange={(e) => update("project", e.target.value)}
+        >
+          <option value="">所有工作区</option>
+          {projects.map((p) => (
+            <option key={p}>{p}</option>
+          ))}
+        </select>
+      </div>
+      <SplitView>
+        <Panel
+          title="请求脉冲"
+          eyebrow="01 / LIVE TELEMETRY"
+          className="pulse-panel"
+          action={
+            <div className="pulse-actions">
+              <div className="segment">
+                {[15, 60, 360].map((m) => (
+                  <button
+                    key={m}
+                    aria-pressed={minutes === m}
+                    className={minutes === m ? "active" : ""}
+                    onClick={() => {
+                      setMinutes(m);
+                      setDrill(null);
+                    }}
+                  >
+                    {m === 360 ? "6h" : `${m}m`}
+                  </button>
+                ))}
+              </div>
+              <button
+                className={`icon-button ${held ? "selected" : ""}`}
+                aria-label={held ? "恢复时间线" : "暂停时间线"}
+                onClick={() =>
+                  setHeld(held ? null : { sessions, end, count: eventCount })
+                }
+              >
+                {held ? <Play size={17} /> : <Pause size={17} />}
+              </button>
+            </div>
+          }
+        >
+          <LiveTrace
+            sessions={selected}
+            end={end}
+            minutes={minutes}
+            onSelect={setDrill}
+          />
+          <div className="pulse-status">
+            <span>
+              <Radio size={14} />
+              {held
+                ? `画面暂停 · ${Math.max(0, eventCount - held.count)} 条新记录待查看`
+                : mode === "local"
+                  ? "随日志自动更新"
+                  : "基于已有记录回放"}
+            </span>
+            <span>
+              {mode === "local"
+                ? `${eventCount} 条新增 / 本次打开后`
+                : "历史记录"}
+            </span>
+          </div>
+        </Panel>
+        <Panel
+          title="会话速览"
+          eyebrow="02 / SESSION DECK"
+          className="deck-panel"
+          action={
+            <Link className="text-link" to="/sessions">
+              全部
+              <ArrowUpRight size={15} />
+            </Link>
+          }
+        >
+          {drill && (
+            <button className="drill-clear" onClick={() => setDrill(null)}>
+              <Filter size={13} />
+              {drill.length} 个会话 · 清除
+              <X size={13} />
+            </button>
+          )}
+          <SessionDeck sessions={recent} />
+          <Link className="deck-compare-link" to="/compare">
+            进入对比工作台 <ArrowUpRight size={16} />
           </Link>
-        </div>
-        <FlowArtwork />
-        <span className="hero-index">01 / OBSERVABILITY</span>
-      </section>
+        </Panel>
+      </SplitView>
+      <div className="section-divider">
+        <span>统计概览</span>
+        <span className="divider-line" />
+        <select
+          aria-label="统计时间范围"
+          value={filters.days}
+          onChange={(e) => update("days", e.target.value)}
+        >
+          {[7, 14, 28].map((d) => (
+            <option key={d} value={d}>
+              最近 {d} 天
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="metric-grid" aria-busy={pending}>
         <Metric
-          label="总 Token 用量"
+          label="Token 用量"
           value={compact(a.total)}
           sub={`输入 ${compact(a.input)} / 输出 ${compact(a.output)}`}
           index={0}
           accent
-        >
-          <span className="metric-decoration">↗</span>
-        </Metric>
+        />
         <Metric
           label="模型请求"
-          value={compact(a.requests)}
-          sub={`${a.activeSessions.length} 个有用量的会话`}
+          value={integer(a.requests)}
+          sub={`${a.activeSessions.length} 个会话产生了记录`}
           index={1}
         />
         <Metric
-          label="输入缓存命中"
+          label="缓存命中率"
           value={percent(a.cacheRate)}
-          sub={`${compact(a.cache)} 已缓存 / 已知输入 ${compact(a.knownCacheInput)}`}
+          sub={`${compact(a.cache)} 已缓存 / ${compact(a.knownCacheInput)} 已知输入`}
           index={2}
         >
           <div className="mini-progress">
@@ -201,23 +296,23 @@ export default function Overview() {
           </div>
         </Metric>
         <Metric
-          label="最高上下文占用"
+          label="最大上下文占用"
           value={a.contextKnown ? percent(a.maxContext) : "—"}
           sub={
             a.contextKnown
-              ? `${a.contextKnown} 次请求记录了上下文上限`
-              : "日志未提供模型上下文上限"
+              ? `${a.contextKnown} 次请求记录了上限`
+              : "日志未提供上下文上限"
           }
           index={3}
         />
       </div>
-      <div className="analytics-grid">
+      <div className="history-grid">
         <Panel
-          title="投入的节奏"
-          eyebrow="TOKEN ACTIVITY"
+          title="用量趋势"
+          eyebrow="03 / USAGE HISTORY"
           className="trend-panel"
           action={
-            <div className="segment" aria-label="趋势指标">
+            <div className="segment">
               {(
                 [
                   ["total", "总量"],
@@ -238,203 +333,95 @@ export default function Overview() {
             </div>
           }
         >
-          <div className="chart-caption">
-            <strong>{compact(a[metric])}</strong>
-            <span>最近 {filters.days} 天 · 点击曲线查看当日会话</span>
-          </div>
-          <UsageChart data={a.daily} metric={metric} onDay={setDay} />
+          <UsageChart
+            data={a.daily}
+            metric={metric}
+            onDay={(day) => {
+              const ids = selected
+                .filter((s) =>
+                  s.requests.some((r) => {
+                    const d = new Date(r.time);
+                    return (
+                      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}` ===
+                      day
+                    );
+                  }),
+                )
+                .map((s) => s.id);
+              setDrill(ids);
+              document
+                .querySelector(".deck-panel")
+                ?.scrollIntoView({ behavior: "smooth", block: "center" });
+            }}
+          />
         </Panel>
-        <Panel title="你的 Agent 组合" eyebrow="SOURCE MIX">
-          <div className="donut-wrap">
-            <div
-              className="donut"
-              style={{
-                background: a.total ? `conic-gradient(${conic})` : "#e5e2ee",
-              }}
-            >
-              <div>
-                <span>{top.length}</span>
-                <small>活跃数据源</small>
-              </div>
-            </div>
-            <span className="donut-caption">按 Token 用量分布</span>
-          </div>
-          <div className="source-list">
-            {a.breakdown.map((b) => (
-              <button
-                key={b.provider}
-                className={`source-line ${filters.provider === b.provider ? "selected" : ""}`}
-                onClick={() =>
-                  update(
-                    "source",
-                    filters.provider === b.provider ? "all" : b.provider,
-                  )
-                }
-              >
-                <ProviderBadge provider={b.provider} />
-                <strong>{a.total ? percent(b.total / a.total) : "—"}</strong>
-                <ChevronRight size={14} />
-              </button>
-            ))}
-          </div>
-          {filters.provider !== "all" && (
-            <button
-              className="text-button"
-              onClick={() => update("source", "all")}
-            >
-              清除数据源筛选 <X size={12} />
-            </button>
-          )}
-        </Panel>
-      </div>
-      <div className="lower-grid">
         <Panel
-          title="最近的工作轨迹"
-          eyebrow="SESSION EXPLORER"
-          action={
-            <Link className="text-link" to="/sessions">
-              全部会话 <ArrowUpRight size={16} />
-            </Link>
-          }
+          title="请求记录"
+          eyebrow="04 / REQUEST FEED"
+          className="feed-panel"
+          action={<span className="feed-count">{records.length} RECENT</span>}
         >
-          <AnimatePresence>
-            {(selectedDay || activityDay !== null) && (
-              <motion.div
-                className="drilldown"
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
+          <AnimatePresence initial={false}>
+            {records.map(({ session: s, request: r }) => (
+              <motion.button
+                layout
+                key={`${s.id}/${r.id}`}
+                className="feed-row"
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                onClick={() => open(s.id)}
               >
-                正在查看{" "}
-                {selectedDay ??
-                  ["周一", "周二", "周三", "周四", "周五", "周六", "周日"][
-                    activityDay!
-                  ]}{" "}
-                · {visible.length} 个会话
-                <button
-                  className="icon-button"
-                  aria-label="清除图表联动筛选"
-                  onClick={() => {
-                    setDay(null);
-                    setActivityDay(null);
-                  }}
-                >
-                  <X size={15} />
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          {visible.length ? (
-            <div className="recent-list">
-              {visible.slice(0, 5).map((s, i) => (
-                <motion.button
-                  className="recent-session"
-                  key={s.id}
-                  layout
-                  onClick={() => open(s.id)}
-                  whileHover={{ x: 5 }}
-                >
-                  <span className="session-number">0{i + 1}</span>
-                  <div className="session-caption">
-                    <strong>{s.title}</strong>
-                    <span>
-                      {s.project} · {time(s.updatedAt)}
-                    </span>
-                  </div>
-                  <ProviderBadge provider={s.provider} short />
-                  <span className="recent-total">
-                    {compact(sessionTotals(s).total)}
-                  </span>
-                  <ArrowUpRight size={17} />
-                </motion.button>
-              ))}
-            </div>
-          ) : (
-            <Empty
-              title="这段时间还没有记录"
-              message="试试切换时间范围或清除筛选。"
-            />
-          )}
-        </Panel>
-        <Panel title="工作区分布" eyebrow="WHERE IT HAPPENS">
-          <div className="project-list">
-            {topProjects.map((p, i) => (
-              <button
-                key={p.name}
-                onClick={() =>
-                  update("project", filters.project === p.name ? "" : p.name)
-                }
-              >
-                <span className="project-icon">
-                  <Layers size={17} />
-                </span>
+                <span className="feed-time">{clock(r.time).slice(0, 5)}</span>
                 <div>
-                  <strong>{p.name}</strong>
-                  <div className="project-bar">
-                    <motion.i
-                      initial={{ width: 0 }}
-                      animate={{
-                        width: `${(p.total / topProjects[0].total) * 100}%`,
-                      }}
-                      transition={{ duration: 0.65, delay: i * 0.05 }}
-                    />
-                  </div>
+                  <ProviderBadge provider={s.provider} />
+                  <strong>{r.model}</strong>
+                  <small>
+                    {s.project} ·{" "}
+                    {r.kind === "compaction" ? "上下文压缩" : "用量记录"}
+                  </small>
                 </div>
-                <span>{compact(p.total)}</span>
-              </button>
+                <span className="feed-amount">
+                  {compact(r.input + r.output)}
+                  <ArrowDownRight size={12} />
+                </span>
+              </motion.button>
             ))}
-          </div>
-          <p className="panel-footnote">工作区用量为筛选会话的全部请求合计。</p>
+          </AnimatePresence>
+          {!records.length && <p className="deck-empty">等待第一条记录</p>}
         </Panel>
       </div>
-      <Panel
-        title="哪一刻最专注"
-        eyebrow="ACTIVITY MAP"
-        action={<span className="muted small">点击星期，联动上方会话</span>}
-      >
-        <div className="heatmap">
-          <div className="heat-hours">
-            <span />
-            {Array.from({ length: 24 }, (_, h) => (
-              <span key={h}>{h % 4 === 0 ? `${h}:00` : ""}</span>
-            ))}
-          </div>
-          {a.heatmap.map((hours, day) => (
-            <div className="heat-row" key={day}>
-              <button
-                className={activityDay === day ? "active" : ""}
-                onClick={() => setActivityDay(activityDay === day ? null : day)}
-              >
-                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][day]}
-              </button>
-              {hours.map((v, h) => (
-                <div
-                  key={h}
-                  title={`${["周一", "周二", "周三", "周四", "周五", "周六", "周日"][day]} ${h}:00 · ${v} 次请求`}
-                  style={{
-                    background: v
-                      ? `rgba(130, 107, 214, ${Math.min(0.95, 0.15 + (v / Math.max(1, ...a.heatmap.flat())) * 0.8)})`
-                      : "#f0eef5",
-                  }}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-        <div className="heat-legend">
-          <span>按浏览器本地时区</span>
-          <span>
-            少 <i />
-            <i />
-            <i />
-            <i /> 多
-          </span>
-        </div>
-      </Panel>
-      <div className="page-note">
-        {providerNames.codex} / Claude Code / WorkBuddy ·
-        数据来自日志，统计不能替代服务商账单。
+      <div className="source-meters">
+        {(["codex", "claude", "workbuddy"] as Provider[]).map((p) => {
+          const s = snapshot?.sources.find((s) => s.provider === p);
+          const b = a.breakdown.find((b) => b.provider === p)!;
+          return (
+            <button
+              key={p}
+              onClick={() =>
+                update("source", filters.provider === p ? "all" : p)
+              }
+            >
+              <ProviderBadge provider={p} />
+              <strong>{compact(b.total)}</strong>
+              <span>
+                {s?.status === "missing"
+                  ? "未发现日志"
+                  : `${b.requests} 次请求`}
+              </span>
+            </button>
+          );
+        })}
       </div>
-    </>
+      {events.length > 0 && mode === "local" && (
+        <div className="last-event" role="status">
+          最新增量：{events[0].project} · +
+          {compact(events[0].input + events[0].output)} tokens
+        </div>
+      )}
+      <p className="page-note">
+        统计来自日志中已写入的记录；不是正在生成中的逐 token
+        流。未知指标保留为空，不补造数字。
+      </p>
+    </div>
   );
 }

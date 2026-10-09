@@ -10,6 +10,7 @@ import {
   YAxis,
   Line,
   LineChart,
+  ReferenceLine,
 } from "recharts";
 import { compact, integer } from "../lib/format";
 import type { Analytics } from "../../shared/analytics";
@@ -56,13 +57,13 @@ export function UsageChart({
           >
             <defs>
               <linearGradient id="usage-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#b1a0ff" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#b1a0ff" stopOpacity={0} />
+                <stop offset="0%" stopColor="#a9d7b7" stopOpacity={0.3} />
+                <stop offset="95%" stopColor="#a9d7b7" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
               vertical={false}
-              stroke="#e8e7ee"
+              stroke="#2a3031"
               strokeDasharray="3 5"
             />
             <XAxis
@@ -85,7 +86,7 @@ export function UsageChart({
             <Area
               type="monotone"
               dataKey={metric}
-              stroke="#8a71e8"
+              stroke="#a9d7b7"
               strokeWidth={3}
               fill="url(#usage-fill)"
               animationDuration={550}
@@ -137,10 +138,14 @@ export function ContextChart({
   sessions,
   normalized = false,
   syncId,
+  selectedStep,
+  onStep,
 }: {
   sessions: Session[];
   normalized?: boolean;
   syncId?: string;
+  selectedStep?: number;
+  onStep?: (step: number) => void;
 }) {
   const size = Math.max(0, ...sessions.map((s) => s.requests.length));
   const data = Array.from({ length: size }, (_, i) =>
@@ -171,10 +176,17 @@ export function ContextChart({
         <LineChart
           data={data}
           syncId={syncId}
+          onClick={(state) => {
+            if (
+              state.activeTooltipIndex !== null &&
+              state.activeTooltipIndex !== undefined
+            )
+              onStep?.(Number(state.activeTooltipIndex) + 1);
+          }}
           margin={{ top: 15, left: -15, right: 20 }}
         >
           <CartesianGrid
-            stroke="#e8e7ee"
+            stroke="#2a3031"
             vertical={false}
             strokeDasharray="3 5"
           />
@@ -182,13 +194,13 @@ export function ContextChart({
             dataKey="step"
             tickLine={false}
             axisLine={false}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "#a5b19e" }}
           />
           <YAxis
             tickFormatter={(v) => (normalized ? `${v}%` : compact(v))}
             axisLine={false}
             tickLine={false}
-            tick={{ fontSize: 11 }}
+            tick={{ fontSize: 11, fill: "#a5b19e" }}
           />
           <Tooltip
             contentStyle={chartTheme}
@@ -197,6 +209,13 @@ export function ContextChart({
             }
           />
           <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
+          {selectedStep && (
+            <ReferenceLine
+              x={selectedStep}
+              stroke="#e8a97d"
+              strokeDasharray="4 4"
+            />
+          )}
           {sessions.map((s) => (
             <Line
               key={s.id}

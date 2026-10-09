@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useForm } from "react-hook-form";
@@ -43,6 +43,10 @@ function Detail({ session: s }: { session: Session }) {
     overscan: 5,
   });
   const activeRequest = s.requests.find((r) => r.id === selected);
+  useEffect(() => {
+    const index = requests.findIndex((r) => r.id === selected);
+    if (index >= 0) virtual.scrollToIndex(index, { align: "center" });
+  }, [selected, requests, virtual]);
   const form = useForm({
     defaultValues: {
       tags: s.annotation.tags.join(", "),
@@ -68,7 +72,7 @@ function Detail({ session: s }: { session: Session }) {
     ),
   );
   return (
-    <>
+    <div className="detail-body">
       <div className="detail-top">
         <ProviderBadge provider={s.provider} />
         <span className="muted">{s.id.slice(-12)}</span>
@@ -167,7 +171,18 @@ function Detail({ session: s }: { session: Session }) {
             <h4>上下文的生长</h4>
             <span>每次请求的输入 · 非累计用量</span>
           </div>
-          <ContextChart sessions={[s]} />
+          <ContextChart
+            sessions={[s]}
+            selectedStep={
+              selected
+                ? s.requests.findIndex((r) => r.id === selected) + 1
+                : undefined
+            }
+            onStep={(step) => {
+              setKind("all");
+              setSelected(s.requests[step - 1]?.id ?? null);
+            }}
+          />
           <div className="detail-section-head">
             <h4>
               请求明细 <span>{requests.length}</span>
@@ -345,7 +360,7 @@ function Detail({ session: s }: { session: Session }) {
           </button>
         </form>
       )}
-    </>
+    </div>
   );
 }
 export default function SessionDetail() {

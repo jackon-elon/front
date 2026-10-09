@@ -3,7 +3,10 @@
 ## 按界面找文件
 
 - 整体导航、全局栏、路由转场：`src/App.tsx`
-- 总览、主视觉流线、图表联动：`src/pages/Overview.tsx`
+- 实时工作台、过滤与时间线暂停：`src/pages/Overview.tsx`
+- 请求时间桶与 SVG 点击联动：`src/components/LiveTrace.tsx`、`shared/live.ts`
+- 会话卡片展开与对比：`src/components/SessionDeck.tsx`
+- 指针 / 键盘分隔条和宽度记忆：`src/components/SplitView.tsx`
 - 搜索、排序、收藏筛选、虚拟列表、CSV：`src/pages/Sessions.tsx`
 - 会话侧栏、请求明细、标签备注：`src/components/SessionDetail.tsx`
 - 对比槽位、排序、指标对照：`src/pages/Compare.tsx`
