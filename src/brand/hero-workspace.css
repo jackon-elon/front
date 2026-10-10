@@ -1,0 +1,338 @@
+/* Product UI stays sharp at every viewport; no rasterized interface text. */
+.hero-workspace {
+  width: min(1120px, 100%);
+  margin: auto;
+  border: 1px solid #454951;
+  border-radius: 18px;
+  background: #121418;
+  box-shadow:
+    0 0 0 5px #ffffff04,
+    0 32px 80px #0009;
+  overflow: hidden;
+  text-align: left;
+}
+.hero-workspace-bar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 22px;
+  background: linear-gradient(#272a2f, #1d2025);
+  border-bottom: 1px solid #ffffff0c;
+}
+.hero-window-lights {
+  display: flex;
+  gap: 6px;
+}
+.hero-window-lights i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #656a73;
+}
+.hero-workspace-bar strong {
+  font-size: 13px;
+  font-weight: 500;
+  color: #d4d8df;
+}
+.hero-workspace-note {
+  margin-left: auto;
+  font-size: 11px;
+  color: #9298a3;
+}
+.hero-workspace-body {
+  display: grid;
+  grid-template-columns: 165px minmax(0, 1fr);
+}
+.hero-workspace-sidebar {
+  border-right: 1px solid #ffffff09;
+  padding: 27px 14px;
+  background: #171a1f;
+}
+.hero-workspace-sidebar > span {
+  display: block;
+  font-size: 11px;
+  color: #8b929e;
+  margin: 0 12px 19px;
+}
+.hero-workspace-sidebar > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  font-size: 13px;
+  color: #929ba8;
+  margin-bottom: 8px;
+  border-radius: 7px;
+}
+.hero-workspace-sidebar .active {
+  background: #293443;
+  color: #bedcff;
+}
+.hero-workspace-sidebar p {
+  color: #a0a7b3;
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 53px 12px 0;
+}
+.hero-workspace-content {
+  min-width: 0;
+}
+.hero-workspace-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 23px;
+  border-bottom: 1px solid #ffffff09;
+}
+.hero-workspace-toolbar > span {
+  font-size: 11px;
+  color: #8e97a6;
+  margin-right: auto;
+}
+.hero-workspace-toolbar .segmented-tabs {
+  padding: 3px;
+  background: #22262c;
+  border-radius: 6px;
+  gap: 2px;
+}
+.hero-workspace-toolbar .segmented-tabs button {
+  font-size: 12px;
+  padding: 7px 11px;
+  border-radius: 4px;
+  color: #a9b2bf;
+}
+.hero-workspace-toolbar .segmented-tabs button[aria-selected="true"] {
+  background: #3a424e;
+  color: #fff;
+  box-shadow: none;
+}
+.hero-preview-panel {
+  min-height: 318px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  padding: 25px 35px;
+  align-items: center;
+}
+.hero-preview-panel[data-motion="on"] {
+  animation: hero-preview-appear 0.2s ease-out;
+}
+@keyframes hero-preview-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.hero-preview-image {
+  position: relative;
+  background: #08090b;
+  border: 1px solid #ffffff0b;
+  border-radius: 8px;
+  overflow: hidden;
+  display: grid;
+  justify-items: center;
+}
+.hero-preview-image > span {
+  position: absolute;
+  top: 12px;
+  left: 15px;
+  font-size: 10px;
+  color: #939aa4;
+  z-index: 1;
+}
+.hero-preview-image .image-frame {
+  height: 210px;
+  width: 210px;
+  margin: 12px 0 0;
+}
+.hero-frame-controls {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  border-top: 1px solid #ffffff0d;
+  padding: 5px;
+  color: #b9c3d0;
+  font-size: 11px;
+}
+.hero-frame-controls button {
+  background: none;
+  width: 32px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  color: #c5d2e3;
+}
+.hero-preview-context {
+  padding: 5px 22px;
+}
+.hero-preview-context > span {
+  color: #8c98a8;
+  font-size: 12px;
+}
+.hero-preview-context h2 {
+  font-size: clamp(25px, 2.4vw, 34px);
+  letter-spacing: -0.04em;
+  line-height: 1.25;
+  margin: 13px 0;
+  color: #eff2f6;
+}
+.hero-preview-context p {
+  max-width: 280px;
+  color: #919aa8;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.hero-preview-context a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #8fc4ff;
+  font-size: 12px;
+  margin-top: 17px;
+  padding-block: 5px;
+}
+.hero-preview-document {
+  padding: 22px 25px;
+  border: 1px solid #ffffff13;
+  background: #21262d;
+  border-radius: 8px;
+  color: #c8d2df;
+}
+.hero-preview-document > span {
+  font-size: 11px;
+  margin-left: 12px;
+  vertical-align: super;
+}
+.hero-preview-document h2 {
+  font-size: 24px;
+  line-height: 1.35;
+  margin: 13px 0;
+  color: #edf2f8;
+}
+.hero-preview-document dl {
+  margin: 18px 0;
+  font-size: 11px;
+}
+.hero-preview-document dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  border-bottom: 1px solid #ffffff10;
+  padding: 9px 0;
+}
+.hero-preview-document dt {
+  color: #929eae;
+}
+.hero-preview-document dd {
+  margin: 0;
+}
+.hero-preview-document p {
+  font-size: 10px;
+  color: #9caabb;
+}
+.hero-preview-process {
+  padding: 16px 25px;
+}
+.hero-preview-process > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 77px;
+  position: relative;
+}
+.hero-preview-process > div:not(:last-child):after {
+  content: "";
+  position: absolute;
+  top: 57px;
+  left: 22px;
+  height: 33px;
+  border-left: 1px solid #3b4758;
+}
+.hero-preview-process > div > span {
+  display: grid;
+  place-items: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  color: #c7d8ed;
+  background: #283343;
+  border: 1px solid #435369;
+}
+.hero-preview-process small {
+  display: block;
+  color: #8996a8;
+  font-size: 10px;
+  margin-bottom: 7px;
+}
+.hero-preview-process strong {
+  font-size: 17px;
+  font-weight: 500;
+  color: #e1e6ee;
+}
+@media (max-width: 760px) {
+  .hero-workspace {
+    border-radius: 12px;
+  }
+  .hero-workspace-bar {
+    padding-inline: 14px;
+    height: 39px;
+    gap: 12px;
+  }
+  .hero-workspace-note {
+    font-size: 9px;
+  }
+  .hero-workspace-body {
+    grid-template-columns: 1fr;
+  }
+  .hero-workspace-sidebar,
+  .hero-workspace-toolbar > span {
+    display: none;
+  }
+  .hero-workspace-toolbar {
+    padding: 12px;
+    justify-content: center;
+  }
+  .hero-workspace-toolbar .segmented-tabs {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-workspace-toolbar .segmented-tabs button {
+    font-size: 11px;
+    flex: 1;
+    padding-inline: 5px;
+    min-height: 34px;
+  }
+  .hero-preview-panel {
+    min-height: 283px;
+    grid-template-columns: 1fr;
+    padding: 14px;
+    gap: 0;
+  }
+  .hero-preview-context {
+    display: none;
+  }
+  .hero-preview-image .image-frame {
+    width: 190px;
+    height: 190px;
+    margin-top: 18px;
+  }
+  .hero-frame-controls {
+    font-size: 12px;
+    padding-block: 7px;
+  }
+  .hero-frame-controls button {
+    width: 38px;
+    height: 32px;
+  }
+  .hero-preview-document {
+    width: 100%;
+  }
+  .hero-preview-process {
+    padding-block: 0;
+  }
+}

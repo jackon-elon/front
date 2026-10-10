@@ -1,6 +1,5 @@
 export const media = {
-  care: `${import.meta.env.BASE_URL}media/reading-room.webp`,
-  imagingHero: `${import.meta.env.BASE_URL}media/imaging-workstation-light.webp`,
+  care: `${import.meta.env.BASE_URL}media/reading-room-editorial.webp`,
   jointAtlas: `${import.meta.env.BASE_URL}media/joint-mri-atlas.webp`,
 };
 export const products = [

@@ -61,7 +61,7 @@ export function CareScene({
             src={media.care}
             width="1672"
             height="941"
-            alt="医生在明亮的阅片空间协作，场景为视觉设计示意"
+            alt="两位医生在阅片工作站旁协作，场景为生成的视觉设计示意"
             loading="lazy"
           />
         </div>

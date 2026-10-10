@@ -2,7 +2,7 @@
 
 修改前，先说明区域名称、想改变的属性和预期结果。示例：「首页影像智能章节，报告协同 Tab 下，把右侧报告信息的正文增大到 15px，保留手机纵向排列」。AI 可以据此定位组件与样式。
 
-- 首屏图片、标题、探索入口：CinemaHero.tsx；样式 .launch-*。
+- 首屏标题、探索入口：CinemaHero.tsx，样式 .launch-*；首屏产品预览与帧选择也在此组件，界面样式在 hero-workspace.css 的 .hero-*。
 - 横向产品亮点、切换按钮、加号入口：ProductHighlights.tsx；四种图形在 HighlightArt.tsx；构图样式在 highlight-art.css。
 - 首页三个产品章节和当前选择：ProductSections.tsx；样式 .product-intro、.cloud-_、.intelligence-_、.agent-showcase-*。
 - 云影像的三种画面：CloudScene.tsx；样式 .regional-_、.digital-_、.consultation-*。机构选择、共享暂停和会诊纪要各自拥有状态。

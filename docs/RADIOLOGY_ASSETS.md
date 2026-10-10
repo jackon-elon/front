@@ -1,8 +1,22 @@
 # 影像设计素材记录
 
-## 当前浅色主视觉
+## 当前阅片协作照片
 
-日期：2026-10-10。内置 imagegen 生成，使用 Pillow 仅转为 WebP，没有裁切、调色或改动图像内容。发布路径：public/media/imaging-workstation-light.webp，1672 × 941，42,910 字节。仅在首屏使用一次。
+日期：2026-10-10。使用内置 imagegen 生成新的阅片空间照片，Pillow 仅转换为 WebP，没有裁切、调色或修改内容。发布路径：public/media/reading-room-editorial.webp，1672 × 941，140,292 字节。仅在解决方案出现一次，前端按布局裁切显示。照片为虚构设计场景。
+
+原图：C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-ff2efe33-f9fb-4a6c-bdd1-7c373ccd5abe.png。
+
+最终提示词：
+
+```text
+Use case: photorealistic-natural. Asset type: single premium editorial photograph for a dark medical imaging brand website, wide landscape 16:9. Primary request: a believable documentary-style photograph of two fictional East Asian radiologists working together at a professional reading workstation. Camera looks diagonally from behind and slightly to the side, waist-up medium wide, faces only subtle partial profiles, people in the middle and left half, not posing for camera. One seated female physician in her late thirties, one male colleague standing naturally beside her; ordinary white clinical coats, no stethoscope. One graphite medical display at right shows a restrained small grayscale knee imaging view and a few tiny neutral interface rules, no legible text. Dark modern reading room with charcoal walls and realistic wood or matte desk, soft daylight from a side window, refined warm-neutral ambient light, natural skin and fabric texture, clear realistic details. Both people and workstation are well exposed despite dark room. Calm professional collaboration, not dramatic or futuristic. Crisp editorial photography, no beauty smoothing, no plastic skin, no painterly blur, no oversaturated blue cast. Realistic proportions, natural hands resting on desk, no pointing fingers, no smiling promotional pose. No head scans, brain, skull, organs, horror, blood, exposed anatomy, holograms, floating screens, glowing neon, logos, names, text, numbers, watermark, or actual patient records. The entire photograph is a fictional design concept.
+```
+
+当前发布仅包含该照片与六帧合成影像图集，总计 496,964 字节。首屏与四种亮点由 React、CSS 与 SVG 绘制，避免放大图片中的界面文字。旧浅色终端与阅片空间照片分别归档到 docs/reference-assets/imaging-workstation-light.webp、docs/reference-assets/reading-room-light.webp，不进入部署输出。
+
+## 历史浅色主视觉
+
+日期：2026-10-10。内置 imagegen 生成，使用 Pillow 仅转为 WebP，没有裁切、调色或改动图像内容。历史归档路径：docs/reference-assets/imaging-workstation-light.webp，1672 × 941，42,910 字节。
 
 原图：C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-6e46c002-7120-48c6-8264-cf6b52493d41.png。
 
@@ -24,7 +38,7 @@ Use case: product-mockup. Asset type: wide 16:9 hero photograph for a refined li
 Use case: ads-marketing. Asset type: wide 16:9 hero photograph for a refined medical imaging software brand website. Primary request: premium studio product photography of medical image viewing across two thin professional graphite displays and one small portrait mobile display. These are generic display devices showcasing software, not MRI scanners or branded hardware. Scene: seamless pure black studio cyclorama, black floor with only a faint soft reflection, exceptionally restrained lighting. Composition: one large landscape display facing camera at a subtle 12 degree oblique angle, one slim rear display in elegant opposing perspective showing a small multi-frame contact sheet, one portrait phone in the lower right as a secondary object. All objects fully within the image, clustered in the central 75 percent of width; upper half and edges naturally fall into pure black, generous negative space, no dramatic floating holograms. Screens show extremely refined dark grayscale radiology viewing interfaces with small grayscale knee MRI views, thin muted steel-blue dividing lines, an understated report sidebar represented only by fine gray horizontal rules. Medical images are local joint views, controlled size, never enlarged anatomy. Realistic anti-reflective glass, fine graphite metal texture, delicate silver rim light, precise beveled edges, coherent scale, luxurious materials, no harsh glow. Image-specific grayscale content provides the visual interest. No readable text, no letters, no numbers, no labels, no logo, no watermark, no brand identification, no Apple products. No brain, no skull, no head, no face, no whole body, no blood, no organs, no pathology, no gore, no neon, no purple gradient, no cloudy glass cards, no giant acrylic MRI panels. Synthetic design concept, not an actual patient study. Keep presentation calm, photographic and sophisticated.
 ```
 
-通用设备展示影像软件，不代表讯飞影联制造这些硬件。当前构建只发布浅色主视觉、六帧合成关节图集和既有阅片空间场景图。
+通用设备展示影像软件，不代表讯飞影联制造这些硬件。上述硬件主视觉均已归档，当前首屏直接呈现前端产品预览。
 
 日期：2026-10-09。使用 imagegen 生成两张全新图片，未复制参考网站素材。WebP 仅作格式压缩，未更改生成图的内容或构图。
 
