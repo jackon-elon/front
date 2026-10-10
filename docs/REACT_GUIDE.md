@@ -1,16 +1,17 @@
 # 跟着产品官网阅读 React
 
-按实际组件和交互阅读，不用先记语法清单。
+按真实组件和交互阅读：
 
-1. content.ts 与 BrandSite.tsx：数据配置、组件组合、props、列表 key。修改产品名称观察导航与详情联动。
-2. ProductSections.tsx：useState 与受控 Tab。同一个场景索引驱动画面、说明和节点。
-3. CloudScene.tsx、DigitalFilm.tsx、ImagingWorkstation.tsx：组件拆分、局部状态、受控输入、useId 与条件显示。hidden 保留场景组件及其状态，同时从布局和可访问树隐藏未选画面；切换不用 key 重建组件。详情的组件实例拥有独立状态。
-4. ProductHighlights.tsx：useRef、原生滚动、requestAnimationFrame、ResizeObserver、事件与清理。按钮、拖动和键盘改变同一滚动区域，React 跟踪当前位置。
-5. ui.tsx：可访问 Tab、useId、roving tabindex、左右方向键和 Home/End；减少动态设置影响短转场而不改变阅读结构。
-6. MedicalAgent.tsx 与 workflow.ts：useReducer、定时器、取消与运行编号。场景切换和重置后，旧回调不能覆盖新流程。
-7. Modal.tsx：Portal、事件清理、焦点约束、Escape、滚动锁定与恢复。
-8. BrandSite.tsx 与 CareScene.tsx：状态提升、页脚联动、IntersectionObserver、React.lazy / Suspense。
-9. ImageFrame.tsx 与三份 CSS：图集帧定位、样式对象、Flex/Grid、scroll-snap、sticky 导航、图片比例、响应式与层叠顺序。对照缩放使用 transform，联动翻帧必须同时检查两边的边界。
-10. workflow.test.ts 与 CI：验证取消、重新开始、越界和迟到事件等行为。
+1. content.ts、BrandSite.tsx：数据配置、组件组合、props、列表 key。首页展示与详情共用业务配置。
+2. ProductSections.tsx、CareScene.tsx：组件拆分、声明式视图、回调 props、语义化章节与锚点。业务介绍直接可见，操作在详情中。
+3. CloudProduct.tsx、ImagingAI.tsx：useState 与受控 Tab。同一索引驱动相应场景和说明。
+4. CloudScene.tsx、DigitalFilm.tsx、ImagingWorkstation.tsx：局部状态、受控输入、useId、条件显示；hidden 保留子场景状态，隐藏画面不进入可访问树。
+5. ProductHighlights.tsx：useRef、原生滚动、requestAnimationFrame、ResizeObserver、事件与清理。是否出现方向按钮取决于真实溢出；按实际卡片位置计算滚动与边界。
+6. ui.tsx：可访问 Tab、roving tabindex、方向键和 Home/End；进入视口动画与减少动态设置。
+7. MedicalAgent.tsx、workflow.ts：useReducer、定时器、取消与运行编号；切换或重置后，过期回调不能覆盖新流程。
+8. Modal.tsx：Portal、焦点约束、Escape、滚动锁定与恢复。
+9. BrandSite.tsx：IntersectionObserver 章节跟踪、React.lazy / Suspense 与弹窗入口。方案通过原生锚点定位，不再维护无用途的全局方案选择状态。
+10. ImageFrame.tsx、editorial.css、product-scenes.css：图集定位、样式对象、Grid/Flex、scroll-snap、sticky、素材比例和响应式。
+11. workflow.test.ts、CI：验证取消、重启、越界和迟到事件。
 
-一个合格修改应该能说清「哪个组件、谁拥有状态、谁接收 props、视图如何更新」。复杂度服务产品体验，不必用需要长时间滚动的动画证明技术能力。
+修改前能说清「哪个组件、谁拥有状态、谁传 props、视图怎样更新」，即可让 AI 精确定位。首页强调产品叙事，复杂交互在对应的详情展台中体现。

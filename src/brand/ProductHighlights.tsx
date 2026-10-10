@@ -1,31 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Plus, ArrowUpRight } from "lucide-react";
 import { Reveal, usePresentationMotion } from "./ui";
-import { HighlightArt } from "./HighlightArt";
+import { media } from "./content";
 const cards = [
   {
     name: "区域影像云",
-    title: "一份影像。\n连接一张医疗网络。",
+    title: "一份影像。\n联结更多专业。",
     type: "cloud",
+    image: media.cloud,
+    alt: "夜色中的医疗建筑，生成的区域协作场景示意",
     product: 0,
   },
   {
     name: "数字影像",
-    title: "你的影像。\n不必随身带着胶片。",
+    title: "影像在手。\n从容前行。",
     type: "film",
+    image: media.film,
+    alt: "手机屏幕呈现合成关节影像，数字影像场景示意",
     product: 0,
   },
   {
     name: "影像智能",
-    title: "让智能，\n走进专业的每一步。",
+    title: "多一份洞察。\n看见更多细节。",
     type: "ai",
+    image: media.intelligence,
+    alt: "影像显示屏的玻璃与局部图像细节，生成的视觉示意",
     product: 1,
-  },
-  {
-    name: "远程协作",
-    title: "相隔千里。\n专业支持，始终在场。",
-    type: "care",
-    product: 0,
   },
 ] as const;
 export function ProductHighlights({
@@ -35,6 +35,7 @@ export function ProductHighlights({
 }) {
   const track = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  const [overflow, setOverflow] = useState(false);
   const reduce = usePresentationMotion();
   useEffect(() => {
     const element = track.current;
@@ -47,6 +48,15 @@ export function ProductHighlights({
         const first = items[0];
         if (!first) return;
         const max = element.scrollWidth - element.clientWidth;
+        setOverflow(max > 2);
+        if (max <= 2) {
+          setActive(0);
+          return;
+        }
+        if (element.scrollLeft >= max - 2) {
+          setActive(cards.length - 1);
+          return;
+        }
         const distances = items.map((card) =>
           Math.abs(
             element.scrollLeft -
@@ -79,18 +89,18 @@ export function ProductHighlights({
   };
   return (
     <section
-      className="product-highlights"
+      className="feature-gallery"
       id="products"
       aria-labelledby="highlights-title"
     >
-      <Reveal className="highlight-heading wrap">
+      <Reveal className="feature-gallery-heading wrap">
         <h2 id="highlights-title">值得看见的进步。</h2>
         <a href="#cloud">
           深入了解产品 <ArrowUpRight size={18} />
         </a>
       </Reveal>
       <div
-        className="highlight-track"
+        className="feature-gallery-track wrap"
         ref={track}
         tabIndex={0}
         role="region"
@@ -110,17 +120,23 @@ export function ProductHighlights({
       >
         {cards.map((card, i) => (
           <article
-            className={`highlight-card highlight-${card.type}`}
+            className={`feature-card feature-${card.type}`}
             key={card.name}
             aria-label={`${i + 1} / ${cards.length}，${card.name}`}
           >
-            <div className="highlight-copy">
+            <div className="feature-copy">
               <p>{card.name}</p>
               <h3>{card.title}</h3>
             </div>
-            <HighlightArt kind={card.type} />
+            <img
+              src={card.image}
+              width="1122"
+              height="1402"
+              alt={card.alt}
+              loading="lazy"
+            />
             <button
-              className="highlight-more"
+              className="feature-more"
               aria-label={`了解${card.name}`}
               onClick={() => onExplore(card.product)}
             >
@@ -129,28 +145,32 @@ export function ProductHighlights({
           </article>
         ))}
       </div>
-      <div className="highlight-controls wrap">
-        <p aria-live="polite">
-          {cards[active].name}
-          <span>0{active + 1} / 04</span>
-        </p>
-        <div>
-          <button
-            aria-label="上一项产品亮点"
-            disabled={active === 0}
-            onClick={() => go(active - 1)}
-          >
-            <ChevronLeft size={22} />
-          </button>
-          <button
-            aria-label="下一项产品亮点"
-            disabled={active === cards.length - 1}
-            onClick={() => go(active + 1)}
-          >
-            <ChevronRight size={22} />
-          </button>
+      {overflow && (
+        <div className="feature-controls wrap">
+          <p aria-live="polite">
+            {cards[active].name}
+            <span>
+              {active + 1} / {cards.length}
+            </span>
+          </p>
+          <div>
+            <button
+              aria-label="上一项产品亮点"
+              disabled={active === 0}
+              onClick={() => go(active - 1)}
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <button
+              aria-label="下一项产品亮点"
+              disabled={active === cards.length - 1}
+              onClick={() => go(active + 1)}
+            >
+              <ChevronRight size={22} />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 }

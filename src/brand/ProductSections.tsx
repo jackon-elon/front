@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -6,185 +5,166 @@ import {
   Check,
   ShieldCheck,
 } from "lucide-react";
-import { cloudModes, aiModes } from "./content";
-import { Reveal, Tabs } from "./ui";
-import { ImagingWorkstation } from "./ImagingWorkstation";
-import { CloudScene } from "./CloudScene";
+import { media, cloudModes, aiModes } from "./content";
+import { Reveal } from "./ui";
+import { ImageFrame } from "./ImageFrame";
+
 export function ProductSections({
   onExplore,
 }: {
   onExplore: (index: number) => void;
 }) {
-  const [cloud, setCloud] = useState(0);
-  const [ai, setAI] = useState(0);
   return (
-    <div className="product-sections">
+    <div>
       <section
-        className="cloud-showcase"
+        className="brand-cloud brand-section"
         id="cloud"
         aria-labelledby="cloud-showcase-title"
       >
-        <Reveal className="product-intro wrap">
-          <p className="product-kicker">影联网 · 区域影像云</p>
+        <Reveal className="brand-heading wrap">
+          <p className="brand-kicker">影联网 · 影像云</p>
           <h2 id="cloud-showcase-title">
             影像有了云。
             <br />
-            <span>协作，没有距离。</span>
+            <span>专业，不再遥远。</span>
           </h2>
-          <p className="product-lead">
-            从数字影像到远程会诊，让检查资料与专业服务，
-            <br className="desktop-only" />
-            在医院、医生和患者之间连接。
+          <p className="brand-lead">
+            连接检查资料，也连接专业的人。
+            <br />
+            让跨院协作，成为更自然的日常。
+          </p>
+          <button className="brand-text-link" onClick={() => onExplore(0)}>
+            深入了解影像云 <ArrowUpRight size={19} />
+          </button>
+        </Reveal>
+        <Reveal className="brand-cloud-photo wrap">
+          <img
+            src={media.care}
+            width="1672"
+            height="941"
+            alt="医生在阅片室协作，生成的医疗工作场景示意"
+            loading="lazy"
+          />
+          <p>
+            相隔的，是距离。
+            <br />
+            相连的，是专业。
           </p>
         </Reveal>
-        <div className="showcase-switch">
-          <Tabs
-            labels={cloudModes.map((m) => m.name)}
-            value={cloud}
-            onChange={setCloud}
-            label="首页云影像场景"
-            panelId="cloud-showcase-panel"
-          />
-        </div>
-        <div
-          id="cloud-showcase-panel"
-          role="tabpanel"
-          aria-label={cloudModes[cloud].name}
-          className="cloud-scene-stage wrap"
-        >
-          <CloudScene mode={cloud} />
-        </div>
-        <div className="product-detail-row wrap">
-          <div>
-            <h3>{cloudModes[cloud].title}</h3>
-            <p>{cloudModes[cloud].description}</p>
-          </div>
-          <button className="product-detail-link" onClick={() => onExplore(0)}>
-            探索云影像 <ArrowUpRight size={19} />
-          </button>
-        </div>
-        <div className="cloud-capabilities wrap">
-          {cloudModes[cloud].nodes.map((node, i) => (
-            <div key={node}>
-              <span>0{i + 1}</span>
-              <h3>{node}</h3>
+        <div className="brand-feature-notes wrap">
+          {cloudModes.map((mode) => (
+            <div key={mode.name}>
+              <h3>{mode.name}</h3>
+              <p>
+                <strong>{mode.title}</strong> {mode.description}
+              </p>
             </div>
           ))}
         </div>
       </section>
       <section
-        className="intelligence-showcase"
+        className="brand-intelligence brand-section"
         id="ai"
         aria-labelledby="intelligence-title"
       >
-        <Reveal className="product-intro wrap">
-          <p className="product-kicker">医学影像 AI</p>
+        <Reveal className="brand-heading wrap">
+          <p className="brand-kicker">医学影像 AI</p>
           <h2 id="intelligence-title">
-            从看见影像。
+            多一份洞察。
             <br />
-            <span>到读懂信息。</span>
+            <span>看见更多细节。</span>
           </h2>
-          <p className="product-lead">
-            围绕质控、报告和影像对比，探索智能辅助的工作方式。
-            <br className="desktop-only" />
-            让专业判断，始终由医生掌握。
+          <p className="brand-lead">
+            把影像、报告与关联信息，放在一起。
+            <br />
+            把专业判断，留给医生。
           </p>
-        </Reveal>
-        <div className="showcase-switch">
-          <Tabs
-            labels={aiModes.map((m) => m.name)}
-            value={ai}
-            onChange={setAI}
-            label="首页影像智能功能"
-            panelId="intelligence-panel"
-          />
-        </div>
-        <div
-          className="intelligence-stage wrap"
-          id="intelligence-panel"
-          role="tabpanel"
-          aria-label={aiModes[ai].name}
-        >
-          <ImagingWorkstation mode={ai} />
-        </div>
-        <div className="product-detail-row wrap">
-          <div>
-            <h3>{aiModes[ai].title}</h3>
-            <p>{aiModes[ai].description}</p>
-          </div>
-          <button className="product-detail-link" onClick={() => onExplore(1)}>
-            了解智能影像 <ArrowUpRight size={19} />
+          <button className="brand-text-link" onClick={() => onExplore(1)}>
+            深入了解影像智能 <ArrowUpRight size={19} />
           </button>
+        </Reveal>
+        <Reveal className="brand-imaging-display wrap">
+          <div className="brand-display-bar">
+            <span>影像与信息，在一处汇合。</span>
+            <span>场景示意</span>
+          </div>
+          <div className="brand-display-content">
+            <div className="brand-image-pair">
+              <ImageFrame frame={1} label="合成关节影像，侧面参考视图" />
+              <ImageFrame frame={3} label="合成关节影像，正面参考视图" />
+            </div>
+            <div className="brand-display-context">
+              <FileText size={28} strokeWidth={1.3} />
+              <h3>
+                关联影像。
+                <br />
+                有序的信息。
+              </h3>
+              <p>从资料核对到报告复核，让每一步都有清晰的上下文。</p>
+              <span>检查资料 → 报告框架 → 医生复核</span>
+            </div>
+          </div>
+        </Reveal>
+        <div className="brand-feature-notes wrap">
+          {aiModes.map((mode) => (
+            <div key={mode.name}>
+              <h3>{mode.name}</h3>
+              <p>
+                <strong>{mode.title}</strong> {mode.description}
+              </p>
+            </div>
+          ))}
         </div>
-        <p className="product-source-note wrap">
-          界面与影像为设计示意，不执行诊断。产品方向参考公开资料，具体能力以正式产品信息为准。
-        </p>
       </section>
       <section
-        className="agent-showcase"
+        className="brand-agent brand-section"
         id="agent"
         aria-labelledby="agent-showcase-title"
       >
-        <Reveal className="agent-showcase-layout wrap">
-          <div className="agent-showcase-copy">
-            <p className="product-kicker">医疗 Agent · 协作概念</p>
+        <Reveal className="brand-agent-layout wrap">
+          <div className="brand-agent-copy">
+            <p className="brand-kicker">医疗 Agent · 协作概念</p>
             <h2 id="agent-showcase-title">
               从一个问题。
               <br />
               <span>到下一步行动。</span>
             </h2>
-            <p>
+            <p className="brand-lead">
               影像、报告、参考资料。
               <br />
-              在一条有序的工作流里，找到彼此。
+              在有序的工作流里，找到彼此。
             </p>
-            <button
-              className="product-detail-link"
-              onClick={() => onExplore(2)}
-            >
+            <button className="brand-text-link" onClick={() => onExplore(2)}>
               体验协作流程 <ArrowUpRight size={19} />
             </button>
           </div>
-          <div className="agent-editorial">
-            <div className="agent-editorial-header">
-              <span className="agent-monogram">A</span>
-              <div>
-                <span>医疗 Agent</span>
-                <p>把协作，连接起来。</p>
-              </div>
-              <span>概念演示</span>
+          <div className="brand-agent-flow">
+            <div className="brand-agent-request">
+              为这次阅片，准备协作清单。
+              <ArrowRight size={20} />
             </div>
-            <div className="agent-editorial-prompt">
-              为这次远程阅片，准备一份协作清单。
-              <ArrowRight size={18} />
-            </div>
-            <div className="agent-editorial-path">
-              {[
-                ["影像资料", "关联检查与影像"],
-                ["报告信息", "组织可复核的框架"],
-                ["专业确认", "由医生完成复核"],
-              ].map(([title, desc], i) => (
-                <div key={title}>
-                  <span>
-                    {i === 2 ? (
-                      <ShieldCheck size={21} />
-                    ) : i === 1 ? (
-                      <FileText size={21} />
-                    ) : (
-                      <Check size={21} />
-                    )}
-                  </span>
-                  <div>
-                    <h3>{title}</h3>
-                    <p>{desc}</p>
-                  </div>
-                  <b>0{i + 1}</b>
+            {[
+              ["影像资料", "关联检查与影像"],
+              ["报告信息", "组织可复核的框架"],
+              ["专业确认", "由医生完成复核"],
+            ].map(([title, desc], i) => (
+              <div className="brand-agent-step" key={title}>
+                <span>
+                  {i === 2 ? (
+                    <ShieldCheck size={24} />
+                  ) : i === 1 ? (
+                    <FileText size={24} />
+                  ) : (
+                    <Check size={24} />
+                  )}
+                </span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{desc}</p>
                 </div>
-              ))}
-            </div>
-            <div className="agent-editorial-note">
-              <i /> 清晰的路径。明确的责任。
-            </div>
+              </div>
+            ))}
+            <p className="brand-agent-footnote">清晰的路径。明确的责任。</p>
           </div>
         </Reveal>
       </section>

@@ -1,8 +1,27 @@
 # 影像设计素材记录
 
-## 当前阅片协作照片
+## 当前摄影素材
 
-日期：2026-10-10。使用内置 imagegen 生成新的阅片空间照片，Pillow 仅转换为 WebP，没有裁切、调色或修改内容。发布路径：public/media/reading-room-editorial.webp，1672 × 941，140,292 字节。仅在解决方案出现一次，前端按布局裁切显示。照片为虚构设计场景。
+日期：2026-10-10。四张新图使用内置 imagegen 生成；Pillow 只转换 WebP，quality 94，没有放大或修改内容。[完整提示词](EDITORIAL_IMAGE_PROMPTS.md)。
+
+- public/media/imaging-studio-editorial.webp：1672 × 941，166,534 字节，仅用于首屏。
+- public/media/hospital-editorial.webp：1122 × 1402，307,342 字节，仅用于区域影像云亮点。
+- public/media/digital-film-editorial.webp：1122 × 1402，232,004 字节，仅用于数字影像亮点。
+- public/media/imaging-detail-editorial.webp：1122 × 1402，282,586 字节，仅用于影像智能亮点。
+- public/media/reading-room-editorial.webp：1672 × 941，140,292 字节，移至影像云章节，仅使用一次。
+- public/media/joint-mri-atlas.webp：1536 × 1024，356,672 字节，在阅片与详情中表达同一份合成资料。
+
+六份 WebP 共 1,485,430 字节；首屏图片 166.5 KB，其他摄影延迟加载。素材是生成的设计示意，无真实病人信息，不用于诊断。
+
+四张 PNG 原图依次为：
+- C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-8e2e6918-245e-45cf-9c52-6e492979dd0c.png
+- C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-aec0cc16-aea6-478d-814c-425f3796e73e.png
+- C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-7c2f287a-a4ef-43bf-88d7-24f00dab03b2.png
+- C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-205c9955-9eb2-4453-9a8e-109500f0a447.png
+
+## 前版阅片协作照片
+
+日期：2026-10-10。使用内置 imagegen 生成新的阅片空间照片，Pillow 仅转换为 WebP，没有裁切、调色或修改内容。发布路径：public/media/reading-room-editorial.webp，1672 × 941，140,292 字节。前版仅在解决方案出现一次，前端按布局裁切显示。照片为虚构设计场景。
 
 原图：C:/Users/32117/.codex/generated_images/01a11c15-1ce0-7e61-96a2-bd349443c0f9/exec-ff2efe33-f9fb-4a6c-bdd1-7c373ccd5abe.png。
 
@@ -12,7 +31,7 @@
 Use case: photorealistic-natural. Asset type: single premium editorial photograph for a dark medical imaging brand website, wide landscape 16:9. Primary request: a believable documentary-style photograph of two fictional East Asian radiologists working together at a professional reading workstation. Camera looks diagonally from behind and slightly to the side, waist-up medium wide, faces only subtle partial profiles, people in the middle and left half, not posing for camera. One seated female physician in her late thirties, one male colleague standing naturally beside her; ordinary white clinical coats, no stethoscope. One graphite medical display at right shows a restrained small grayscale knee imaging view and a few tiny neutral interface rules, no legible text. Dark modern reading room with charcoal walls and realistic wood or matte desk, soft daylight from a side window, refined warm-neutral ambient light, natural skin and fabric texture, clear realistic details. Both people and workstation are well exposed despite dark room. Calm professional collaboration, not dramatic or futuristic. Crisp editorial photography, no beauty smoothing, no plastic skin, no painterly blur, no oversaturated blue cast. Realistic proportions, natural hands resting on desk, no pointing fingers, no smiling promotional pose. No head scans, brain, skull, organs, horror, blood, exposed anatomy, holograms, floating screens, glowing neon, logos, names, text, numbers, watermark, or actual patient records. The entire photograph is a fictional design concept.
 ```
 
-当前发布仅包含该照片与六帧合成影像图集，总计 496,964 字节。首屏与四种亮点由 React、CSS 与 SVG 绘制，避免放大图片中的界面文字。旧浅色终端与阅片空间照片分别归档到 docs/reference-assets/imaging-workstation-light.webp、docs/reference-assets/reading-room-light.webp，不进入部署输出。
+前版发布仅包含该照片与六帧合成影像图集，总计 496,964 字节。首屏与四种亮点由 React、CSS 与 SVG 绘制，避免放大图片中的界面文字。旧浅色终端与阅片空间照片分别归档到 docs/reference-assets/imaging-workstation-light.webp、docs/reference-assets/reading-room-light.webp，不进入部署输出。
 
 ## 历史浅色主视觉
 

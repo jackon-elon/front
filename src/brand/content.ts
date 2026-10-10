@@ -1,4 +1,8 @@
 export const media = {
+  hero: `${import.meta.env.BASE_URL}media/imaging-studio-editorial.webp`,
+  cloud: `${import.meta.env.BASE_URL}media/hospital-editorial.webp`,
+  film: `${import.meta.env.BASE_URL}media/digital-film-editorial.webp`,
+  intelligence: `${import.meta.env.BASE_URL}media/imaging-detail-editorial.webp`,
   care: `${import.meta.env.BASE_URL}media/reading-room-editorial.webp`,
   jointAtlas: `${import.meta.env.BASE_URL}media/joint-mri-atlas.webp`,
 };

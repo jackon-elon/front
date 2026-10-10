@@ -5,6 +5,7 @@ import App from "./App";
 import "./site.css";
 import "./narrative.css";
 import "./product-scenes.css";
+import "./brand/editorial.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MotionConfig

@@ -22,36 +22,35 @@ npm run preview
 
 ## 产品与交互
 
-- 统一黑色与石墨灰官网；首屏由 React 绘制清晰的产品界面，支持影像翻帧、报告空间与协作路径切换，移动端重新布局。
-- 四项横向产品亮点采用不同的代码图形与材质，保留原生滚动、滚动吸附、左右按钮、键盘操作与边界状态。新协作照片只在解决方案使用，旧图片归档后不进入发布。
-- 区域影像云显示可选择的机构网络；数字影像显示可操作的手机影像、报告与分享范围；远程会诊显示共享影像、协作画面与本页纪要。
-- 质控支持逐帧复核标记；报告协同支持参考帧、资料摘要与受控草稿编辑；多期对比支持联动或独立翻帧、缩放、边界禁用与复位。
-- 六个场景使用不同画面结构，短淡入切换；本页的草稿、标记与浏览状态在功能切换后保留。刷新或关闭详情后清除，不接入真实服务。
-- 产品详情按需加载，独立的交互状态；首页可以直接浏览，无需先打开详情。
-- 医疗 Agent 四步演示，支持取消、重置、切换和重新开始；过期回调无法覆盖新流程，最后等待人工确认。
-- 医疗协作采用文字与照片并排布局，方案 Tab 与页脚入口共享选择状态。
-- 吸顶章节导航、移动菜单、联系信息复制、电话和邮件链接。
-- 弹窗 Portal、焦点约束、Escape 关闭与焦点恢复。
-- 系统减少动态效果设置与 ?motion=off；动效不会影响页面的阅读顺序。
+- 黑色与石墨灰官网：大型终端主视觉、摄影亮点、大字号章节、原生页面滚动和短转场。
+- 首页不使用业务 Tab；三项云影像能力、三项智能影像方向、三类医疗方案直接呈现。
+- 摄影亮点桌面三列，窄屏原生滚动与吸附，左右按钮和键盘共享真实滚动位置，支持边界禁用与响应式检测。
+- 五张官网摄影各使用一次。四张新素材由内置 imagegen 生成，经 WebP 格式转换用于部署，保留原图与提示词记录。
+- 点击深入了解，按需加载云影像、AI 与医疗 Agent 的独立产品展台。
+- 云影像详情：机构选择、手机影像与报告、分享范围、远程会诊暂停及本页纪要。
+- AI 详情：六帧复核标记、受控报告草稿与保存、联动或独立对照、缩放、边界禁用与复位。切换功能后保留本页状态。
+- Agent：可取消的四步演示、重置和重启，过期回调不会覆盖新流程。
+- 章节导航、手机菜单、方案锚点、联系信息复制、电话及邮件链接。
+- 弹窗 Portal、焦点约束、Escape 与焦点恢复；系统减少动态设置和 ?motion=off。
 
 ## 组件入口
 
 - src/brand/BrandSite.tsx：页面、章节导航、弹窗与跨组件状态。
-- src/brand/CinemaHero.tsx / hero-workspace.css：首屏产品预览、Tab、帧状态与材质。
+- src/brand/CinemaHero.tsx：首屏产品主视觉。
 - src/brand/ProductHighlights.tsx：横向亮点与滚动生命周期。
-- src/brand/HighlightArt.tsx / highlight-art.css：四种独立图形构图。
-- src/brand/ProductSections.tsx：首页产品章节、受控场景切换。
+- src/brand/editorial.css：首页摄影、章节与响应式布局。
+- src/brand/ProductSections.tsx：首页产品叙事与详情入口。
 - src/brand/CloudScene.tsx：区域网络、手机产品展示与远程会诊场景。
 - src/brand/DigitalFilm.tsx：手机影像、报告与分享范围的局部状态。
 - src/brand/ImagingWorkstation.tsx：质控、报告编辑与联动对照的三个工作区。
 - src/brand/ImageFrame.tsx：合成图集的帧定位。
 - src/brand/CloudProduct.tsx / ImagingAI.tsx：按需加载的产品详情。
 - src/brand/MedicalAgent.tsx / workflow.ts：可取消的协作演示。
-- src/brand/CareScene.tsx：医疗场景及方案联动。
+- src/brand/CareScene.tsx：三类医疗方案与各自锚点。
 - src/brand/content.ts：文案、场景、素材与资料链接。
 - src/brand/ui.tsx / src/components/Modal.tsx：视口动画、可访问 Tab 与弹窗。
 - src/site.css：通用组件、导航、Agent、页脚。
-- src/narrative.css：产品章节、横向亮点与响应式布局。
+- src/narrative.css：详情展台的共用样式。
 - src/product-scenes.css：六个场景的画面、控件与手机布局。
 
 [UI 设计与资料来源](docs/UI_DESIGN.md) · [修改位置](docs/PROJECT_MAP.md) · [React 阅读路线](docs/REACT_GUIDE.md) · [验证记录](docs/VERIFICATION.md) · [素材记录](docs/RADIOLOGY_ASSETS.md)

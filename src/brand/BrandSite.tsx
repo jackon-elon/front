@@ -40,7 +40,6 @@ export function BrandSite() {
   const [menu, setMenu] = useState(false);
   const [copied, setCopied] = useState(false);
   const [active, setActive] = useState("");
-  const [solutionMode, setSolutionMode] = useState(0);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -138,11 +137,7 @@ export function BrandSite() {
         <CinemaHero />
         <ProductHighlights onExplore={setDetail} />
         <ProductSections onExplore={setDetail} />
-        <CareScene
-          mode={solutionMode}
-          onChange={setSolutionMode}
-          onContact={() => setContact(true)}
-        />
+        <CareScene onContact={() => setContact(true)} />
         <section
           className="about-section section-pad"
           id="about"
@@ -217,11 +212,7 @@ export function BrandSite() {
             <div>
               <strong>解决方案</strong>
               {solutions.map((s, index) => (
-                <a
-                  key={s.name}
-                  href="#solutions"
-                  onClick={() => setSolutionMode(index)}
-                >
+                <a key={s.name} href={`#solution-${index}`}>
                   {s.name}
                 </a>
               ))}
