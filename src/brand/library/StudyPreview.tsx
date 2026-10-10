@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { Profiler, useState } from "react";
+import { diagnosticsEnabled, profileRender } from "../../performance";
 import { Bookmark, ChevronLeft, ChevronRight } from "lucide-react";
-import { FRAME_COUNT, ImageFrame } from "../ImageFrame";
+import { FRAME_COUNT } from "../ImageFrame";
+import { InteractiveImageViewer } from "./InteractiveImageViewer";
 import type { Study } from "./catalog";
 
 export function StudyPreview({
@@ -30,10 +32,13 @@ export function StudyPreview({
           <Bookmark size={21} fill={bookmarked ? "currentColor" : "none"} />
         </button>
       </header>
-      <div className="study-viewer">
-        <ImageFrame frame={frame} label={`合成关节影像，第 ${frame + 1} 帧`} />
-        <span className="study-viewer-label">合成影像 · 非临床资料</span>
-      </div>
+      {diagnosticsEnabled ? (
+        <Profiler id="ImageViewer" onRender={profileRender}>
+          <InteractiveImageViewer frame={frame} recordId={study.id} />
+        </Profiler>
+      ) : (
+        <InteractiveImageViewer frame={frame} recordId={study.id} />
+      )}
       <div className="study-frame-controls">
         <button
           className="library-icon-button"

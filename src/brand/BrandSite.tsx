@@ -15,7 +15,9 @@ import { RenderBoundary } from "../components/RenderBoundary";
 import { products, solutions, sources } from "./content";
 import { BrandMark, Reveal } from "./ui";
 import { CinemaHero } from "./CinemaHero";
-import { ProductHighlights } from "./ProductHighlights";
+import { ProductHighlights, type HighlightCard } from "./ProductHighlights";
+import { AnimatePresence, LayoutGroup, motion } from "motion/react";
+import { usePresentationMotion } from "./ui";
 import { ProductSections } from "./ProductSections";
 import { CareScene } from "./CareScene";
 import { ProductNavigation, navigation } from "./ProductNavigation";
@@ -30,7 +32,13 @@ const MedicalAgent = lazy(() =>
 );
 
 export function BrandSite() {
-  const [detail, setDetail] = useState<number | null>(null);
+  const [detail, setDetail] = useState<{
+    index: number;
+    origin?: HighlightCard;
+  } | null>(null);
+  const explore = (index: number, origin?: HighlightCard) =>
+    setDetail({ index, origin });
+  const reduce = usePresentationMotion();
   const [contact, setContact] = useState(false);
   const [menu, setMenu] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -44,9 +52,9 @@ export function BrandSite() {
       setCopied(false);
     }
   };
-  const selected = detail !== null ? products[detail] : null;
+  const selected = detail !== null ? products[detail.index] : null;
   return (
-    <>
+    <LayoutGroup id="product-experience">
       <a href="#main" className="skip-link">
         跳转到主要内容
       </a>
@@ -87,8 +95,8 @@ export function BrandSite() {
       />
       <main id="main">
         <CinemaHero />
-        <ProductHighlights onExplore={setDetail} />
-        <ProductSections onExplore={setDetail} />
+        <ProductHighlights onExplore={explore} />
+        <ProductSections onExplore={explore} />
         <CareScene onContact={() => setContact(true)} />
         <section
           className="about-section section-pad"
@@ -192,30 +200,61 @@ export function BrandSite() {
           </div>
         </div>
       </footer>
-      <Modal
-        open={detail !== null}
-        title={selected?.label ?? "产品详情"}
-        onClose={() => setDetail(null)}
-        className="product-modal"
-      >
-        {selected && (
-          <div className="product-exhibit">
-            <RenderBoundary key={selected.id}>
-              <Suspense
-                fallback={
-                  <div className="exhibit-loading" role="status">
-                    正在打开产品展台…
+      <AnimatePresence mode="wait">
+        {detail && (
+          <Modal
+            key="product-detail"
+            open
+            animated
+            sharedId={
+              detail.origin ? `product-${detail.origin.type}` : undefined
+            }
+            title={selected?.label ?? "产品详情"}
+            onClose={() => setDetail(null)}
+            className="product-modal"
+          >
+            {selected && (
+              <div className="product-exhibit">
+                {detail.origin && (
+                  <div className="detail-story">
+                    <motion.img
+                      layoutId={
+                        reduce ? undefined : `image-${detail.origin.type}`
+                      }
+                      src={detail.origin.image}
+                      alt={detail.origin.alt}
+                    />
+                    <motion.h3
+                      layoutId={
+                        reduce ? undefined : `title-${detail.origin.type}`
+                      }
+                    >
+                      {detail.origin.title}
+                    </motion.h3>
                   </div>
-                }
-              >
-                {detail === 0 && <CloudProduct />}
-                {detail === 1 && <ImagingAI />}
-                {detail === 2 && <MedicalAgent />}
-              </Suspense>
-            </RenderBoundary>
-          </div>
+                )}
+                <RenderBoundary key={selected.id}>
+                  <Suspense
+                    fallback={
+                      <div className="exhibit-loading" role="status">
+                        正在打开产品展台…
+                      </div>
+                    }
+                  >
+                    {detail.index === 0 && (
+                      <CloudProduct
+                        initialMode={detail.origin?.type === "film" ? 1 : 0}
+                      />
+                    )}
+                    {detail.index === 1 && <ImagingAI />}
+                    {detail.index === 2 && <MedicalAgent />}
+                  </Suspense>
+                </RenderBoundary>
+              </div>
+            )}
+          </Modal>
         )}
-      </Modal>
+      </AnimatePresence>
       <Modal
         open={contact}
         title="从一次连接开始"
@@ -285,6 +324,6 @@ export function BrandSite() {
           ))}
         </nav>
       </Modal>
-    </>
+    </LayoutGroup>
   );
 }

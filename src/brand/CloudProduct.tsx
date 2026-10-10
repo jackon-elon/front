@@ -5,8 +5,8 @@ import { cloudModes } from "./content";
 import { Tabs } from "./ui";
 import { CloudScene } from "./CloudScene";
 const ImagingLibrary = lazy(() => import("./library/ImagingLibrary"));
-export function CloudProduct() {
-  const [mode, setMode] = useState(0);
+export function CloudProduct({ initialMode = 0 }: { initialMode?: 0 | 1 | 2 }) {
+  const [mode, setMode] = useState<number>(initialMode);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const current = cloudModes[mode];
   return (

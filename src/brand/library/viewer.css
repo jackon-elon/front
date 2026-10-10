@@ -1,0 +1,146 @@
+.viewer-toolbar,
+.viewer-tool-group,
+.viewer-history {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.viewer-toolbar {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.viewer-tool-group {
+  background: #171a20;
+  border: 1px solid #343943;
+  border-radius: 10px;
+  padding: 4px;
+}
+.interactive-viewer button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 7px 9px;
+  color: #d9dee8;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.interactive-viewer button:hover {
+  background: #2b3240;
+}
+.interactive-viewer button[aria-pressed="true"] {
+  background: #304763;
+  color: #d4e6ff;
+}
+.interactive-viewer button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.interactive-viewer button:focus-visible,
+.viewer-stage:focus-visible {
+  outline: 2px solid #82b6fa;
+  outline-offset: 3px;
+}
+.viewer-tool-group output {
+  min-width: 48px;
+  text-align: center;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.viewer-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 13px;
+  border: 1px solid #343b46;
+  background: #050608;
+  touch-action: none;
+  user-select: none;
+}
+.viewer-stage.tool-pan {
+  cursor: grab;
+}
+.viewer-stage.tool-pan:active {
+  cursor: grabbing;
+}
+.viewer-stage.tool-mark {
+  cursor: crosshair;
+}
+.viewer-image-plane {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.viewer-image-plane .image-frame {
+  width: 100%;
+  height: 100%;
+}
+.viewer-image-plane svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.viewer-image-plane rect {
+  fill: #7cbdff14;
+  stroke: #8dc6ff;
+  stroke-width: 2;
+}
+.viewer-image-plane text {
+  fill: #b9ddff;
+  font:
+    28px Arial,
+    sans-serif;
+}
+.annotation-draft rect {
+  stroke-dasharray: 5 4;
+}
+.viewer-corner-label,
+.viewer-mark-count {
+  position: absolute;
+  bottom: 10px;
+  padding: 5px 7px;
+  border-radius: 5px;
+  background: #080b10d9;
+  font-size: 12px;
+  pointer-events: none;
+}
+.viewer-corner-label {
+  left: 10px;
+  color: #b3bac6;
+}
+.viewer-mark-count {
+  right: 10px;
+  color: #b9d9ff;
+}
+.viewer-history {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin-top: 10px;
+}
+.viewer-help {
+  color: #969eab;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+@media (max-width: 700px) {
+  .viewer-toolbar {
+    justify-content: center;
+  }
+  .viewer-tool-group {
+    flex-shrink: 0;
+  }
+  .viewer-history {
+    justify-content: center;
+  }
+}

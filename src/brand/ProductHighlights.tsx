@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Plus, ArrowUpRight } from "lucide-react";
 import { Reveal, usePresentationMotion } from "./ui";
 import { media } from "./content";
-const cards = [
+import { motion } from "motion/react";
+export const highlightCards = [
   {
     name: "区域影像云",
     title: "一份影像。\n联结更多专业。",
@@ -28,10 +29,12 @@ const cards = [
     product: 1,
   },
 ] as const;
+export type HighlightCard = (typeof highlightCards)[number];
+const cards = highlightCards;
 export function ProductHighlights({
   onExplore,
 }: {
-  onExplore: (index: number) => void;
+  onExplore: (index: number, origin?: HighlightCard) => void;
 }) {
   const track = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -99,7 +102,8 @@ export function ProductHighlights({
           深入了解产品 <ArrowUpRight size={18} />
         </a>
       </Reveal>
-      <div
+      <motion.div
+        layoutScroll
         className="feature-gallery-track wrap"
         ref={track}
         tabIndex={0}
@@ -119,16 +123,21 @@ export function ProductHighlights({
         }}
       >
         {cards.map((card, i) => (
-          <article
+          <motion.article
+            layoutId={reduce ? undefined : `product-${card.type}`}
+            style={{ borderRadius: 24 }}
             className={`feature-card feature-${card.type}`}
             key={card.name}
             aria-label={`${i + 1} / ${cards.length}，${card.name}`}
           >
             <div className="feature-copy">
               <p>{card.name}</p>
-              <h3>{card.title}</h3>
+              <motion.h3 layoutId={reduce ? undefined : `title-${card.type}`}>
+                {card.title}
+              </motion.h3>
             </div>
-            <img
+            <motion.img
+              layoutId={reduce ? undefined : `image-${card.type}`}
               src={card.image}
               width="1122"
               height="1402"
@@ -138,13 +147,13 @@ export function ProductHighlights({
             <button
               className="feature-more"
               aria-label={`了解${card.name}`}
-              onClick={() => onExplore(card.product)}
+              onClick={() => onExplore(card.product, card)}
             >
               <Plus size={22} />
             </button>
-          </article>
+          </motion.article>
         ))}
-      </div>
+      </motion.div>
       {overflow && (
         <div className="feature-controls wrap">
           <p aria-live="polite">

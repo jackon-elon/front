@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 
 export function Modal({
   open,
@@ -8,13 +9,20 @@ export function Modal({
   onClose,
   children,
   className = "",
+  animated = false,
+  sharedId,
 }: {
   open: boolean;
   title: string;
   onClose: () => void;
   children: ReactNode;
   className?: string;
+  animated?: boolean;
+  sharedId?: string;
 }) {
+  const reduced =
+    useReducedMotion() ||
+    new URLSearchParams(window.location.search).get("motion") === "off";
   const id = useId();
   const dialog = useRef<HTMLDivElement>(null);
   const latestClose = useRef(onClose);
@@ -82,13 +90,22 @@ export function Modal({
 
   if (!open) return null;
   return createPortal(
-    <div
+    <motion.div
+      layoutRoot
+      initial={animated && !reduced ? { opacity: 0 } : false}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: reduced ? 0 : 0.28 }}
       className="modal-backdrop"
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
-      <div
+      <motion.div
+        layoutId={reduced ? undefined : sharedId}
+        layoutScroll
+        style={{ borderRadius: 24 }}
+        transition={{ type: "spring", stiffness: 280, damping: 32 }}
         ref={dialog}
         tabIndex={-1}
         role="dialog"
@@ -107,8 +124,8 @@ export function Modal({
           </button>
         </div>
         {children}
-      </div>
-    </div>,
+      </motion.div>
+    </motion.div>,
     document.body,
   );
 }

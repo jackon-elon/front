@@ -1,0 +1,123 @@
+{
+  "environment": "development",
+  "firstContentfulPaintMs": 720,
+  "largestContentfulPaintMs": 756,
+  "layoutShiftScoreTotal": 0,
+  "longTasks": {
+    "count": 2,
+    "maxMs": 93,
+    "totalMs": 153
+  },
+  "reactCommits": [
+    {
+      "actualMs": 46.70000001043081,
+      "baseMs": 37.10000003129244,
+      "committedAtMs": 676.1999999955297,
+      "id": "App",
+      "phase": "mount"
+    },
+    {
+      "actualMs": 26.5,
+      "baseMs": 24.600000001490116,
+      "committedAtMs": 1010.2999999970198,
+      "id": "App",
+      "phase": "update"
+    },
+    {
+      "actualMs": 0,
+      "baseMs": 24.600000001490116,
+      "committedAtMs": 1023.7999999970198,
+      "id": "App",
+      "phase": "update"
+    },
+    {
+      "actualMs": 23.399999991059303,
+      "baseMs": 43.79999998211861,
+      "committedAtMs": 1327,
+      "id": "App",
+      "phase": "update"
+    },
+    {
+      "actualMs": 15.600000001490116,
+      "baseMs": 39.50000000745058,
+      "committedAtMs": 1397.6999999955297,
+      "id": "App",
+      "phase": "update"
+    },
+    {
+      "actualMs": 6.100000008940697,
+      "baseMs": 4.900000013411045,
+      "committedAtMs": 1711.5999999940395,
+      "id": "ImageViewer",
+      "phase": "mount"
+    },
+    {
+      "actualMs": 22.700000002980232,
+      "baseMs": 59.00000002980232,
+      "committedAtMs": 1711.5999999940395,
+      "id": "App",
+      "phase": "update"
+    },
+    {
+      "actualMs": 3.699999995529651,
+      "baseMs": 3.699999995529651,
+      "committedAtMs": 1729,
+      "id": "ImageViewer",
+      "phase": "update"
+    },
+    {
+      "actualMs": 12.399999998509884,
+      "baseMs": 53.20000000298023,
+      "committedAtMs": 1729,
+      "id": "App",
+      "phase": "update"
+    },
+    {
+      "actualMs": 4.399999998509884,
+      "baseMs": 4.200000002980232,
+      "committedAtMs": 1793.89999999851,
+      "id": "ImageViewer",
+      "phase": "update"
+    },
+    {
+      "actualMs": 4.600000001490116,
+      "baseMs": 53.70000001043081,
+      "committedAtMs": 1793.89999999851,
+      "id": "App",
+      "phase": "update"
+    },
+    {
+      "actualMs": 4,
+      "baseMs": 4,
+      "committedAtMs": 2085.39999999851,
+      "id": "ImageViewer",
+      "phase": "update"
+    },
+    {
+      "actualMs": 5.800000004470348,
+      "baseMs": 53.70000000298023,
+      "committedAtMs": 2085.39999999851,
+      "id": "App",
+      "phase": "update"
+    }
+  ],
+  "reactProfiling": "enabled-development-only",
+  "sampledInteractionMaxMs": 72,
+  "supportedEntryTypes": [
+    "element",
+    "event",
+    "first-input",
+    "interaction-contentful-paint",
+    "largest-contentful-paint",
+    "layout-shift",
+    "long-animation-frame",
+    "longtask",
+    "mark",
+    "measure",
+    "navigation",
+    "paint",
+    "resource",
+    "soft-navigation",
+    "visibility-state"
+  ]
+}

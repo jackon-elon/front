@@ -1,5 +1,19 @@
 # 跟着产品官网阅读 React
 
+## 卡片转场与影像交互
+
+先体验：首页摄影卡片的加号 → 云影像详情 → 浏览影像资料。
+
+1. BrandSite 保存产品索引和入口卡片，ProductHighlights 通过 props 回调把入口传回来。同一个产品的不同卡片可以有不同的转场身份。LayoutGroup 让 Portal 内外的相同 layoutId 对接位置；AnimatePresence 让退出动画结束后才卸载弹窗。滚动容器用 layoutScroll，固定遮罩用 layoutRoot。
+2. InteractiveImageViewer 用 useRef 保存连续输入与当前变换，useState 保存渲染视图。鼠标移动、滚轮和双指缩放的视图更新通过 requestAnimationFrame 合并；框选草稿是独立的局部状态。高频操作不会把状态提升到整个资料列表。
+3. viewerModel 使用相对影像坐标，缩放时保持鼠标下面的影像位置，并限制拖拽范围。SVG 标注和图像在同一个变换容器里；改变查看器宽度无需重算每个标注的像素位置。
+4. 标注由 useReducer 管理 past / present / future。清除一帧也算一条可以撤销的命令；撤销后编辑会丢弃旧的重做分支。最多保留 50 个历史快照，避免操作历史无限增长。
+5. Pointer Capture 让手指或鼠标移出画布后仍能结束操作。第二个触点进入时，取消未完成框选并切换为缩放；pointercancel、丢失捕获、翻帧或卸载都不能提交半个标注。触控限制只在画布内，外面的页面仍可滚动。
+6. 导出用 Blob、临时对象 URL 和下载链接；坐标、帧号和合成资料标记写入 JSON，随后回收 URL。关闭资料预览仍会清除本次会话状态，不做后端保存。
+7. 性能观察与优化分开验证：开发环境的 Profiler 记录真实 React 提交；生产标准构建不会启用 React 计时。PerformanceObserver 的浏览器指标和构建预算用于另一类检查，不能把原始交互时长当成完整 INP。
+
+参考：[Motion 共享布局](https://motion.dev/docs/react-layout-animations)、[Pointer Events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events)、[React Profiler](https://react.dev/reference/react/Profiler)。
+
 按真实组件和交互阅读：
 
 1. content.ts、BrandSite.tsx：数据配置、组件组合、props、列表 key。首页展示与详情共用业务配置。

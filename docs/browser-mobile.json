@@ -1,0 +1,121 @@
+{
+  "results": [
+    {
+      "name": "6000-row list stays virtualized",
+      "passed": true,
+      "evidence": {
+        "mounted": 15
+      }
+    },
+    {
+      "name": "toolbar zoom",
+      "passed": true,
+      "evidence": "125%"
+    },
+    {
+      "name": "annotation coordinates are visible",
+      "passed": true,
+      "evidence": {
+        "height": 273,
+        "viewportHeight": 844,
+        "width": 273,
+        "x": 51,
+        "y": 512.625
+      }
+    },
+    {
+      "name": "pointer rectangle annotation",
+      "passed": true,
+      "evidence": 1
+    },
+    {
+      "name": "undo",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "name": "redo",
+      "passed": true,
+      "evidence": 1
+    },
+    {
+      "name": "marks are scoped to their frame",
+      "passed": true,
+      "evidence": 0
+    },
+    {
+      "name": "returning to frame restores marks",
+      "passed": true,
+      "evidence": 1
+    },
+    {
+      "name": "keyboard zoom",
+      "passed": true,
+      "evidence": "150%"
+    },
+    {
+      "name": "keyboard pan",
+      "passed": true,
+      "evidence": "translate(4%, 0%) scale(1.5)"
+    },
+    {
+      "name": "reset view",
+      "passed": true,
+      "evidence": "100%"
+    },
+    {
+      "name": "no horizontal overflow",
+      "passed": true,
+      "evidence": {
+        "content": 355,
+        "dialog": 355,
+        "document": 390,
+        "viewport": 390
+      }
+    },
+    {
+      "name": "close restores opener focus and page scrolling",
+      "passed": true,
+      "evidence": {
+        "focus": "了解区域影像云",
+        "overflow": ""
+      }
+    },
+    {
+      "name": "browser console has no errors",
+      "passed": true,
+      "evidence": []
+    }
+  ],
+  "diagnostics": {
+    "environment": "production",
+    "reactProfiling": "disabled-in-standard-production-build",
+    "supportedEntryTypes": [
+      "element",
+      "event",
+      "first-input",
+      "interaction-contentful-paint",
+      "largest-contentful-paint",
+      "layout-shift",
+      "long-animation-frame",
+      "longtask",
+      "mark",
+      "measure",
+      "navigation",
+      "paint",
+      "resource",
+      "soft-navigation",
+      "visibility-state"
+    ],
+    "firstContentfulPaintMs": 148,
+    "largestContentfulPaintMs": 148,
+    "longTasks": {
+      "count": 0,
+      "totalMs": 0,
+      "maxMs": 0
+    },
+    "layoutShiftScoreTotal": 0,
+    "sampledInteractionMaxMs": 48,
+    "reactCommits": []
+  }
+}
