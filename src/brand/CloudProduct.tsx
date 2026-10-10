@@ -1,13 +1,29 @@
-import { lazy, Suspense, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { ArrowDown, ChevronUp } from "lucide-react";
 import { RenderBoundary } from "../components/RenderBoundary";
 import { cloudModes } from "./content";
 import { Tabs } from "./ui";
 import { CloudScene } from "./CloudScene";
-const ImagingLibrary = lazy(() => import("./library/ImagingLibrary"));
+import { imagingLibrary, canPreloadNearby } from "./productResources";
+const ImagingLibrary = imagingLibrary.Component;
 export function CloudProduct({ initialMode = 0 }: { initialMode?: 0 | 1 | 2 }) {
   const [mode, setMode] = useState<number>(initialMode);
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const libraryEntry = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!libraryEntry.current || !canPreloadNearby()) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          void imagingLibrary.preload();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" },
+    );
+    observer.observe(libraryEntry.current);
+    return () => observer.disconnect();
+  }, []);
   const current = cloudModes[mode];
   return (
     <section
@@ -59,10 +75,17 @@ export function CloudProduct({ initialMode = 0 }: { initialMode?: 0 | 1 | 2 }) {
             <p>搜索、整理，再打开影像。体验资料浏览与本页收藏。</p>
           </div>
           <button
+            ref={libraryEntry}
+            onPointerEnter={() => void imagingLibrary.preload()}
+            onFocus={() => void imagingLibrary.preload()}
+            onPointerDown={() => void imagingLibrary.preload()}
             className="button blue-button"
             aria-expanded={libraryOpen}
             aria-controls="library-content"
-            onClick={() => setLibraryOpen((value) => !value)}
+            onClick={() => {
+              void imagingLibrary.preload();
+              setLibraryOpen((value) => !value);
+            }}
           >
             {libraryOpen ? "收起资料浏览" : "浏览影像资料"}
             {libraryOpen ? <ChevronUp size={18} /> : <ArrowDown size={18} />}

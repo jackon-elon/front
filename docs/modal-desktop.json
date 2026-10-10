@@ -1,0 +1,243 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 1000
+  },
+  "results": [
+    {
+      "name": "modal round 1 preserves page geometry",
+      "passed": true,
+      "evidence": {
+        "before": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": null,
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        },
+        "during": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": {
+            "height": 928,
+            "y": 36
+          },
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        },
+        "after": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": null,
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        }
+      }
+    },
+    {
+      "name": "modal round 2 preserves page geometry",
+      "passed": true,
+      "evidence": {
+        "before": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": null,
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        },
+        "during": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": {
+            "height": 928,
+            "y": 36
+          },
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        },
+        "after": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": null,
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        }
+      }
+    },
+    {
+      "name": "modal round 3 preserves page geometry",
+      "passed": true,
+      "evidence": {
+        "before": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": null,
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        },
+        "during": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": {
+            "height": 928,
+            "y": 36
+          },
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        },
+        "after": {
+          "bodyWidth": 1425,
+          "button": {
+            "x": 712.5,
+            "y": 499.796875
+          },
+          "modal": null,
+          "scroll": 1888,
+          "viewportHeight": 1000,
+          "width": 1280,
+          "x": 72.5,
+          "y": 185.171875
+        }
+      }
+    }
+  ],
+  "viewer": {
+    "results": [
+      {
+        "name": "6000-row list stays virtualized",
+        "passed": true,
+        "evidence": {
+          "mounted": 17
+        }
+      },
+      {
+        "name": "toolbar zoom",
+        "passed": true,
+        "evidence": "125%"
+      },
+      {
+        "name": "annotation coordinates are visible",
+        "passed": true,
+        "evidence": {
+          "height": 494.9375,
+          "viewportHeight": 1000,
+          "width": 494.9375,
+          "x": 761.5625,
+          "y": 534.625
+        }
+      },
+      {
+        "name": "pointer rectangle annotation",
+        "passed": true,
+        "evidence": 1
+      },
+      {
+        "name": "undo",
+        "passed": true,
+        "evidence": 0
+      },
+      {
+        "name": "redo",
+        "passed": true,
+        "evidence": 1
+      },
+      {
+        "name": "marks are scoped to their frame",
+        "passed": true,
+        "evidence": 0
+      },
+      {
+        "name": "returning to frame restores marks",
+        "passed": true,
+        "evidence": 1
+      },
+      {
+        "name": "keyboard zoom",
+        "passed": true,
+        "evidence": "150%"
+      },
+      {
+        "name": "keyboard pan",
+        "passed": true,
+        "evidence": "translate(4%, 0%) scale(1.5)"
+      },
+      {
+        "name": "reset view",
+        "passed": true,
+        "evidence": "100%"
+      },
+      {
+        "name": "no horizontal overflow",
+        "passed": true,
+        "evidence": {
+          "content": 1265,
+          "dialog": 1265,
+          "document": 1425,
+          "viewport": 1440
+        }
+      },
+      {
+        "name": "close restores opener focus and page scrolling",
+        "passed": true,
+        "evidence": {
+          "focus": "了解区域影像云",
+          "overflow": ""
+        }
+      },
+      {
+        "name": "browser console has no errors",
+        "passed": true,
+        "evidence": []
+      }
+    ],
+    "diagnostics": null
+  }
+}

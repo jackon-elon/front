@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, Suspense } from "react";
 
 import {
   ArrowUpRight,
@@ -21,23 +21,25 @@ import { usePresentationMotion } from "./ui";
 import { ProductSections } from "./ProductSections";
 import { CareScene } from "./CareScene";
 import { ProductNavigation, navigation } from "./ProductNavigation";
-const CloudProduct = lazy(() =>
-  import("./CloudProduct").then((module) => ({ default: module.CloudProduct })),
-);
-const ImagingAI = lazy(() =>
-  import("./ImagingAI").then((module) => ({ default: module.ImagingAI })),
-);
-const MedicalAgent = lazy(() =>
-  import("./MedicalAgent").then((module) => ({ default: module.MedicalAgent })),
-);
+import {
+  cloudProduct,
+  imagingAI,
+  medicalAgent,
+  preloadProduct,
+} from "./productResources";
+const CloudProduct = cloudProduct.Component;
+const ImagingAI = imagingAI.Component;
+const MedicalAgent = medicalAgent.Component;
 
 export function BrandSite() {
   const [detail, setDetail] = useState<{
     index: number;
     origin?: HighlightCard;
   } | null>(null);
-  const explore = (index: number, origin?: HighlightCard) =>
+  const explore = (index: number, origin?: HighlightCard) => {
+    preloadProduct(index);
     setDetail({ index, origin });
+  };
   const reduce = usePresentationMotion();
   const [contact, setContact] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -95,8 +97,8 @@ export function BrandSite() {
       />
       <main id="main">
         <CinemaHero />
-        <ProductHighlights onExplore={explore} />
-        <ProductSections onExplore={explore} />
+        <ProductHighlights onExplore={explore} onPreload={preloadProduct} />
+        <ProductSections onExplore={explore} onPreload={preloadProduct} />
         <CareScene onContact={() => setContact(true)} />
         <section
           className="about-section section-pad"

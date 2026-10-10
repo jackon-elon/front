@@ -13,6 +13,8 @@
 - 详情中的复核标记、报告编辑和联动对照：src/brand/ImagingWorkstation.tsx；样式 .quality-_、.report-_、.comparison-*。
 - 图集帧定位：src/brand/ImageFrame.tsx。
 - 按需加载的产品详情：CloudProduct.tsx、ImagingAI.tsx、MedicalAgent.tsx。
+- 详情加载慢、等待提示闪烁：productResources.ts 注册独立模块，components/preloadable.ts 共享加载请求；ProductHighlights.tsx、ProductSections.tsx 与 CloudProduct.tsx 负责接近视口和操作意图预加载。
+- 开关弹窗时页面横移：site.css 的 scrollbar-gutter 与 components/scrollLock.ts；详情加载前后外框尺寸：narrative.css 的 .product-modal；默认布局转场时长：main.tsx 的 MotionConfig。
 - 影像云详情里的资料浏览入口：CloudProduct.tsx 的 library-section；工具栏与搜索输入：library/ImagingLibrary.tsx。
 - 资料索引与筛选规则：library/catalog.ts；生成的是元数据索引，共用六帧合成图集。
 - 资料列表、键盘与滚动位置：library/StudyList.tsx；每一行与收藏标志：StudyRow.tsx。88px 的行高与 library.css 共同控制布局。

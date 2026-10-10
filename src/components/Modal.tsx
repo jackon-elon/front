@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
+import { lockPageScroll } from "./scrollLock";
 
 export function Modal({
   open,
@@ -33,8 +34,7 @@ export function Modal({
   useEffect(() => {
     if (!open) return;
     const previousFocus = document.activeElement as HTMLElement | null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlockScroll = lockPageScroll();
     const getFocusable = () =>
       [
         ...(dialog.current?.querySelectorAll<HTMLElement>(
@@ -47,7 +47,9 @@ export function Modal({
     const frame = requestAnimationFrame(() => {
       const initial =
         dialog.current?.querySelector<HTMLElement>("[data-autofocus]");
-      (initial ?? getFocusable()[0] ?? dialog.current)?.focus();
+      (initial ?? getFocusable()[0] ?? dialog.current)?.focus({
+        preventScroll: true,
+      });
     });
     const handleKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -82,7 +84,7 @@ export function Modal({
     return () => {
       cancelAnimationFrame(frame);
       document.removeEventListener("keydown", handleKey);
-      document.body.style.overflow = previousOverflow;
+      unlockScroll();
       if (previousFocus?.isConnected)
         previousFocus.focus({ preventScroll: true });
     };
@@ -95,7 +97,7 @@ export function Modal({
       initial={animated && !reduced ? { opacity: 0 } : false}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: reduced ? 0 : 0.28 }}
+      transition={{ duration: reduced ? 0 : 0.18 }}
       className="modal-backdrop"
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
@@ -105,7 +107,6 @@ export function Modal({
         layoutId={reduced ? undefined : sharedId}
         layoutScroll
         style={{ borderRadius: 24 }}
-        transition={{ type: "spring", stiffness: 280, damping: 32 }}
         ref={dialog}
         tabIndex={-1}
         role="dialog"

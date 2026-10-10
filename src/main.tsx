@@ -15,6 +15,7 @@ startDiagnostics();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <MotionConfig
+      transition={{ layout: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } }}
       reducedMotion={
         new URLSearchParams(window.location.search).get("motion") === "off"
           ? "always"

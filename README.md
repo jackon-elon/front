@@ -27,13 +27,14 @@ npm run preview
 - 首页不使用业务 Tab；三项云影像能力、三项智能影像方向、三类医疗方案直接呈现。
 - 摄影亮点桌面三列，窄屏原生滚动与吸附，左右按钮和键盘共享真实滚动位置，支持边界禁用与响应式检测。
 - 五张官网摄影各使用一次。四张新素材由内置 imagegen 生成，经 WebP 格式转换用于部署，保留原图与提示词记录。
-- 点击深入了解，按需加载云影像、AI 与医疗 Agent 的独立产品展台。
+- 云影像、AI 与医疗 Agent 的详情保持独立代码分块，入口接近视口、悬停或获得焦点时提前下载；点击时才挂载交互。已预热的模块直接渲染，避免再次闪过加载提示。
 - 云影像详情：机构选择、手机影像与报告、分享范围、远程会诊暂停及本页纪要。
 - 云影像资料浏览：按需加载 6,000 条演示索引，支持搜索、分组、排序、收藏、键盘跳转与六帧预览。TanStack Virtual 仅挂载可见区域附近的资料行。
 - AI 详情：六帧复核标记、受控报告草稿与保存、联动或独立对照、缩放、边界禁用与复位。切换功能后保留本页状态。
 - Agent：可取消的四步演示、重置和重启，过期回调不会覆盖新流程。
 - 章节导航、手机菜单、方案锚点、联系信息复制、电话及邮件链接。
 - 弹窗 Portal、焦点约束、Escape 与焦点恢复；系统减少动态设置和 ?motion=off。
+- 弹窗开关保留滚动条空间与页面位置，产品详情预留固定高度，加载前后不改变外框位置。旧浏览器按实际宽度变化补偿滚动条。
 - 渲染优化：章节跟踪状态只更新导航；预览翻帧只更新预览区；列表、资料行与搜索结果通过 memo、稳定回调、useMemo 和 useDeferredValue 减少重复工作。
 - 产品详情与资料浏览各有渲染错误边界，支持局部重试与页面重载；不会将内部错误内容显示给用户。
 - 摄影卡片、标题和封面与详情使用 Motion 共享布局转场；退出动画结束后恢复入口焦点和页面滚动。减少动画模式直接展示。
@@ -57,6 +58,7 @@ npm run preview
 - src/brand/library/InteractiveImageViewer.tsx、viewerModel.ts、viewer.css：输入事件、坐标变换、标注历史与查看器样式。
 - src/performance.ts、scripts/browser-regression.mjs、scripts/check-bundle.mjs：性能采样、真实浏览器验证与构建预算。
 - src/components/RenderBoundary.tsx：详情渲染异常隔离和重试。
+- src/brand/productResources.ts、src/components/preloadable.ts：详情与资料浏览的共享加载缓存；scrollLock.ts：滚动锁定、宽度补偿与恢复。
 - src/brand/MedicalAgent.tsx / workflow.ts：可取消的协作演示。
 - src/brand/CareScene.tsx：三类医疗方案与各自锚点。
 - src/brand/content.ts：文案、场景、素材与资料链接。

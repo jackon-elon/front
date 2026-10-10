@@ -1,5 +1,14 @@
 # 跟着产品官网阅读 React
 
+## 详情打开速度与页面稳定性
+
+1. `productResources.ts` 注册动态导入；`preloadable.ts` 把预加载和首次渲染合并到同一个 Promise。已经加载好的组件同步呈现，尚未加载好的组件仍由 lazy / Suspense 等待。每次挂载固定所选组件类型，加载完成后的父组件更新不会意外重置表单状态。
+2. `IntersectionObserver` 在入口接近视口时提前下载；鼠标悬停、键盘焦点和按下也表达操作意图。浏览器报告省流量或 2G 时跳过自动接近预加载。下载代码不等于挂载组件，6,000 条资料仍在打开资料浏览后才建立。
+3. `scrollbar-gutter: stable` 为滚动条保留空间；`scrollLock.ts` 只对实际扩大的宽度进行补偿，退出时恢复原样式。多个锁各自释放，最后一个结束才恢复滚动。详情固定外框高度，避免短加载提示和完整内容造成居中弹窗跳动。
+4. `preloadable.test.tsx` 验证请求去重、预热后不挂载等待提示、冷加载后保留编辑状态与预加载失败的处理。`scrollLock.test.ts` 验证重叠锁与宽度补偿；真实像素和滚动位置另外由浏览器回归检查。
+
+参考：[React lazy](https://react.dev/reference/react/lazy)、[Suspense](https://react.dev/reference/react/Suspense)、[scrollbar-gutter](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/scrollbar-gutter)。
+
 ## 卡片转场与影像交互
 
 先体验：首页摄影卡片的加号 → 云影像详情 → 浏览影像资料。

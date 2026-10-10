@@ -1,6 +1,6 @@
 # 浏览器与性能验证
 
-`npm test` 运行 30 项逻辑和 React DOM 测试，`npm run build` 构建生产输出，`npm run check:bundle` 检查输出资源预算。GitHub Actions 执行这三项；资源检查失败会阻止 CI 通过。
+`npm test` 运行 35 项逻辑和 React DOM 测试，`npm run build` 构建生产输出，`npm run check:bundle` 检查输出资源预算。GitHub Actions 执行这三项；资源检查失败会阻止 CI 通过。
 
 浏览器回归由 `scripts/browser-regression.mjs` 提供，使用 Codex 的 `cua_repl` 浏览器接口。脚本不启动浏览器、不连接隐藏传输通道，也不通过 evaluate 改变 DOM。它接受已经打开预览页面的 tab，依次点击真实控件和拖动影像。**这部分需要 Codex 浏览器会话，不是在 GitHub Actions 中执行的 E2E。**
 
@@ -11,11 +11,16 @@ const regression =
   await import("file:///绝对路径/front/scripts/browser-regression.mjs");
 const result = await regression.runBrowserRegression(tab);
 nodeRepl.write(result);
+// 入口已处于视口内、锚点与图片布局已稳定时运行。
+const stability = await regression.runModalStabilityRegression(tab);
+nodeRepl.write(stability);
 ```
 
 页面应在产品亮点处，建议地址为 `http://127.0.0.1:4173/?diagnostics=1#products`。桌面实际 CSS 视口 1440 × 1000；手机 390 × 844。移动页面还验证 `&motion=off`。每次运行要求先关闭已打开的弹窗；需要重置状态时重载页面。页面内匹配使用可访问名称；坐标拖动前读取当前画布位置并刷新截图映射。
 
 每次有 14 项断言：虚拟列表、按钮缩放、可见坐标、框选、撤销、重做、跨帧隐藏和恢复、键盘缩放和移动、复位、无横向溢出、关闭恢复焦点与滚动、无控制台错误。结果保存在 `browser-desktop.json` 和 `browser-mobile.json`。截图属于视觉证据，布局尺寸也有断言；**尚未实现截图像素差异回归或多浏览器矩阵**。
+
+弹窗稳定性脚本连续三次点击「深入了解影像云」并关闭，比较背景标题的位置、宽度、页面滚动偏移及正文宽度。点击入口采用真实鼠标坐标，排除 locator 自动滚入视口带来的偏移。最新桌面和手机结果保存在 `modal-desktop.json`、`modal-mobile.json`，各包含三项稳定性断言与重新执行的 14 项查看器断言。稳定性回归用于已可见且布局稳定的入口，不覆盖弱网下的完整网络计时。
 
 ## 性能数据
 

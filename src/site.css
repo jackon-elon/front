@@ -23,6 +23,7 @@
   --ink-subtle: #c3cbd6;
   --line: #30353d;
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
   color-scheme: dark;
   --canvas: #08090b;
 }
@@ -709,6 +710,7 @@ button:focus:not(:focus-visible) {
   overflow: auto;
 }
 .modal {
+  scrollbar-gutter: stable;
   background: #121418;
   width: min(940px, 100%);
   max-height: calc(100dvh - 72px);

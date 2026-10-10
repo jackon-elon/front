@@ -116,7 +116,7 @@ export async function runBrowserRegression(tab) {
     };
   });
   assert(
-    geometry.document === geometry.viewport &&
+    geometry.document <= geometry.viewport + 1 &&
       geometry.content <= geometry.dialog + 1,
     "no horizontal overflow",
     geometry,
@@ -139,4 +139,67 @@ export async function runBrowserRegression(tab) {
       document.getElementById("performance-diagnostics")?.textContent ?? null,
   );
   return { results, diagnostics: performance ? JSON.parse(performance) : null };
+}
+
+// A native click avoids a locator's automatic scroll-into-view being mistaken
+// for an application scroll jump. Measure only once the entry is visible.
+export async function runModalStabilityRegression(tab) {
+  const results = [];
+  const opener = tab.playwright.getByRole("button", {
+    name: "深入了解影像云",
+    exact: true,
+  });
+  await opener.press("Escape");
+  await tab.getAXState({ emit: false });
+  const measure = () =>
+    tab.playwright.evaluate(() => {
+      const title = document
+        .getElementById("cloud-showcase-title")
+        .getBoundingClientRect();
+      const button = [...document.querySelectorAll("button")]
+        .find((element) => element.textContent.includes("深入了解影像云"))
+        .getBoundingClientRect();
+      const modal = document.querySelector('[role="dialog"]');
+      const rect = modal?.getBoundingClientRect();
+      return {
+        x: title.x,
+        y: title.y,
+        width: title.width,
+        scroll: document.scrollingElement.scrollTop,
+        bodyWidth: document.body.getBoundingClientRect().width,
+        button: {
+          x: button.x + button.width / 2,
+          y: button.y + button.height / 2,
+        },
+        viewportHeight: document.documentElement.clientHeight,
+        modal: rect ? { y: rect.y, height: rect.height } : null,
+      };
+    });
+  for (let round = 1; round <= 3; round++) {
+    await tab.getScreenshot({ emit: false });
+    const before = await measure();
+    if (before.button.y <= 0 || before.button.y >= before.viewportHeight)
+      throw new Error("Product entry is outside the measured viewport");
+    await tab.click([before.button.x, before.button.y]);
+    await tab.getAXState({ emit: false });
+    await tab.playwright.getByRole("dialog").waitFor({ state: "visible" });
+    const during = await measure();
+    await tab.playwright.getByLabel("关闭弹窗", { exact: true }).click();
+    await tab.playwright.getByRole("dialog").waitFor({ state: "detached" });
+    await tab.getAXState({ emit: false });
+    const after = await measure();
+    const keys = ["x", "y", "width", "scroll", "bodyWidth"];
+    const stable = [during, after].every((value) =>
+      keys.every((key) => Math.abs(value[key] - before[key]) < 1),
+    );
+    const evidence = { before, during, after };
+    if (!stable)
+      throw new Error(`Modal round ${round}: ${JSON.stringify(evidence)}`);
+    results.push({
+      name: `modal round ${round} preserves page geometry`,
+      passed: true,
+      evidence,
+    });
+  }
+  return { results };
 }

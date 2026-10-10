@@ -248,6 +248,12 @@
 }
 .product-modal {
   width: min(1280px, 100%);
+  height: calc(100dvh - 72px);
+}
+@media (max-width: 760px) {
+  .product-modal {
+    height: calc(100dvh - 32px);
+  }
 }
 .exhibit-loading {
   min-height: 260px;

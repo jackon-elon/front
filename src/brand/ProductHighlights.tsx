@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Plus, ArrowUpRight } from "lucide-react";
 import { Reveal, usePresentationMotion } from "./ui";
 import { media } from "./content";
 import { motion } from "motion/react";
+import { canPreloadNearby } from "./productResources";
 export const highlightCards = [
   {
     name: "区域影像云",
@@ -33,13 +34,29 @@ export type HighlightCard = (typeof highlightCards)[number];
 const cards = highlightCards;
 export function ProductHighlights({
   onExplore,
+  onPreload,
 }: {
   onExplore: (index: number, origin?: HighlightCard) => void;
+  onPreload: (index: number) => void;
 }) {
   const track = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [overflow, setOverflow] = useState(false);
   const reduce = usePresentationMotion();
+  useEffect(() => {
+    if (!track.current || !canPreloadNearby()) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          new Set(cards.map((card) => card.product)).forEach(onPreload);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px 0px" },
+    );
+    observer.observe(track.current);
+    return () => observer.disconnect();
+  }, [onPreload]);
   useEffect(() => {
     const element = track.current;
     if (!element) return;
@@ -147,6 +164,9 @@ export function ProductHighlights({
             <button
               className="feature-more"
               aria-label={`了解${card.name}`}
+              onPointerEnter={() => onPreload(card.product)}
+              onFocus={() => onPreload(card.product)}
+              onPointerDown={() => onPreload(card.product)}
               onClick={() => onExplore(card.product, card)}
             >
               <Plus size={22} />

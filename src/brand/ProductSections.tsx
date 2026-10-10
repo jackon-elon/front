@@ -8,17 +8,45 @@ import {
 import { media, cloudModes, aiModes } from "./content";
 import { Reveal } from "./ui";
 import { ImageFrame } from "./ImageFrame";
+import { useEffect, useRef } from "react";
+import { canPreloadNearby } from "./productResources";
 
 export function ProductSections({
   onExplore,
+  onPreload,
 }: {
   onExplore: (index: number) => void;
+  onPreload: (index: number) => void;
 }) {
+  const container = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!container.current || !canPreloadNearby()) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          if (entry.isIntersecting) {
+            onPreload(Number((entry.target as HTMLElement).dataset.product));
+            observer.unobserve(entry.target);
+          }
+      },
+      { rootMargin: "400px 0px" },
+    );
+    container.current
+      .querySelectorAll("[data-product]")
+      .forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, [onPreload]);
+  const intent = (index: number) => ({
+    onPointerEnter: () => onPreload(index),
+    onFocus: () => onPreload(index),
+    onPointerDown: () => onPreload(index),
+  });
   return (
-    <div>
+    <div ref={container}>
       <section
         className="brand-cloud brand-section"
         id="cloud"
+        data-product="0"
         aria-labelledby="cloud-showcase-title"
       >
         <Reveal className="brand-heading wrap">
@@ -33,7 +61,11 @@ export function ProductSections({
             <br />
             让跨院协作，成为更自然的日常。
           </p>
-          <button className="brand-text-link" onClick={() => onExplore(0)}>
+          <button
+            {...intent(0)}
+            className="brand-text-link"
+            onClick={() => onExplore(0)}
+          >
             深入了解影像云 <ArrowUpRight size={19} />
           </button>
         </Reveal>
@@ -65,6 +97,7 @@ export function ProductSections({
       <section
         className="brand-intelligence brand-section"
         id="ai"
+        data-product="1"
         aria-labelledby="intelligence-title"
       >
         <Reveal className="brand-heading wrap">
@@ -79,7 +112,11 @@ export function ProductSections({
             <br />
             把专业判断，留给医生。
           </p>
-          <button className="brand-text-link" onClick={() => onExplore(1)}>
+          <button
+            {...intent(1)}
+            className="brand-text-link"
+            onClick={() => onExplore(1)}
+          >
             深入了解影像智能 <ArrowUpRight size={19} />
           </button>
         </Reveal>
@@ -119,6 +156,7 @@ export function ProductSections({
       <section
         className="brand-agent brand-section"
         id="agent"
+        data-product="2"
         aria-labelledby="agent-showcase-title"
       >
         <Reveal className="brand-agent-layout wrap">
@@ -134,7 +172,11 @@ export function ProductSections({
               <br />
               在有序的工作流里，找到彼此。
             </p>
-            <button className="brand-text-link" onClick={() => onExplore(2)}>
+            <button
+              {...intent(2)}
+              className="brand-text-link"
+              onClick={() => onExplore(2)}
+            >
               体验协作流程 <ArrowUpRight size={19} />
             </button>
           </div>
