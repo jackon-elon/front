@@ -1,4 +1,64 @@
 /* Shared product exhibit styles. Homepage layout lives in brand/editorial.css. */
+.render-fallback {
+  padding: 64px 32px;
+  text-align: center;
+  color: #f5f5f7;
+}
+.render-fallback h3 {
+  font-size: clamp(24px, 4vw, 36px);
+  margin: 12px 0 16px;
+}
+.render-fallback > p:not(.eyebrow) {
+  font-size: 17px;
+  color: #b4b8bf;
+  line-height: 1.7;
+}
+.render-fallback > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 28px;
+}
+.library-section {
+  padding-top: 50px;
+  margin-top: 50px;
+  border-top: 1px solid #383c42;
+}
+.library-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  text-align: left;
+}
+.library-intro h3 {
+  font-size: clamp(25px, 3vw, 34px);
+  letter-spacing: -0.04em;
+  margin: 12px 0;
+}
+.library-intro > div > p:last-child {
+  font-size: 17px;
+  color: #b4b8bf;
+  line-height: 1.7;
+}
+.library-intro > button {
+  flex-shrink: 0;
+}
+@media (max-width: 700px) {
+  .library-intro {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .library-section {
+    padding-top: 34px;
+    margin-top: 34px;
+  }
+  .library-intro > div > p:last-child {
+    font-size: 16px;
+  }
+}
 :root {
   --nav-height: 56px;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense } from "react";
 
 import {
   ArrowUpRight,
@@ -11,12 +11,14 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { Modal } from "../components/Modal";
+import { RenderBoundary } from "../components/RenderBoundary";
 import { products, solutions, sources } from "./content";
 import { BrandMark, Reveal } from "./ui";
 import { CinemaHero } from "./CinemaHero";
 import { ProductHighlights } from "./ProductHighlights";
 import { ProductSections } from "./ProductSections";
 import { CareScene } from "./CareScene";
+import { ProductNavigation, navigation } from "./ProductNavigation";
 const CloudProduct = lazy(() =>
   import("./CloudProduct").then((module) => ({ default: module.CloudProduct })),
 );
@@ -27,34 +29,11 @@ const MedicalAgent = lazy(() =>
   import("./MedicalAgent").then((module) => ({ default: module.MedicalAgent })),
 );
 
-const navigation = [
-  { id: "cloud", name: "影像云" },
-  { id: "ai", name: "影像智能" },
-  { id: "agent", name: "医疗 Agent" },
-  { id: "solutions", name: "解决方案" },
-];
-
 export function BrandSite() {
   const [detail, setDetail] = useState<number | null>(null);
   const [contact, setContact] = useState(false);
   const [menu, setMenu] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [active, setActive] = useState("");
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries)
-          if (entry.isIntersecting)
-            setActive(entry.target.id === "top" ? "" : entry.target.id);
-      },
-      { rootMargin: "-12% 0px -60% 0px" },
-    );
-    [{ id: "top" }, ...navigation].forEach((item) => {
-      const target = document.getElementById(item.id);
-      if (target) observer.observe(target);
-    });
-    return () => observer.disconnect();
-  }, []);
   const copyContact = async () => {
     try {
       await navigator.clipboard.writeText(
@@ -99,40 +78,13 @@ export function BrandSite() {
           </button>
         </div>
       </header>
-      <div className="product-nav">
-        <div className="wrap product-nav-inner">
-          <a href="#home" className="product-nav-title">
-            影像产品
-          </a>
-          <nav aria-label="产品章节">
-            {navigation.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                aria-current={active === item.id ? "location" : undefined}
-              >
-                {item.name}
-              </a>
-            ))}
-          </nav>
-          <button
-            className="chapter-menu-button"
-            aria-label="浏览产品章节"
-            onClick={() => setMenu(true)}
-          >
-            产品 <Menu size={17} />
-          </button>
-          <button
-            className="button small-button"
-            onClick={() => {
-              setCopied(false);
-              setContact(true);
-            }}
-          >
-            联系与合作
-          </button>
-        </div>
-      </div>
+      <ProductNavigation
+        onMenu={() => setMenu(true)}
+        onContact={() => {
+          setCopied(false);
+          setContact(true);
+        }}
+      />
       <main id="main">
         <CinemaHero />
         <ProductHighlights onExplore={setDetail} />
@@ -248,17 +200,19 @@ export function BrandSite() {
       >
         {selected && (
           <div className="product-exhibit">
-            <Suspense
-              fallback={
-                <div className="exhibit-loading" role="status">
-                  正在打开产品展台…
-                </div>
-              }
-            >
-              {detail === 0 && <CloudProduct />}
-              {detail === 1 && <ImagingAI />}
-              {detail === 2 && <MedicalAgent />}
-            </Suspense>
+            <RenderBoundary key={selected.id}>
+              <Suspense
+                fallback={
+                  <div className="exhibit-loading" role="status">
+                    正在打开产品展台…
+                  </div>
+                }
+              >
+                {detail === 0 && <CloudProduct />}
+                {detail === 1 && <ImagingAI />}
+                {detail === 2 && <MedicalAgent />}
+              </Suspense>
+            </RenderBoundary>
           </div>
         )}
       </Modal>

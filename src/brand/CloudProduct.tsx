@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
+import { ArrowDown, ChevronUp } from "lucide-react";
+import { RenderBoundary } from "../components/RenderBoundary";
 import { cloudModes } from "./content";
 import { Tabs } from "./ui";
 import { CloudScene } from "./CloudScene";
+const ImagingLibrary = lazy(() => import("./library/ImagingLibrary"));
 export function CloudProduct() {
   const [mode, setMode] = useState(0);
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const current = cloudModes[mode];
   return (
     <section
@@ -47,6 +51,39 @@ export function CloudProduct() {
           </div>
         </div>
       </div>
+      <section className="library-section wrap" aria-labelledby="library-title">
+        <div className="library-intro">
+          <div>
+            <p className="eyebrow">区域资料库 · 交互体验</p>
+            <h3 id="library-title">从海量资料，找到这一份。</h3>
+            <p>搜索、整理，再打开影像。体验资料浏览与本页收藏。</p>
+          </div>
+          <button
+            className="button blue-button"
+            aria-expanded={libraryOpen}
+            aria-controls="library-content"
+            onClick={() => setLibraryOpen((value) => !value)}
+          >
+            {libraryOpen ? "收起资料浏览" : "浏览影像资料"}
+            {libraryOpen ? <ChevronUp size={18} /> : <ArrowDown size={18} />}
+          </button>
+        </div>
+        <div id="library-content">
+          {libraryOpen && (
+            <RenderBoundary title="资料浏览暂时未能打开。">
+              <Suspense
+                fallback={
+                  <div className="exhibit-loading" role="status">
+                    正在打开影像资料…
+                  </div>
+                }
+              >
+                <ImagingLibrary />
+              </Suspense>
+            </RenderBoundary>
+          )}
+        </div>
+      </section>
       <p className="exhibit-visual-note">
         产品界面为设计示意，不接入真实医院或患者数据。
       </p>

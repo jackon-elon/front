@@ -53,6 +53,11 @@ export function Modal({
       if (!first || !last) {
         event.preventDefault();
         dialog.current?.focus();
+      } else if (!dialog.current?.contains(document.activeElement)) {
+        // A failed or removed child can send focus back to body. The next Tab
+        // must stay in this dialog, including while an error fallback is shown.
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus();
       } else if (
         event.shiftKey &&
         (document.activeElement === first ||

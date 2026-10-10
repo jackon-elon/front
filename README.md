@@ -28,14 +28,17 @@ npm run preview
 - 五张官网摄影各使用一次。四张新素材由内置 imagegen 生成，经 WebP 格式转换用于部署，保留原图与提示词记录。
 - 点击深入了解，按需加载云影像、AI 与医疗 Agent 的独立产品展台。
 - 云影像详情：机构选择、手机影像与报告、分享范围、远程会诊暂停及本页纪要。
+- 云影像资料浏览：按需加载 6,000 条演示索引，支持搜索、分组、排序、收藏、键盘跳转与六帧预览。TanStack Virtual 仅挂载可见区域附近的资料行。
 - AI 详情：六帧复核标记、受控报告草稿与保存、联动或独立对照、缩放、边界禁用与复位。切换功能后保留本页状态。
 - Agent：可取消的四步演示、重置和重启，过期回调不会覆盖新流程。
 - 章节导航、手机菜单、方案锚点、联系信息复制、电话及邮件链接。
 - 弹窗 Portal、焦点约束、Escape 与焦点恢复；系统减少动态设置和 ?motion=off。
+- 渲染优化：章节跟踪状态只更新导航；预览翻帧只更新预览区；列表、资料行与搜索结果通过 memo、稳定回调、useMemo 和 useDeferredValue 减少重复工作。
+- 产品详情与资料浏览各有渲染错误边界，支持局部重试与页面重载；不会将内部错误内容显示给用户。
 
 ## 组件入口
 
-- src/brand/BrandSite.tsx：页面、章节导航、弹窗与跨组件状态。
+- src/brand/BrandSite.tsx：页面、弹窗与跨组件状态；ProductNavigation.tsx 单独拥有章节跟踪状态。
 - src/brand/CinemaHero.tsx：首屏产品主视觉。
 - src/brand/ProductHighlights.tsx：横向亮点与滚动生命周期。
 - src/brand/editorial.css：首页摄影、章节与响应式布局。
@@ -45,6 +48,8 @@ npm run preview
 - src/brand/ImagingWorkstation.tsx：质控、报告编辑与联动对照的三个工作区。
 - src/brand/ImageFrame.tsx：合成图集的帧定位。
 - src/brand/CloudProduct.tsx / ImagingAI.tsx：按需加载的产品详情。
+- src/brand/library/：资料浏览、筛选、虚拟列表、独立预览和交互测试；样式在 library.css。
+- src/components/RenderBoundary.tsx：详情渲染异常隔离和重试。
 - src/brand/MedicalAgent.tsx / workflow.ts：可取消的协作演示。
 - src/brand/CareScene.tsx：三类医疗方案与各自锚点。
 - src/brand/content.ts：文案、场景、素材与资料链接。

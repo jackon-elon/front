@@ -6,12 +6,18 @@
 - 三张摄影亮点、加号入口、滚动及边界：src/brand/ProductHighlights.tsx；.feature-*。
 - 云影像、影像智能、Agent 的首页展示：src/brand/ProductSections.tsx；.brand-cloud-*、.brand-display-*、.brand-agent-*。首页无需选择业务标签。
 - 三类医疗方案及各自锚点：src/brand/CareScene.tsx；.solution-*。页脚直接跳到 solution-0、solution-1、solution-2。
-- 导航、产品弹窗、联系信息与移动菜单：src/brand/BrandSite.tsx。
+- 产品弹窗、联系信息与移动菜单：src/brand/BrandSite.tsx；章节导航的观察器与当前章节状态：ProductNavigation.tsx。
 - 业务文案与媒体路径：src/brand/content.ts；生成素材见 docs/RADIOLOGY_ASSETS.md。
 - 详情中的云影像三场景：src/brand/CloudScene.tsx，数字胶片：DigitalFilm.tsx；样式在 src/product-scenes.css。
 - 详情中的复核标记、报告编辑和联动对照：src/brand/ImagingWorkstation.tsx；样式 .quality-*、.report-*、.comparison-*。
 - 图集帧定位：src/brand/ImageFrame.tsx。
 - 按需加载的产品详情：CloudProduct.tsx、ImagingAI.tsx、MedicalAgent.tsx。
+- 影像云详情里的资料浏览入口：CloudProduct.tsx 的 library-section；工具栏与搜索输入：library/ImagingLibrary.tsx。
+- 资料索引与筛选规则：library/catalog.ts；生成的是元数据索引，共用六帧合成图集。
+- 资料列表、键盘与滚动位置：library/StudyList.tsx；每一行与收藏标志：StudyRow.tsx。88px 的行高与 library.css 共同控制布局。
+- 右侧预览、翻帧与收藏按钮：library/StudyPreview.tsx；更换资料时通过 key 重置预览状态。
+- 资料浏览颜色、字号、列数与手机布局：library/library.css；首页外观仍在 editorial.css。
+- 产品渲染异常界面与重试：src/components/RenderBoundary.tsx；共用样式在 narrative.css。
 - 协作演示的状态规则：src/brand/workflow.ts；生命周期测试：workflow.test.ts。
 - 可访问 Tab 与进入视口动画：src/brand/ui.tsx；弹窗焦点、Escape、滚动锁定：src/components/Modal.tsx。
 
